@@ -1,0 +1,40 @@
+.home {
+  display: grid;
+  gap: 3rem;
+}
+
+.home__hero {
+  background: var(--color-surface-alt);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+.home__hero h2 {
+  margin-top: 0;
+  font-size: 1.75rem;
+}
+
+.home__hero p {
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+}
+
+.home__goals {
+  display: grid;
+  gap: 0.75rem;
+  padding-left: 1.25rem;
+  color: var(--color-text-primary);
+}
+
+.home__units h2 {
+  margin-bottom: 1rem;
+}
+
+.home__grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
