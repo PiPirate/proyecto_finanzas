@@ -1,95 +1,19 @@
-import { useEffect, useMemo, useState } from 'react'
-import CourseLayout from './layouts/CourseLayout'
+import { useState } from 'react'
 import HomePage from './pages/HomePage'
-import Unit1Page from './pages/unit1/Unit1Page' // 👈 usamos Unit1Page
-import { units as unitsData } from './data/courseStructure'
-import './styles/App.css'
+import { units } from './data/courseStructure'
 
-const parseHashRoute = (hash) => {
-  if (!hash) {
-    return null
-  }
+export default function App() {
+  const [selectedUnit, setSelectedUnit] = useState(null)
 
-  const normalized = hash.startsWith('#') ? hash.slice(1) : hash
-  if (!normalized || normalized === '/' || normalized === '#/') {
-    return null
-  }
-
-  const segments = normalized.replace(/^\//u, '').split('/')
-  if (segments[0] === 'unidades' && segments[1]) {
-    return segments[1]
-  }
-
-  return null
-}
-
-function App() {
-  const [units] = useState(() => unitsData.map((unit) => ({ ...unit })))
-  const [activeUnit, setActiveUnit] = useState(() => {
-    if (typeof window === 'undefined') {
-      return null
-    }
-
-    return parseHashRoute(window.location.hash)
-  })
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return undefined
-    }
-
-    const handleHashChange = () => {
-      setActiveUnit(parseHashRoute(window.location.hash))
-    }
-
-    window.addEventListener('hashchange', handleHashChange)
-
-    if (!window.location.hash) {
-      window.location.hash = '/'
-    }
-
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange)
-    }
-  }, [])
-
-  const selectedUnit = useMemo(
-    () => units.find((unit) => unit.id === activeUnit) ?? null,
-    [activeUnit, units]
-  )
-
-  const handleNavigateHome = () => {
-    setActiveUnit(null)
-    if (typeof window !== 'undefined') {
-      window.location.hash = '/'
-    }
-  }
-
-  const handleSelectUnit = (unitId) => {
-    const unit = units.find((entry) => entry.id === unitId)
-    if (unit?.isAvailable) {
-      setActiveUnit(unitId)
-      if (typeof window !== 'undefined') {
-        window.location.hash = `/unidades/${unitId}`
-      }
-    }
+  const handleOpenUnit = (unit) => {
+    console.log('Opening unit:', unit)
+    setSelectedUnit(unit)
+    // Aquí puedes agregar la lógica para mostrar el contenido de la unidad
   }
 
   return (
-    <CourseLayout
-      units={units}
-      activeUnitSlug={activeUnit}
-      onSelectUnit={handleSelectUnit}
-      onNavigateHome={handleNavigateHome}
-    >
-      {selectedUnit ? (
-        // 👇 aquí mostramos Unit1Page en vez de UnitPage
-        <Unit1Page unit={selectedUnit} onNavigateHome={handleNavigateHome} />
-      ) : (
-        <HomePage units={units} onOpenUnit={handleSelectUnit} />
-      )}
-    </CourseLayout>
+    <div className="min-h-screen">
+      <HomePage units={units} onOpenUnit={handleOpenUnit} />
+    </div>
   )
 }
-
-export default App
