@@ -46,7 +46,8 @@ export const units = [
         ]
       },
       tutorial: {
-        setting: 'Banco comunitario con vista cenital, dividido en estaciones de Metas, Presupuesto y Ahorro.',
+        setting:
+          'Banco comunitario con vista cenital, dividido en estaciones de Metas, Presupuesto y Ahorro.',
         assistant: {
           name: 'Lía',
           role: 'Asistente virtual del banco',

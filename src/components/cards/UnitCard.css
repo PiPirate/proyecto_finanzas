@@ -61,6 +61,18 @@
   padding: 0.75rem 1rem;
 }
 
+.unit-card__meta {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.unit-card__meta span::before {
+  content: '• ';
+  color: var(--color-primary);
+}
+
 .unit-card__action {
   align-self: flex-start;
   background: var(--color-primary);

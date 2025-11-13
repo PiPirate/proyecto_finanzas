@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import CourseLayout from './layouts/CourseLayout'
 import HomePage from './pages/HomePage'
-import Unit1Page from './pages/unit1/Unit1Page'
+import UnitPage from './pages/UnitPage'
 import { units as unitsData } from './data/courseStructure'
 import './App.css'
 
@@ -64,6 +64,7 @@ function App() {
       window.location.hash = '/'
     }
   }
+
   const handleSelectUnit = (unitId) => {
     const unit = units.find((entry) => entry.id === unitId)
     if (unit?.isAvailable) {
@@ -82,7 +83,7 @@ function App() {
       onNavigateHome={handleNavigateHome}
     >
       {selectedUnit ? (
-        <Unit1Page unit={selectedUnit} onNavigateHome={handleNavigateHome} />
+        <UnitPage unit={selectedUnit} onNavigateHome={handleNavigateHome} />
       ) : (
         <HomePage units={units} onOpenUnit={handleSelectUnit} />
       )}
@@ -91,3 +92,4 @@ function App() {
 }
 
 export default App
+
