@@ -76,6 +76,6 @@ export const units = [
       'Tower defense contra intentos de fraude'
     ],
     duration: '15-20 min',
-    difficulty: 'Principiante'
+    difficulty: 'Intermedio'
   }
 ]
