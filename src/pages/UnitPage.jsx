@@ -1,5 +1,5 @@
 import GameHost from '../games/host/GameHost'
-import './UnitPage.css'
+import './css/UnitPage.css'
 
 const UnitPage = ({ unit, onNavigateHome }) => {
   return (

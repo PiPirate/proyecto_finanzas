@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import CourseLayout from './layouts/CourseLayout'
 import HomePage from './pages/HomePage'
-import UnitPage from './pages/UnitPage'
+import Unit1Page from './pages/unit1/Unit1Page' // 👈 usamos Unit1Page
 import { units as unitsData } from './data/courseStructure'
 import './App.css'
 
@@ -83,7 +83,8 @@ function App() {
       onNavigateHome={handleNavigateHome}
     >
       {selectedUnit ? (
-        <UnitPage unit={selectedUnit} onNavigateHome={handleNavigateHome} />
+        // 👇 aquí mostramos Unit1Page en vez de UnitPage
+        <Unit1Page unit={selectedUnit} onNavigateHome={handleNavigateHome} />
       ) : (
         <HomePage units={units} onOpenUnit={handleSelectUnit} />
       )}
@@ -92,4 +93,3 @@ function App() {
 }
 
 export default App
-
