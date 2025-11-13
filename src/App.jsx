@@ -22,8 +22,6 @@ function App() {
     }
   }
 
-  const handleSelectUnit = (unitId) => setActiveUnit(unitId)
-
 
   return (
     <CourseLayout
