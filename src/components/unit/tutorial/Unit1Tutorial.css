@@ -1,0 +1,320 @@
+.tutorial {
+  display: grid;
+  gap: 2rem;
+}
+
+.tutorial__map {
+  display: grid;
+  gap: 1.5rem;
+  background: var(--color-surface-alt);
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  border: 1px solid var(--color-border);
+}
+
+.tutorial__setting {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.tutorial__setting-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.tutorial__setting p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.tutorial__stations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.tutorial__station {
+  text-align: left;
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 1.25rem;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+.tutorial__station:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-sm);
+}
+
+.tutorial__station--active {
+  border-color: var(--color-primary);
+  background: rgba(60, 104, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(60, 104, 255, 0.15);
+}
+
+.tutorial__station-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.tutorial__station strong {
+  font-size: 1.05rem;
+}
+
+.tutorial__station p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.tutorial__content {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  align-items: start;
+}
+
+.tutorial__assistant {
+  background: linear-gradient(135deg, rgba(60, 104, 255, 0.18), rgba(60, 104, 255, 0.05));
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(60, 104, 255, 0.2);
+  display: grid;
+  gap: 0.45rem;
+  color: var(--color-text-secondary);
+}
+
+.tutorial__assistant h4 {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.tutorial__assistant-tag {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.tutorial__assistant-role,
+.tutorial__assistant-personality {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.tutorial__panel {
+  display: grid;
+}
+
+.tutorial__panel-card {
+  background: var(--color-surface-alt);
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  border: 1px solid var(--color-border);
+  display: grid;
+  gap: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.tutorial__panel-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.tutorial__panel-card h5 {
+  margin: 0;
+}
+
+.tutorial__metric {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.tutorial__grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.tutorial__grid--three {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.tutorial__grid label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.tutorial__grid input[type='text'],
+.tutorial__grid input[type='number'] {
+  border-radius: 0.85rem;
+  border: 1px solid var(--color-border);
+  padding: 0.75rem 1rem;
+  font: inherit;
+  background: #fff;
+}
+
+.tutorial__grid input[type='range'] {
+  accent-color: var(--color-primary);
+}
+
+.tutorial__range-value {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.tutorial__panel-text {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.tutorial__progress {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(60, 104, 255, 0.15);
+  overflow: hidden;
+}
+
+.tutorial__progress-bar {
+  height: 100%;
+  background: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.tutorial__panel-summary {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  align-items: start;
+}
+
+.tutorial__panel-summary p {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-secondary);
+}
+
+.tutorial__panel-hint {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+}
+
+.tutorial__balance-positive {
+  color: #1c8c4d;
+  font-weight: 700;
+}
+
+.tutorial__balance-negative {
+  color: #c0392b;
+  font-weight: 700;
+}
+
+.tutorial__weeks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.85rem;
+}
+
+.tutorial__week {
+  border-radius: 1.25rem;
+  padding: 1rem 1.25rem;
+  border: 1px dashed rgba(60, 104, 255, 0.45);
+  background: rgba(60, 104, 255, 0.08);
+  display: grid;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.tutorial__week span {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+}
+
+.tutorial__week strong {
+  font-size: 1rem;
+  color: var(--color-text-primary);
+}
+
+.tutorial__week:hover {
+  transform: translateY(-4px);
+}
+
+.tutorial__week--filled {
+  background: rgba(28, 140, 77, 0.15);
+  border-style: solid;
+  border-color: rgba(28, 140, 77, 0.4);
+}
+
+.tutorial__flow {
+  background: #fff;
+  border-radius: 1.5rem;
+  border: 1px solid var(--color-border);
+  padding: 1.75rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.tutorial__flow h5 {
+  margin: 0;
+}
+
+.tutorial__flow ol {
+  margin: 0;
+  padding-left: 1.5rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.tutorial__flow li {
+  background: var(--color-surface-alt);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  list-style: decimal;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.tutorial__flow p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.tutorial__flow ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--color-text-secondary);
+  display: grid;
+  gap: 0.35rem;
+}
+
+@media (max-width: 960px) {
+  .tutorial__content {
+    grid-template-columns: 1fr;
+  }
+}
