@@ -7,19 +7,21 @@ import './App.css'
 
 function App() {
   const [activeUnit, setActiveUnit] = useState(null)
-  const [units] = useState(() => unitsData.map((unit) => ({ ...unit })))
+  const units = useMemo(() => unitsData, [])
   const selectedUnit = useMemo(
     () => units.find((unit) => unit.id === activeUnit) ?? null,
     [activeUnit, units]
   )
 
   const handleNavigateHome = () => setActiveUnit(null)
+
   const handleSelectUnit = (unitId) => {
     const unit = units.find((entry) => entry.id === unitId)
     if (unit?.isAvailable) {
       setActiveUnit(unitId)
     }
   }
+
 
   return (
     <CourseLayout
