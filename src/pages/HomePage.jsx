@@ -5,21 +5,17 @@ import './HomePage.css'
 const HomePage = ({ units, onOpenUnit }) => {
   return (
     <section className="home">
-      <div className="home__intro">
-        <h2>Bienvenido al módulo interactivo</h2>
-        <p>{courseOverview.welcome}</p>
-        <ul className="home__highlights">
-          {courseOverview.highlights.map((highlight) => (
-            <li key={highlight}>{highlight}</li>
+      <div className="home__hero">
+        <h2>Bienvenido al módulo</h2>
+        <p>{courseOverview.description}</p>
+        <ul className="home__goals">
+          {courseOverview.goals.map((goal) => (
+            <li key={goal}>{goal}</li>
           ))}
         </ul>
       </div>
-
       <div className="home__units">
-        <div className="home__units-header">
-          <h2>Unidades del módulo</h2>
-          <p>{courseOverview.description}</p>
-        </div>
+        <h2>Unidades disponibles</h2>
         <div className="home__grid">
           {units.map((unit) => (
             <UnitCard key={unit.id} unit={unit} onOpen={onOpenUnit} />
