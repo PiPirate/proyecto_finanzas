@@ -14,7 +14,16 @@ function App() {
   )
 
   const handleNavigateHome = () => setActiveUnit(null)
+
+  const handleSelectUnit = (unitId) => {
+    const unit = units.find((entry) => entry.id === unitId)
+    if (unit?.isAvailable) {
+      setActiveUnit(unitId)
+    }
+  }
+
   const handleSelectUnit = (unitId) => setActiveUnit(unitId)
+
 
   return (
     <CourseLayout

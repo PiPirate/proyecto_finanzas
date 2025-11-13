@@ -61,3 +61,15 @@
   border-color: var(--color-primary-dark);
   box-shadow: var(--shadow-md);
 }
+
+.course-nav__item.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.course-nav__item.is-disabled:hover,
+.course-nav__item.is-disabled:focus {
+  border-color: transparent;
+  color: var(--color-text-primary);
+}
+
