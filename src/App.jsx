@@ -3,7 +3,7 @@ import CourseLayout from './layouts/CourseLayout'
 import HomePage from './pages/HomePage'
 import Unit1Page from './pages/unit1/Unit1Page' // 👈 usamos Unit1Page
 import { units as unitsData } from './data/courseStructure'
-import './App.css'
+import './styles/App.css'
 
 const parseHashRoute = (hash) => {
   if (!hash) {

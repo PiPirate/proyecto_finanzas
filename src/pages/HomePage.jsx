@@ -1,6 +1,6 @@
 import UnitCard from '../components/cards/UnitCard'
 import { courseOverview } from '../data/courseStructure'
-import './HomePage.css'
+import './css/HomePage.css'
 
 const HomePage = ({ units, onOpenUnit }) => {
   return (
