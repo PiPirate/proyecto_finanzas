@@ -1,0 +1,38 @@
+.evaluation-empty {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 700px;
+  margin: 2rem auto;
+  text-align: center;
+  box-shadow: 0 10px 25px -5px rgb(0 0 0 / .08);
+}
+
+.evaluation-title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+.evaluation-description {
+  color: #64748b;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.evaluation-finish-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  padding: 0.9rem 2rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: .3s ease;
+}
+
+.evaluation-finish-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -6px rgb(16 185 129 / .25);
+}

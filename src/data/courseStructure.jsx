@@ -32,8 +32,8 @@ export const units = [
     title: 'Mini-presupuesto: 50-30-20',
     number: '02',
     tagline: 'Organiza tu dinero: necesidades, gustos y ahorro.',
-    description: 'Distingue gastos esenciales de opcionales y adapta la regla 50-30-20 a tu realidad financiera. Aprende a equilibrar necesidades, gustos personales y ahorro programado con casos cotidianos.',
-    isAvailable: false,
+    description: 'Distingue gastos esenciales de opcionales para asi llevar una salud financiera y adapta la regla 50-30-20 a tu realidad financiera. Aprende a equilibrar necesidades, gustos personales y ahorro programado con casos cotidianos.',
+    isAvailable: true,
     icon: 'wallet',
     color: 'from-purple-500 to-pink-500',
     highlights: [
@@ -50,7 +50,7 @@ export const units = [
     number: '03',
     tagline: 'Evalúa préstamos y elige la mejor opción.',
     description: 'Compara cuota mensual, plazo, comisiones ocultas y costo total real antes de firmar cualquier crédito. Descubre cómo los trade-offs de un préstamo afectan tu bolsillo y cómo negociar pagos anticipados sostenibles.',
-    isAvailable: false,
+    isAvailable: true,
     icon: 'handshake',
     color: 'from-green-500 to-emerald-500',
     highlights: [
@@ -67,7 +67,7 @@ export const units = [
     number: '04',
     tagline: 'Usa QR, tarjetas y transferencias con seguridad.',
     description: 'Identifica amenazas comunes en pagos digitales, valida información crítica y aplica protocolos de autenticación segura antes de aprobar cualquier transacción. Protege tu dinero de fraudes y estafas digitales.',
-    isAvailable: false,
+    isAvailable: true,
     icon: 'shield-check',
     color: 'from-orange-500 to-red-500',
     highlights: [

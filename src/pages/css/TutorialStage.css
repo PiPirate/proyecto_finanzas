@@ -1,0 +1,43 @@
+.tutorial-map-container {
+  position: relative;
+  width: 600px;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.tutorial-map {
+  width: 100%;
+  display: block;
+  border-radius: 15px;
+}
+
+.tutorial-player {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.tutorial-success {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 15px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  text-align: center;
+  font-weight: bold;
+}
+
+.tutorial-continue-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
