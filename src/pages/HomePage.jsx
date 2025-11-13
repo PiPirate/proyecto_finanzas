@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import UnitCard from '../components/cards/UnitCard'
 import AchievementCard from '../components/AchievementCard'
 import NoteCard from '../components/NoteCard'
@@ -8,9 +9,14 @@ import { notes } from '../data/notes'
 import { Sparkles, BookOpen, Gamepad2, GraduationCap, Trophy, StickyNote } from 'lucide-react'
 import './css/HomePage.css'
 
-const HomePage = ({ units, onOpenUnit }) => {
+const HomePage = ({ units }) => {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('modulos')
   const highlightIcons = [BookOpen, Sparkles, Gamepad2]
+  
+  const handleOpenUnit = (unit) => {
+    navigate(`/unit/${unit.id}`)
+  }
   
   // Statistics
   const unlockedAchievements = achievements.filter(a => a.unlocked).length
@@ -99,7 +105,7 @@ const HomePage = ({ units, onOpenUnit }) => {
 
               <div className="units-grid">
                 {units.map((unit) => (
-                  <UnitCard key={unit.id} unit={unit} onOpen={onOpenUnit} />
+                  <UnitCard key={unit.id} unit={unit} onOpen={handleOpenUnit} />
                 ))}
               </div>
             </div>

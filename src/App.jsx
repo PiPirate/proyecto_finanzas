@@ -1,19 +1,18 @@
-import { useState } from 'react'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
+
+import Unit1Page from './pages/unit1/Unit1Page'
+
 import { units } from './data/courseStructure'
 
 export default function App() {
-  const [selectedUnit, setSelectedUnit] = useState(null)
-
-  const handleOpenUnit = (unit) => {
-    console.log('Opening unit:', unit)
-    setSelectedUnit(unit)
-    // Aquí puedes agregar la lógica para mostrar el contenido de la unidad
-  }
-
   return (
-    <div className="min-h-screen">
-      <HomePage units={units} onOpenUnit={handleOpenUnit} />
-    </div>
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<HomePage units={units} />} />
+
+        <Route path="/unit/unidad-1" element={<Unit1Page />} />
+      </Routes>
+    </HashRouter>
   )
 }
