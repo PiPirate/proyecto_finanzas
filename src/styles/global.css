@@ -1,0 +1,47 @@
+:root {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  background-color: #f4f6f9;
+  color: #0f172a;
+
+  --color-primary: #3b82f6;
+  --color-primary-light: rgba(59, 130, 246, 0.12);
+  --color-primary-dark: #1d4ed8;
+  --color-assessment: #d97706;
+  --color-assessment-light: rgba(217, 119, 6, 0.12);
+  --color-surface: #f4f6f9;
+  --color-surface-alt: #ffffff;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-border: rgba(15, 23, 42, 0.1);
+  --color-chip-bg: rgba(15, 23, 42, 0.05);
+  --layout-max-width: 1100px;
+  --shadow-sm: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 18px 40px rgba(15, 23, 42, 0.12);
+  --shadow-lg: 0 25px 60px rgba(15, 23, 42, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-surface);
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+iframe {
+  width: 100%;
+  border: none;
+}

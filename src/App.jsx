@@ -1,34 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useMemo, useState } from 'react'
+import CourseLayout from './layouts/CourseLayout'
+import HomePage from './pages/HomePage'
+import UnitPage from './pages/UnitPage'
+import { units as unitsData } from './data/courseStructure'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeUnit, setActiveUnit] = useState(null)
+  const [units] = useState(() => unitsData.map((unit) => ({ ...unit })))
+  const selectedUnit = useMemo(
+    () => units.find((unit) => unit.id === activeUnit) ?? null,
+    [activeUnit, units]
+  )
+
+  const handleNavigateHome = () => setActiveUnit(null)
+  const handleSelectUnit = (unitId) => {
+    const unit = units.find((entry) => entry.id === unitId)
+    if (unit?.isAvailable) {
+      setActiveUnit(unitId)
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <CourseLayout
+      units={units}
+      activeUnitSlug={activeUnit}
+      onSelectUnit={handleSelectUnit}
+      onNavigateHome={handleNavigateHome}
+    >
+      {selectedUnit ? (
+        <UnitPage unit={selectedUnit} onNavigateHome={handleNavigateHome} />
+      ) : (
+        <HomePage units={units} onOpenUnit={handleSelectUnit} />
+      )}
+    </CourseLayout>
   )
 }
 
