@@ -57,4 +57,3 @@ const UnitCard = ({ unit, onOpen }) => {
 }
 
 export default UnitCard
-

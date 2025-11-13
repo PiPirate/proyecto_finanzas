@@ -1,8 +1,7 @@
 .unit-card {
   background: #ffffff;
-
-  border-radius: 1rem;
-  padding: 1.75rem;
+  border-radius: 1.25rem;
+  padding: 1.9rem;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
@@ -17,7 +16,6 @@
   box-shadow: var(--shadow-md);
   border-color: var(--color-primary-light);
 }
-
 
 .unit-card--locked {
   opacity: 0.85;
@@ -39,12 +37,7 @@
   font-weight: 500;
 }
 
-.unit-card__title {
-  font-size: 1.25rem;
-  margin: 0;
-}
-
-.unit-card__description {
+.unit-card__summary {
   margin: 0;
   color: var(--color-text-secondary);
   line-height: 1.6;
@@ -66,6 +59,7 @@
   background: var(--color-surface-alt);
   border-radius: 0.75rem;
   padding: 0.75rem 1rem;
+}
 
 .unit-card__meta {
   display: grid;
@@ -85,11 +79,10 @@
   color: #ffffff;
   border: none;
   border-radius: 999px;
-  padding: 0.65rem 1.5rem;
+  padding: 0.65rem 1.6rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
-
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .unit-card__action:hover,
