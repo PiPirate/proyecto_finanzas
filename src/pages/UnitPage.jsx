@@ -1,147 +1,59 @@
+import GameHost from '../games/host/GameHost'
 import './UnitPage.css'
 
 const UnitPage = ({ unit, onNavigateHome }) => {
-  const { content } = unit
-
   return (
     <article className="unit">
       <header className="unit__header">
-        <div className="unit__header-top">
+        <div>
           <button type="button" className="unit__back" onClick={onNavigateHome}>
             ← Volver al inicio
           </button>
-          <span className="unit__label">Video + tutorial + minijuego</span>
+          <h2>{unit.title}</h2>
         </div>
-        <h2>{unit.title}</h2>
-        <p className="unit__tagline">{unit.tagline}</p>
-        <p className="unit__summary-text">{unit.summary}</p>
+        <p>{unit.description}</p>
       </header>
 
       <section className="unit__section">
-        <h3>Video explicativo</h3>
-        <div className="unit__video-placeholder">{unit.videoPlaceholder}</div>
+        <h3>Video introductorio</h3>
+        <div className="unit__video">
+          <iframe
+            src={unit.video.url}
+            title={unit.video.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
       </section>
 
-      {content ? (
-        <>
-          <section className="unit__section">
-            <h3>Explicación del tema</h3>
-            <p className="unit__lead">{content.explanation}</p>
-          </section>
+      <section className="unit__section">
+        <h3>Juego de aprendizaje</h3>
+        <GameHost game={unit.learningGame} />
+      </section>
 
-          <section className="unit__section unit__section--summary">
-            <h3>Resumen del tema</h3>
-            <div className="unit__summary-grid">
-              <p>{content.summary.introduction}</p>
-              <p>{content.summary.importance}</p>
-              <div>
-                <h4>Errores comunes</h4>
-                <ul>
-                  {content.summary.commonMistakes.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4>Beneficios de dominarlo</h4>
-                <ul>
-                  {content.summary.benefits.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </section>
+      <section className="unit__section">
+        <h3>Juego de evaluación</h3>
+        <GameHost game={unit.evaluationGame} variant="assessment" />
+      </section>
 
-          <section className="unit__section unit__section--tutorial">
-            <h3>Tutorial jugable</h3>
-            <div className="unit__tutorial-overview">
-              <p>{content.tutorial.setting}</p>
-              <div className="unit__assistant">
-                <span className="unit__assistant-label">Asistente virtual</span>
-                <h4>{content.tutorial.assistant.name}</h4>
-                <p className="unit__assistant-role">{content.tutorial.assistant.role}</p>
-                <p className="unit__assistant-personality">{content.tutorial.assistant.personality}</p>
-              </div>
-            </div>
-            <ol className="unit__tutorial-flow">
-              {content.tutorial.flow.map((step) => (
-                <li key={step.title}>
-                  <h4>{step.title}</h4>
-                  <p>{step.description}</p>
-                  <ul>
-                    {step.interactions.map((interaction) => (
-                      <li key={interaction}>{interaction}</li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ol>
-            <p className="unit__note">{content.tutorial.feedback}</p>
-          </section>
-
-          <section className="unit__section unit__section--game">
-            <h3>Minijuego final</h3>
-            <div className="unit__game-header">
-              <div>
-                <h4>{content.finalGame.name}</h4>
-                <p>{content.finalGame.format}</p>
-              </div>
-              <p className="unit__game-objective">{content.finalGame.objective}</p>
-            </div>
-            <div className="unit__game-grid">
-              <div>
-                <h5>Canales de juego</h5>
-                <ul>
-                  {content.finalGame.lanes.map((lane) => (
-                    <li key={lane}>{lane}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h5>Mecánicas principales</h5>
-                <ul>
-                  {content.finalGame.mechanics.map((mechanic) => (
-                    <li key={mechanic}>{mechanic}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h5>Reglas y condiciones</h5>
-                <ul>
-                  {content.finalGame.rules.map((rule) => (
-                    <li key={rule}>{rule}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h5>Condiciones de victoria</h5>
-                <ul>
-                  {content.finalGame.victoryConditions.map((condition) => (
-                    <li key={condition}>{condition}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h5>Estados de fallo</h5>
-                <ul>
-                  {content.finalGame.failStates.map((state) => (
-                    <li key={state}>{state}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h5>Notas visuales</h5>
-                <ul>
-                  {content.finalGame.visualNotes.map((note) => (
-                    <li key={note}>{note}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </section>
-        </>
-      ) : null}
+      <section className="unit__section unit__section--columns">
+        <div>
+          <h4>Conceptos clave</h4>
+          <ul>
+            {unit.keyConcepts.map((concept) => (
+              <li key={concept}>{concept}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h4>Recursos descargables</h4>
+          <ul>
+            {unit.resources.map((resource) => (
+              <li key={resource}>{resource}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
     </article>
   )
 }
