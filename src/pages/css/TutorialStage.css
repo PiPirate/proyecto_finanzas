@@ -1,43 +1,41 @@
+/* src/pages/css/TutorialStage.css */
+
 .tutorial-map-container {
   position: relative;
-  width: 600px;
-  margin: auto;
-  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
 }
 
-.tutorial-map {
-  width: 100%;
-  display: block;
-  border-radius: 15px;
-}
-
-.tutorial-player {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
+/* Overlay cuando se completa el objetivo */
 .tutorial-success {
   position: absolute;
-  bottom: 20px;
+  top: 10%;
   left: 50%;
   transform: translateX(-50%);
-  background: white;
-  padding: 15px 25px;
+  background: rgba(15, 23, 42, 0.95);
+  color: #f9fafb;
+  padding: 16px 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   text-align: center;
-  font-weight: bold;
+  max-width: 280px;
+  font-size: 0.95rem;
 }
 
 .tutorial-continue-btn {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background: #2563eb;
-  color: white;
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 999px;
   border: none;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  font-weight: 600;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+}
+
+.tutorial-continue-btn:hover {
+  filter: brightness(1.05);
 }

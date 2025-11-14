@@ -1,0 +1,36 @@
+/* src/games/core/player/Player.css */
+
+.player {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center top;
+  image-rendering: pixelated;
+  transform-origin: center center;
+
+  animation: player-idle 1.2s steps(4) infinite;
+}
+
+.player.player--moving {
+  animation: player-walk 0.8s steps(4) infinite;
+}
+
+/* Idle: recorre suavemente los primeros 5 frames */
+@keyframes player-idle {
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    background-position-y: 50%;
+  }
+}
+
+/* Walk: recorre los últimos 4 frames */
+@keyframes player-walk {
+  from {
+    background-position-y: 50%;
+  }
+  to {
+    background-position-y: 100%;
+  }
+}

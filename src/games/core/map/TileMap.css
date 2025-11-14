@@ -1,0 +1,13 @@
+/* src/games/core/map/TileMap.css */
+
+.tile-map {
+  position: relative;
+  margin: 0 auto;
+  border: 2px solid #333;
+  background-color: #000;
+  background-size: 100% auto;      /* ancho completo, altura proporcional */
+  background-repeat: no-repeat;
+  background-position: top center; /* usamos la habitación de arriba */
+  image-rendering: pixelated;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
