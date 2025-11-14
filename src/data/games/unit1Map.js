@@ -1,55 +1,52 @@
 // src/data/unit1Map.js
 
-// Cada tile = 32x32 px
-export const unit1TileSize = 32;
+// Usamos 16 columnas y 11 filas.
+// La imagen mide 1008px de ancho, así que:
+// 1008 / 16 = 63px → cada tile será de 63px
+export const unit1TileSize = 63;
 
-// Matriz 16x16 (512x512 px). Solo usamos la habitación de arriba del sprite.
-// 1 = muro/obstáculo
+// Convención:
 // 0 = caminable
-// 2 = zona interactiva
+// 1 = obstáculo (paredes, escritorios, plantas, cerdito)
+// 2 = interactivo (frente al asesor, frente a la mesa de presupuesto)
 export const unit1MapMatrix = [
-  // y = 0  (borde superior / techo)
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  // y = 1
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  // y = 2
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  // y = 3
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  // y = 4 (parte alta de la pared)
+  // y = 0: borde superior
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 
-  // y = 5 (suelo pegado al tablero)
-  // x=7, y=5: frente al tablero verde
-  [1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+  // y = 1: zona trasera (pared / parte alta de los muebles)
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
 
-  // y = 6–7: suelo medio
-  [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+  // y = 2: escritorios del asesor (izquierda) y mesa "BUDGET" (derecha)
+  // Bloqueamos las zonas donde están los muebles.
+  // x 1..4: escritorio asesor, x 9..14: mesa presupuesto
+  [1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1],
+
+  // y = 3: parte baja de los muebles (también obstáculos)
+  [1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1],
+
+  // y = 4: fila frente a los muebles (aquí ponemos las zonas interactivas)
+  // (x=2, y=4) -> frente al asesor
+  // (x=10, y=4) -> frente a la mesa de presupuesto
+  [1, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 1],
+
+  // y = 5–8: suelo caminable (zona central)
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 
-  // y = 8: frente a la mesa izquierda y al cerdito derecha
-  // (x=4, y=8) = metas (mesa de papeles)
-  // (x=11, y=8) = ahorro (cerdito)
-  [1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1],
+  // y = 9: fila más baja caminable
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 
-  // y = 9–14: resto del suelo
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-
-  // y = 15 (borde inferior)
+  // y = 10: borde inferior
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
-// Posición inicial del jugador (centro inferior de la habitación)
-export const unit1PlayerStart = { x: 8, y: 12 };
+// Posición inicial del jugador (abajo, más o menos centrada)
+export const unit1PlayerStart = { x: 8, y: 8 };
 
-// Metadata para las zonas interactivas
+// Zonas interactivas que coinciden con los 2 de la matriz
 export const unit1InteractiveZones = [
-  { id: 'tablero',     x: 7,  y: 5, type: 'stats-board' },
-  { id: 'metas',       x: 4,  y: 8, type: 'goal-station' },
-  { id: 'ahorro',      x: 11, y: 8, type: 'saving-station' },
+  { id: 'advisor_1', x: 2, y: 4, type: 'advisor' },
+  { id: 'budget_1',  x: 10, y: 4, type: 'budget-station' },
 ];

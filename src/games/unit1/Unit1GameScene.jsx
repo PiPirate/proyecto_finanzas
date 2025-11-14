@@ -11,9 +11,8 @@ import {
   unit1InteractiveZones,
 } from '../../data/games/unit1Map';
 
-import bankMapImage from '../../assets/unit1/mapa_banco.png';
+import hallImage from '../../assets/unit1/mapa_banco.png'; // o el nombre que estés usando
 import girlSpriteSheet from '../../assets/general/la socia caminando.png';
-
 
 function Unit1GameScene({ onGoalReached }) {
   const handleStep = useCallback(
@@ -24,20 +23,11 @@ function Unit1GameScene({ onGoalReached }) {
         );
 
         if (zone) {
-          console.log(
-            'Entraste a una zona interactiva:',
-            zone.id,
-            '| tipo:',
-            zone.type,
-            '| posición:',
-            tilePosition
-          );
+          console.log('Zona interactiva:', zone.id, zone.type, tilePosition);
 
-          if (zone.id === 'tablero' && typeof onGoalReached === 'function') {
+          if (zone.id === 'budget_1' && typeof onGoalReached === 'function') {
             onGoalReached();
           }
-        } else {
-          console.log('Tile interactivo (2) en', tilePosition, 'sin metadata específica');
         }
       }
     },
@@ -65,7 +55,7 @@ function Unit1GameScene({ onGoalReached }) {
       <TileMap
         mapMatrix={unit1MapMatrix}
         tileSize={unit1TileSize}
-        mapImage={bankMapImage}
+        mapImage={hallImage}
       >
         <Player
           pixelPosition={pixelPosition}
