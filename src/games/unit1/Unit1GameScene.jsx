@@ -1,8 +1,9 @@
 // src/games/unit1/Unit1GameScene.jsx
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import TileMap from '../core/map/TileMap';
 import Player from '../core/player/Player';
 import usePlayerMovement from '../core/hooks/usePlayerMovement';
+import DialogueBox from '../core/dialogue/DialogueBox';
 
 import {
   unit1MapMatrix,
@@ -14,60 +15,84 @@ import {
 import hallImage from '../../assets/unit1/mapa_banco.png';
 import girlSpriteSheet from '../../assets/general/la socia caminando.png';
 
+// NUEVO: dos tirillas de rostro
+import girlFaceTalking from '../../assets/general/player_face_hablando.png';
+import girlFaceNeutral from '../../assets/general/player_face_neutral.png';
+
 import './Unit1GameScene.css';
 
+const introDialogue = [
+  'Bueno… aquí estamos. Primera unidad del módulo de finanzas',
+  'La verdad, al igual que tú, siempre he querido aprender a organizar mejor mi dinero',
+  'pero nunca supe muy bien por dónde empezar.',
+  'Aquí vamos a aprender a convertir nuestras ideas sueltas en metas claras y alcanzables.',
+  'Para empezar, vamos a hablar con el asesor financiero de aquella mesa. Él nos guiará por todo este proceso.',
+  'Acércate a él y haz click en su escritorio para comenzar.',
+
+];
+
 function Unit1GameScene({ onGoalReached }) {
-  const [activeZone, setActiveZone] = useState(null);
+  const [dialogueMode, setDialogueMode] = useState('intro'); // 'intro' | null
+  const [dialogueIndex, setDialogueIndex] = useState(0);
+
+  const isDialogueVisible = dialogueMode !== null;
+
+  const currentDialogueText = useMemo(() => {
+    if (dialogueMode === 'intro') {
+      return introDialogue[dialogueIndex] || '';
+    }
+    return '';
+  }, [dialogueMode, dialogueIndex]);
+
+  const canMove = !isDialogueVisible;
 
   const handleStep = useCallback(() => {
-    // Aquí se podrían manejar triggers por tiles diferentes en el futuro
+    // triggers al pisar, si quieres luego
   }, []);
 
-  const { tilePosition, pixelPosition, isMoving, direction } = usePlayerMovement({
+  const {
+    tilePosition,
+    pixelPosition,
+    isMoving,
+    direction,
+  } = usePlayerMovement({
     initialTilePosition: unit1PlayerStart,
     tileSize: unit1TileSize,
     mapMatrix: unit1MapMatrix,
-    blockingTileTypes: [1, 2], // 2 bloquea el paso (muebles, marranito)
-    interactiveTileTypes: [],  // no usamos interacción "al pisar" por ahora
+    blockingTileTypes: [1, 2],
+    interactiveTileTypes: [],
     moveDuration: 260,
     onStep: handleStep,
+    canMove,
   });
 
-  // Click sobre el mapa
   const handleTileClick = ({ x, y, value }) => {
-    // Solo nos interesan los tiles 2 (interactuables)
-    if (value !== 2) {
-      setActiveZone(null);
-      return;
-    }
+    if (isDialogueVisible) return;
+    if (value !== 2) return;
 
-    // Distancia en tiles entre el jugador y el tile clickeado
     const dx = Math.abs(x - tilePosition.x);
     const dy = Math.abs(y - tilePosition.y);
+    if (Math.max(dx, dy) > 1) return;
 
-    // Máximo 1 cuadrito de distancia en cualquier dirección (incluye diagonales)
-    if (Math.max(dx, dy) > 1) {
-      return;
-    }
-
-    // ¿Es una zona especial con metadata?
     const zoneMeta =
       unit1InteractiveZones.find((z) => z.x === x && z.y === y) || null;
 
-    const zone = zoneMeta || { id: null, x, y, type: 'generic' };
-    setActiveZone(zone);
+    if (!zoneMeta) return;
 
-    // Ejemplo: puedes usar cualquiera de las zonas para marcar "completado"
-    if (
-      zoneMeta &&
-      zoneMeta.id === 'budget_1' &&
-      typeof onGoalReached === 'function'
-    ) {
-      onGoalReached();
-    }
+    console.log('Click en zona interactiva:', zoneMeta);
+    // aquí luego abriremos diálogos específicos según advisor/budget/piggy
   };
 
-  const closePopup = () => setActiveZone(null);
+  const handleDialogueNext = () => {
+    if (dialogueMode === 'intro') {
+      if (dialogueIndex < introDialogue.length - 1) {
+        setDialogueIndex((prev) => prev + 1);
+      } else {
+        setDialogueMode(null);
+        setDialogueIndex(0);
+      }
+    }
+  };
 
   return (
     <div className="unit1-game-container">
@@ -86,52 +111,13 @@ function Unit1GameScene({ onGoalReached }) {
         />
       </TileMap>
 
-      {activeZone && (
-        <div className="unit1-popup">
-          {activeZone.type === 'advisor' && (
-            <>
-              <h3>Asesor financiero</h3>
-              <p>
-                Aquí puedes hablar con tu asesor sobre tus metas y tu presupuesto.
-              </p>
-            </>
-          )}
-
-          {activeZone.type === 'budget-station' && (
-            <>
-              <h3>Estación de presupuesto</h3>
-              <p>
-                Esta mesa representa tu presupuesto mensual: alimentos, facturas y
-                transporte.
-              </p>
-            </>
-          )}
-
-          {activeZone.type === 'piggy-bank' && (
-            <>
-              <h3>Marranito de ahorro</h3>
-              <p>
-                Este marranito simboliza tu fondo de ahorro. Cada moneda que guardas aquí
-                te acerca a tus metas financieras.
-              </p>
-            </>
-          )}
-
-          {activeZone.type === 'generic' && (
-            <>
-              <h3>Elemento interactivo</h3>
-              <p>
-                Has hecho clic sobre un objeto interactivo en ({activeZone.x},{' '}
-                {activeZone.y}).
-              </p>
-            </>
-          )}
-
-          <button className="unit1-popup-close" onClick={closePopup}>
-            Cerrar
-          </button>
-        </div>
-      )}
+      <DialogueBox
+        visible={isDialogueVisible}
+        text={currentDialogueText}
+        speakingSprite={girlFaceTalking}
+        idleSprite={girlFaceNeutral}
+        onNext={handleDialogueNext}
+      />
     </div>
   );
 }

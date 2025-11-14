@@ -1,0 +1,128 @@
+/* src/games/core/dialogue/DialogueBox.css */
+
+/* Contenedor general del diálogo */
+.dialogue-root {
+  position: absolute;
+  left: 50%;
+  bottom: 80px;               /* súbelo o bájalo según te guste */
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;                   /* pequeño espacio entre cara y cuadro */
+  z-index: 20;
+  cursor: pointer;
+}
+
+/* Marco de la carita */
+.dialogue-face-wrapper {
+  width: 140px;
+  height: 190px;
+  background-color: #121a2f;
+  border: 3px solid #4c6fbf;
+  border-radius: 10px;
+  box-shadow: 0 0 0 2px #192243; /* doble borde tipo pixel */
+  image-rendering: pixelated;
+  overflow: hidden;
+
+  flex-shrink: 0;              /* ¡no te encoges más! */
+}
+
+/* BASE: configuración común para ambos sprites */
+.dialogue-face {
+  width: 103%;
+  height: 107%;
+  background-repeat: no-repeat;
+  background-size: 108% auto;  /* tú ya lo tenías ajustado así */
+  background-position: center top;
+  image-rendering: pixelated;
+
+  /* OJO: aquí NO hay animation.
+     Las animaciones van en las clases --talking y --idle */
+}
+
+/* MODO HABLANDO
+   Usa la tirilla de hablar y la animación rápida */
+.dialogue-face--talking {
+  animation: dialogue-face-talk 1.5s steps(5) infinite;
+}
+
+/* MODO NEUTRAL
+   Usa la tirilla neutral y su propia animación
+   (puedes dejarla casi quieta o con parpadeo lento) */
+.dialogue-face--idle {
+  animation: dialogue-face-idle 2.5s steps(4) infinite;
+}
+
+/* TALK: ajusta steps(5) y el to% a tu tirilla de hablar */
+@keyframes dialogue-face-talk {
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    background-position-y: 102.0001%;
+  }
+}
+
+/* IDLE: ajusta steps(4) y el to% a tu tirilla neutral
+   (si tu neutral tiene 4 frames verticales, esto está bien;
+    si son 5, cambia steps(4) por steps(5) y el 100–102% según veas) */
+@keyframes dialogue-face-idle {
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    background-position-y: 137.1%;
+  }
+}
+
+/* Caja grande de texto: ancho fijo, alto flexible */
+.dialogue-panel {
+  position: relative;
+  width: 640px;               /* ancho fijo */
+  max-width: 640px;
+  min-height: 150px;
+
+  padding: 24px 40px 28px 40px;
+
+  background-color: #131b34;
+  border: 3px solid #4c6fbf;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 2px #192243,
+    0 12px 0 rgba(0, 0, 0, 0.4);
+
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+
+  flex-shrink: 0;             /* tampoco se encoge la caja de texto */
+}
+
+/* Texto estilo retro, se adapta al ancho y hace salto de línea */
+.dialogue-text {
+  margin: 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 25px;
+  line-height: 1.5;
+  color: #e5f0ff;
+  text-shadow: 1px 1px 0 #000;
+
+  white-space: normal;        /* permite saltos de línea automáticos */
+  word-wrap: break-word;      /* por si hubiera palabras muy largas */
+}
+
+/* Flechita de "siguiente" abajo a la derecha */
+.dialogue-next {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  font-size: 20px;
+  color: #e5f0ff;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.dialogue-next--visible {
+  opacity: 1;
+}
