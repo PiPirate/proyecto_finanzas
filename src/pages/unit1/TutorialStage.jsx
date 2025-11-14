@@ -22,15 +22,7 @@ export default function TutorialStage({ onComplete }) {
       {/* Escena del banco */}
       <Unit1GameScene onGoalReached={handleGoalReached} />
 
-      {/* Overlay de éxito, similar al que tenías */}
-      {completed && (
-        <div className="tutorial-success">
-          <p>¡Llegaste a la estación principal del banco! 🎉</p>
-          <button className="tutorial-continue-btn" onClick={handleContinue}>
-            Continuar
-          </button>
-        </div>
-      )}
+
     </div>
   );
 }

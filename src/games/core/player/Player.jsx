@@ -9,7 +9,7 @@ import './Player.css';
 // - spriteSheet
 // - direction: 'up' | 'down' | 'left' | 'right'
 function Player({ pixelPosition, tileSize, isMoving, spriteSheet, direction }) {
-  const size = tileSize * 8.5; // ajusta si la quieres más grande/pequeña
+  const size = tileSize * 7.9; // ← AQUÍ cambias el tamaño
 
   // Por defecto el sprite mira a la izquierda.
   // Si la dirección es 'right', lo espejamos horizontalmente.

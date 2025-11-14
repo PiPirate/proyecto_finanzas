@@ -2,8 +2,13 @@
 import React from 'react';
 import './TileMap.css';
 
-// Renderiza el mapa de fondo y sirve como contenedor del jugador
-function TileMap({ mapMatrix, tileSize, mapImage, children }) {
+// Props:
+// - mapMatrix
+// - tileSize
+// - mapImage
+// - onTileClick({ x, y, value })
+// - children
+function TileMap({ mapMatrix, tileSize, mapImage, onTileClick, children }) {
   const rows = mapMatrix.length;
   const cols = mapMatrix[0].length;
 
@@ -16,8 +21,32 @@ function TileMap({ mapMatrix, tileSize, mapImage, children }) {
     backgroundImage: mapImage ? `url(${mapImage})` : 'none',
   };
 
+  function handleClick(event) {
+    if (!onTileClick) return;
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const offsetY = event.clientY - rect.top;
+
+    const tileX = Math.floor(offsetX / tileSize);
+    const tileY = Math.floor(offsetY / tileSize);
+
+    if (
+      tileX < 0 ||
+      tileY < 0 ||
+      tileX >= cols ||
+      tileY >= rows
+    ) {
+      return;
+    }
+
+    const value = mapMatrix[tileY][tileX];
+
+    onTileClick({ x: tileX, y: tileY, value });
+  }
+
   return (
-    <div className="tile-map" style={style}>
+    <div className="tile-map" style={style} onClick={handleClick}>
       {children}
     </div>
   );
