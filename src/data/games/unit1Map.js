@@ -41,12 +41,27 @@ export const unit1PlayerStart = { x: 8, y: 8 };
 // Zonas interactivas “especiales” dentro de los 2.
 // Usamos una casilla central de cada mueble para poder distinguirlos.
 export const unit1InteractiveZones = [
-  // Escritorio del asesor (grupo de 2 en la izquierda, fila 3)
+  // Escritorio del asesor: todos los 2 de la izquierda en y = 3
+  { id: 'advisor_1', x: 1, y: 3, type: 'advisor' },
   { id: 'advisor_1', x: 2, y: 3, type: 'advisor' },
+  { id: 'advisor_1', x: 3, y: 3, type: 'advisor' },
+  { id: 'advisor_1', x: 4, y: 3, type: 'advisor' },
 
-  // Mesa BUDGET (grupo de 2 derecha, fila 3)
+  // Mesa BUDGET: todos los 2 de la derecha en y = 2
+  { id: 'budget_1', x: 7, y: 2, type: 'budget-station' },
+  { id: 'budget_1', x: 8, y: 2, type: 'budget-station' },
+  { id: 'budget_1', x: 9, y: 2, type: 'budget-station' },
+  { id: 'budget_1', x: 10, y: 2, type: 'budget-station' },
+  { id: 'budget_1', x: 11, y: 2, type: 'budget-station' },
+
+  // Mesa BUDGET: todos los 2 de la derecha en y = 3
+  { id: 'budget_1', x: 7, y: 3, type: 'budget-station' },
+  { id: 'budget_1', x: 8, y: 3, type: 'budget-station' },
   { id: 'budget_1', x: 9, y: 3, type: 'budget-station' },
+  { id: 'budget_1', x: 10, y: 3, type: 'budget-station' },
+  { id: 'budget_1', x: 11, y: 3, type: 'budget-station' },
 
   // Marranito de ahorro (tile 2 en la fila 7, columna 1)
-  { id: 'piggy_1', x: 1, y: 8, type: 'piggy-bank' },
+  { id: 'piggy_1', x: 1, y: 7, type: 'piggy-bank' },
 ];
+
