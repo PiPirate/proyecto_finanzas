@@ -4,6 +4,7 @@ import TileMap from '../core/map/TileMap';
 import Player from '../core/player/Player';
 import usePlayerMovement from '../core/hooks/usePlayerMovement';
 import DialogueBox from '../core/dialogue/DialogueBox';
+import BudgetConsole from './BudgetConsole';
 
 import {
   unit1MapMatrix,
@@ -19,7 +20,10 @@ import girlSpriteSheet from '../../assets/general/la socia caminando.png';
 import girlFaceTalking from '../../assets/general/player_face_hablando.png';
 import girlFaceNeutral from '../../assets/general/player_face_neutral.png';
 
-import './Unit1GameScene.css';
+// Monitor neutro
+import budgetComputerImage from '../../assets/unit1/null_desktop.png';
+
+import './css/Unit1GameScene.css';
 
 // Diálogo inicial (habla Carmina)
 const introDialogue = [
@@ -31,8 +35,8 @@ const introDialogue = [
   'Acércate a él y haz click en su escritorio para comenzar.',
 ];
 
-// Diálogo con el asesor (multi-personaje)
-const advisorDialogue = [
+// Diálogo principal con el asesor (multi-personaje)
+const advisorMainDialogue = [
   {
     speaker: 'Asesor',
     text: 'Bienvenidos. Me alegra que hayan decidido empezar a organizar su dinero.',
@@ -61,12 +65,10 @@ const advisorDialogue = [
     speaker: 'Asesor',
     text: 'Y por último verán cómo una buena estrategia de ahorro hace que ese objetivo deje de ser un sueño y empiece a ser algo totalmente posible.',
   },
-  // Respuesta de Carmina
   {
     speaker: 'Carmina',
     text: 'Suena genial. ¿Cuál es el siguiente paso?',
   },
-  // Respuesta final del asesor, ahora en 3 líneas distintas
   {
     speaker: 'Asesor',
     text: 'Primero vamos a transformar una meta vaga en una meta clara.',
@@ -81,31 +83,56 @@ const advisorDialogue = [
   },
 ];
 
+// Diálogo corto del asesor después de la primera vez
+const advisorRepeatDialogue = [
+  {
+    speaker: 'Asesor',
+    text: 'Espero que ya hayan pasado por la mesa de presupuesto.',
+  },
+];
+
 function Unit1GameScene({ onGoalReached }) {
-  // 'intro' | 'advisor' | null
+  // 'intro' | 'advisorMain' | 'advisorRepeat' | null
   const [dialogueMode, setDialogueMode] = useState('intro');
   const [dialogueIndex, setDialogueIndex] = useState(0);
+  const [advisorMainDone, setAdvisorMainDone] = useState(false);
 
-  const isDialogueVisible = dialogueMode !== null;
+  // NUEVO: estado para el menú de presupuesto
+  const [isBudgetConsoleOpen, setIsBudgetConsoleOpen] = useState(false);
+
+  const isDialogueVisible = dialogueMode !== null || isBudgetConsoleOpen;
 
   const currentDialogueText = useMemo(() => {
     if (dialogueMode === 'intro') {
       return introDialogue[dialogueIndex] || '';
     }
-    if (dialogueMode === 'advisor') {
-      const entry = advisorDialogue[dialogueIndex];
+
+    if (dialogueMode === 'advisorMain') {
+      const entry = advisorMainDialogue[dialogueIndex];
       return entry ? entry.text : '';
     }
+
+    if (dialogueMode === 'advisorRepeat') {
+      const entry = advisorRepeatDialogue[dialogueIndex];
+      return entry ? entry.text : '';
+    }
+
     return '';
   }, [dialogueMode, dialogueIndex]);
 
-  // Nombre del personaje que habla
   const speakerName = useMemo(() => {
     if (dialogueMode === 'intro') return 'Carmina';
-    if (dialogueMode === 'advisor') {
-      const entry = advisorDialogue[dialogueIndex];
+
+    if (dialogueMode === 'advisorMain') {
+      const entry = advisorMainDialogue[dialogueIndex];
       return entry ? entry.speaker : '';
     }
+
+    if (dialogueMode === 'advisorRepeat') {
+      const entry = advisorRepeatDialogue[dialogueIndex];
+      return entry ? entry.speaker : '';
+    }
+
     return '';
   }, [dialogueMode, dialogueIndex]);
 
@@ -132,13 +159,11 @@ function Unit1GameScene({ onGoalReached }) {
   });
 
   const handleTileClick = ({ x, y, value }) => {
-    // si hay diálogo abierto, ignoramos clicks
+    // si hay diálogo o menú abierto, ignoramos clicks
     if (isDialogueVisible) return;
 
-    // solo reaccionamos a tiles interactivos
     if (value !== 2) return;
 
-    // debe estar cerca (máx 1 tile)
     const dx = Math.abs(x - tilePosition.x);
     const dy = Math.abs(y - tilePosition.y);
     if (Math.max(dx, dy) > 1) return;
@@ -148,14 +173,28 @@ function Unit1GameScene({ onGoalReached }) {
 
     if (!zoneMeta) return;
 
-    // Por ahora, solo queremos que funcione el asesor
-    if (zoneMeta.type !== 'advisor') {
+    // Asesor
+    if (zoneMeta.type === 'advisor') {
+      if (!advisorMainDone) {
+        setDialogueMode('advisorMain');
+        setDialogueIndex(0);
+      } else {
+        setDialogueMode('advisorRepeat');
+        setDialogueIndex(0);
+      }
       return;
     }
 
-    // Abrimos diálogo con el asesor (incluye la réplica de Carmina)
-    setDialogueMode('advisor');
-    setDialogueIndex(0);
+    // Mesa de presupuesto
+    if (zoneMeta.type === 'budget-station') {
+      // Solo permitimos usarla si ya hablamos con el asesor
+      if (!advisorMainDone) return;
+
+      setIsBudgetConsoleOpen(true);
+      return;
+    }
+
+    // Otros tipos por ahora los ignoramos
   };
 
   const handleDialogueNext = () => {
@@ -163,22 +202,29 @@ function Unit1GameScene({ onGoalReached }) {
       if (dialogueIndex < introDialogue.length - 1) {
         setDialogueIndex((prev) => prev + 1);
       } else {
-        // terminó intro → cerramos diálogo y permitimos movimiento
         setDialogueMode(null);
         setDialogueIndex(0);
       }
       return;
     }
 
-    if (dialogueMode === 'advisor') {
-      if (dialogueIndex < advisorDialogue.length - 1) {
+    if (dialogueMode === 'advisorMain') {
+      if (dialogueIndex < advisorMainDialogue.length - 1) {
         setDialogueIndex((prev) => prev + 1);
       } else {
-        // terminó conversación con el asesor → cerramos diálogo
         setDialogueMode(null);
         setDialogueIndex(0);
+        setAdvisorMainDone(true); // ya hicimos la charla principal
+      }
+      return;
+    }
 
-        // Aquí luego puedes activar la mesa BUDGET
+    if (dialogueMode === 'advisorRepeat') {
+      if (dialogueIndex < advisorRepeatDialogue.length - 1) {
+        setDialogueIndex((prev) => prev + 1);
+      } else {
+        setDialogueMode(null);
+        setDialogueIndex(0);
       }
     }
   };
@@ -200,13 +246,21 @@ function Unit1GameScene({ onGoalReached }) {
         />
       </TileMap>
 
+      {/* Cuadro de diálogo normal (Carmina/Asesor) */}
       <DialogueBox
-        visible={isDialogueVisible}
+        visible={dialogueMode !== null}
         text={currentDialogueText}
         speakingSprite={girlFaceTalking}
         idleSprite={girlFaceNeutral}
         speakerName={speakerName}
         onNext={handleDialogueNext}
+      />
+
+      {/* Menú de la mesa de presupuesto (monitor MK23) */}
+      <BudgetConsole
+        visible={isBudgetConsoleOpen}
+        onClose={() => setIsBudgetConsoleOpen(false)}
+        computerImage={budgetComputerImage}
       />
     </div>
   );

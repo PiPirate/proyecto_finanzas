@@ -1,0 +1,133 @@
+/* src/games/unit1/BudgetConsole.css */
+
+/* Capa oscura sobre el juego */
+.budget-console-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  cursor: pointer;
+}
+
+/* Marco general inspirado en el de diálogo */
+.budget-console-frame {
+  background-color: #121a2f;
+  border: 3px solid #4c6fbf;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 2px #192243,
+    0 16px 0 rgba(0, 0, 0, 0.5);
+  padding: 18px;
+  image-rendering: pixelated;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Monitor: usamos la imagen como background */
+.budget-console-monitor {
+  width: 640px;   /* ajusta según cómo veas el tamaño */
+  height: 520px;  /* idem */
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  position: relative;
+  image-rendering: pixelated;
+}
+
+/* Zona de la pantalla donde va el texto */
+.budget-console-screen {
+  position: absolute;
+
+  /* Ajusta estos valores para que el texto caiga justo en la "pantalla" del monitor */
+  left: 80px;
+  right: 80px;
+  top: 80px;
+  bottom: 120px;
+
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  padding: 10px 18px 18px 18px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  /* Cursor retro dentro de la pantalla.
+     Si no existe retro_cursor.png, el navegador usará pointer normal. */
+  cursor: url('../../assets/unit1/icons/retro_cursor.png'), pointer;
+}
+
+/* Cabecera: solo el nombre del hablante, sin caja */
+.budget-console-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 6px;
+}
+
+.budget-console-speaker {
+  margin: 7% 14% 0% 14%; /* top right bottom left */
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 16px;
+  color: #c0d5ff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Texto dentro de la pantalla (integrado con el monitor) */
+.budget-console-text {
+  flex: 1;
+  margin: 0% 14% 10% 14%; /* top right bottom left */
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #e5f0ff;
+  text-shadow: 1px 1px 0 #000;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* Contenedor del icono del minijuego */
+.budget-console-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px; /* un pequeño espacio respecto a la flecha */
+}
+
+/* Icono con animación de latido */
+.budget-console-icon {
+  width: 96px;            /* ajusta al tamaño que más te guste */
+  height: auto;
+  image-rendering: pixelated;
+  animation: budget-console-icon-pulse 1.3s ease-in-out infinite;
+}
+
+@keyframes budget-console-icon-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+/* Flechita de siguiente */
+.budget-console-next {
+  align-self: flex-end;
+  margin-top: 4px;
+  font-size: 20px;
+  color: #e5f0ff;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.budget-console-next--visible {
+  opacity: 1;
+}
