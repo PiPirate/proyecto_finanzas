@@ -207,8 +207,11 @@ function Unit1GameScene({ onComplete }) {
   const [pigIntroDone, setPigIntroDone] = useState(false);
   const [isPiggyGameOpen, setIsPiggyGameOpen] = useState(false);
 
+  const [unitFinished, setUnitFinished] = useState(false);
+
+
   const isDialogueVisible =
-    dialogueMode !== null || isBudgetConsoleOpen || isPiggyGameOpen;
+    dialogueMode !== null || isBudgetConsoleOpen || isPiggyGameOpen || unitFinished;
 
   const currentDialogueText = useMemo(() => {
     if (dialogueMode === 'intro') {
@@ -488,6 +491,7 @@ function Unit1GameScene({ onComplete }) {
       } else {
         setDialogueMode(null);
         setDialogueIndex(0);
+        setUnitFinished(true);
         // Aquí marcamos la unidad como completada y avisamos al padre
         if (onComplete) {
           onComplete();
@@ -527,10 +531,18 @@ function Unit1GameScene({ onComplete }) {
         visible={isBudgetConsoleOpen}
         computerImage={budgetComputerImage}
         onTrainingFinished={() => {
+          // 1) Cerrar el computador dentro de la escena
           setIsBudgetConsoleOpen(false);
           setMkTrainingFinished(true);
+          setUnitFinished(true);
+
+          // 2) Avisar hacia arriba que el tutorial se terminó
+          if (typeof onComplete === 'function') {
+            onComplete(); // 👉 esto es lo que hace que UnitPage pase a EvaluationStage
+          }
         }}
       />
+
 
       <PiggySavingsGame
         visible={isPiggyGameOpen}
