@@ -130,7 +130,7 @@ const advisorPostMkDialogue = [
 const advisorWaitPigDialogue = [
   {
     speaker: 'Asesor',
-    text: 'Te estaré esperando. Ve a la alcancía con forma de cerdito para continuar.',
+    text: 'Qué bueno saber que aprendieron.',
   },
 ];
 
