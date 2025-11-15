@@ -49,8 +49,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 20; /* por encima del mapa y HUD */
+  /* Capa oscura + blur del contenido de atrás */
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9999; /* por encima del mapa, HUD, diálogos, etc. */
 }
 
 /* Tarjeta de contenido del modal */
