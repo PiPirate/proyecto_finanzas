@@ -17,8 +17,12 @@ import hallImage from '../../assets/unit1/mapa_banco.png';
 import girlSpriteSheet from '../../assets/general/la socia caminando.png';
 
 // Rostros
+// Rostro de la socia
 import girlFaceTalking from '../../assets/general/player_face_hablando.png';
 import girlFaceNeutral from '../../assets/general/player_face_neutral.png';
+// Rostro del asesor
+import advisorFaceTalking from '../../assets/unit1/asesor_player_talking.png';
+import advisorFaceNeutral from '../../assets/unit1/asesor_player_neutral.png';
 
 // Monitor neutro
 import budgetComputerImage from '../../assets/unit1/null_desktop.png';
@@ -91,13 +95,24 @@ const advisorRepeatDialogue = [
   },
 ];
 
+// Diálogo del computador después de terminar el entrenamiento
+// (ya lo maneja internamente BudgetConsole con MK25 + Carmina)
+
+// Diálogo de reconexión cuando ya terminaste y vuelves a tocar el computador
+const reconnectingDialogue = [
+  'Reconectando...',
+];
+
 function Unit1GameScene({ onGoalReached }) {
-  // 'intro' | 'advisorMain' | 'advisorRepeat' | null
+  // 'intro' | 'advisorMain' | 'advisorRepeat' | 'reconnecting' | null
   const [dialogueMode, setDialogueMode] = useState('intro');
   const [dialogueIndex, setDialogueIndex] = useState(0);
   const [advisorMainDone, setAdvisorMainDone] = useState(false);
 
-  // NUEVO: estado para el menú de presupuesto
+  // ¿Ya se completó TODO el entrenamiento con MK25 (los 3 minijuegos + diálogo final)?
+  const [mkTrainingFinished, setMkTrainingFinished] = useState(false);
+
+  // Estado para el menú de presupuesto (monitor MK25)
   const [isBudgetConsoleOpen, setIsBudgetConsoleOpen] = useState(false);
 
   const isDialogueVisible = dialogueMode !== null || isBudgetConsoleOpen;
@@ -117,6 +132,10 @@ function Unit1GameScene({ onGoalReached }) {
       return entry ? entry.text : '';
     }
 
+    if (dialogueMode === 'reconnecting') {
+      return reconnectingDialogue[dialogueIndex] || '';
+    }
+
     return '';
   }, [dialogueMode, dialogueIndex]);
 
@@ -133,8 +152,40 @@ function Unit1GameScene({ onGoalReached }) {
       return entry ? entry.speaker : '';
     }
 
+    if (dialogueMode === 'reconnecting') {
+      // Narrador / sistema, sin personaje ni nombre
+      return '';
+    }
+
     return '';
   }, [dialogueMode, dialogueIndex]);
+
+  // Selección dinámica de rostro según quién hable
+  const { currentSpeakingSprite, currentIdleSprite } = useMemo(() => {
+    if (!dialogueMode) {
+      return { currentSpeakingSprite: null, currentIdleSprite: null };
+    }
+
+    if (speakerName === 'Asesor') {
+      return {
+        currentSpeakingSprite: advisorFaceTalking,
+        currentIdleSprite: advisorFaceNeutral,
+      };
+    }
+
+    if (speakerName === 'Carmina') {
+      return {
+        currentSpeakingSprite: girlFaceTalking,
+        currentIdleSprite: girlFaceNeutral,
+      };
+    }
+
+    // Modos sin personaje (por ejemplo "reconnecting")
+    return {
+      currentSpeakingSprite: null,
+      currentIdleSprite: null,
+    };
+  }, [dialogueMode, speakerName]);
 
   const canMove = !isDialogueVisible;
 
@@ -185,16 +236,22 @@ function Unit1GameScene({ onGoalReached }) {
       return;
     }
 
-    // Mesa de presupuesto
+    // Mesa de presupuesto (computador)
     if (zoneMeta.type === 'budget-station') {
-      // Solo permitimos usarla si ya hablamos con el asesor
+      // No puedes usarla antes de hablar con el asesor
       if (!advisorMainDone) return;
 
+      // Si ya terminaste el entrenamiento con MK25, solo muestra "reconectando..."
+      if (mkTrainingFinished) {
+        setDialogueMode('reconnecting');
+        setDialogueIndex(0);
+        return;
+      }
+
+      // Si NO has terminado el entrenamiento → abre el monitor con MK25
       setIsBudgetConsoleOpen(true);
       return;
     }
-
-    // Otros tipos por ahora los ignoramos
   };
 
   const handleDialogueNext = () => {
@@ -214,7 +271,7 @@ function Unit1GameScene({ onGoalReached }) {
       } else {
         setDialogueMode(null);
         setDialogueIndex(0);
-        setAdvisorMainDone(true); // ya hicimos la charla principal
+        setAdvisorMainDone(true);
       }
       return;
     }
@@ -226,6 +283,17 @@ function Unit1GameScene({ onGoalReached }) {
         setDialogueMode(null);
         setDialogueIndex(0);
       }
+      return;
+    }
+
+    if (dialogueMode === 'reconnecting') {
+      if (dialogueIndex < reconnectingDialogue.length - 1) {
+        setDialogueIndex((prev) => prev + 1);
+      } else {
+        setDialogueMode(null);
+        setDialogueIndex(0);
+      }
+      return;
     }
   };
 
@@ -246,12 +314,12 @@ function Unit1GameScene({ onGoalReached }) {
         />
       </TileMap>
 
-      {/* Cuadro de diálogo normal (Carmina/Asesor) */}
+      {/* Cuadro de diálogo normal (Carmina/Asesor/narrador) */}
       <DialogueBox
         visible={dialogueMode !== null}
         text={currentDialogueText}
-        speakingSprite={girlFaceTalking}
-        idleSprite={girlFaceNeutral}
+        speakingSprite={currentSpeakingSprite}
+        idleSprite={currentIdleSprite}
         speakerName={speakerName}
         onNext={handleDialogueNext}
       />
@@ -259,8 +327,14 @@ function Unit1GameScene({ onGoalReached }) {
       {/* Menú de la mesa de presupuesto (monitor MK25) */}
       <BudgetConsole
         visible={isBudgetConsoleOpen}
-        onClose={() => setIsBudgetConsoleOpen(false)}
         computerImage={budgetComputerImage}
+        onTrainingFinished={() => {
+          // Se termina TODO el entrenamiento de MK25:
+          // 1) se cierra el ordenador
+          // 2) se marca como completado
+          setIsBudgetConsoleOpen(false);
+          setMkTrainingFinished(true);
+        }}
       />
     </div>
   );

@@ -8,7 +8,7 @@ import './DialogueBox.css';
 // text: string
 // speakingSprite: tirilla cuando está hablando
 // idleSprite: tirilla cuando está en reposo
-// speakerName: nombre que aparece en el panel ("Tú", "Asesor", etc.)
+// speakerName: nombre que aparece en el panel ("Carmina", "Asesor", etc.)
 // onNext: se llama cuando el texto ya terminó y el jugador hace click
 export default function DialogueBox({
   visible,
@@ -30,15 +30,40 @@ export default function DialogueBox({
     }
   };
 
+  // quién está hablando
+  const isAdvisor = speakerName === 'Asesor';
+  const isCarmina = speakerName === 'Carmina';
+
   // hablando mientras el texto se escribe
   const isSpeaking = !isDone;
+
+  // sprite que se usa (hablando vs idle)
   const spriteToUse = isSpeaking
     ? (speakingSprite || idleSprite)
     : (idleSprite || speakingSprite);
 
-  const faceClassName = `dialogue-face ${
-    isSpeaking ? 'dialogue-face--talking' : 'dialogue-face--idle'
-  }`;
+  // clase de animación según personaje y si habla o está idle
+  let animationClass = '';
+
+  if (isSpeaking) {
+    if (isAdvisor) {
+      // animación de hablar del asesor
+      animationClass = 'dialogue-face--talking-advisor';
+    } else {
+      // por defecto (Carmina u otros)
+      animationClass = 'dialogue-face--talking-carmina';
+    }
+  } else {
+    if (isAdvisor) {
+      // animación neutral del asesor
+      animationClass = 'dialogue-face--idle-advisor';
+    } else {
+      // por defecto neutral (Carmina u otros)
+      animationClass = 'dialogue-face--idle-carmina';
+    }
+  }
+
+  const faceClassName = `dialogue-face ${animationClass}`;
 
   return (
     <div className="dialogue-root" onClick={handleClick}>
@@ -60,7 +85,11 @@ export default function DialogueBox({
           {displayedText}
         </p>
 
-        <span className={`dialogue-next ${isDone ? 'dialogue-next--visible' : ''}`}>
+        <span
+          className={`dialogue-next ${
+            isDone ? 'dialogue-next--visible' : ''
+          }`}
+        >
           ▼
         </span>
       </div>

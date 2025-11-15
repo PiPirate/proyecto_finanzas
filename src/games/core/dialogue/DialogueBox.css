@@ -4,16 +4,16 @@
 .dialogue-root {
   position: absolute;
   left: 50%;
-  bottom: 80px;               /* súbelo o bájalo según te guste */
+  bottom: 80px;
   transform: translateX(-50%);
   display: flex;
   align-items: flex-end;
-  gap: 12px;                   /* pequeño espacio entre cara y cuadro */
+  gap: 12px;
   z-index: 20;
   cursor: pointer;
 }
 
-/* Marco de la carita */
+/* Marco de la carita (mismo marco para todos los personajes) */
 .dialogue-face-wrapper {
   width: 140px;
   height: 190px;
@@ -24,49 +24,53 @@
   image-rendering: pixelated;
   overflow: hidden;
 
-  flex-shrink: 0;              /* ¡no te encoges más! */
+  flex-shrink: 0;
 }
 
-/* BASE: configuración común para ambos sprites */
+/* BASE: configuración general para cualquier sprite de cara */
 .dialogue-face {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover; /* valor neutro, lo sobreescribimos por personaje */
+  image-rendering: pixelated;
+}
+
+/* ========================================================= */
+/*     TAMAÑO + ANIMACIÓN PARA CARMINA                       */
+/* ========================================================= */
+
+/* Carmina: tamaño de sprite dentro del marco */
+.dialogue-face--talking-carmina,
+.dialogue-face--idle-carmina {
   width: 103%;
   height: 107%;
-  background-repeat: no-repeat;
-  background-size: 108% auto;  /* tú ya lo tenías ajustado así */
-  background-position: center top;
-  image-rendering: pixelated;
-
-  /* OJO: aquí NO hay animation.
-     Las animaciones van en las clases --talking y --idle */
+  background-size: 108% auto;
 }
 
-/* MODO HABLANDO
-   Usa la tirilla de hablar y la animación rápida */
-.dialogue-face--talking {
-  animation: dialogue-face-talk 1.5s steps(5) infinite;
+/* Carmina hablando */
+.dialogue-face--talking-carmina {
+  animation: dialogue-face-talk-carmina 1.5s steps(5) infinite;
 }
 
-/* MODO NEUTRAL
-   Usa la tirilla neutral y su propia animación
-   (puedes dejarla casi quieta o con parpadeo lento) */
-.dialogue-face--idle {
-  animation: dialogue-face-idle 2.5s steps(4) infinite;
+/* Carmina neutral */
+.dialogue-face--idle-carmina {
+  animation: dialogue-face-idle-carmina 2.5s steps(4) infinite;
 }
 
-/* TALK: ajusta steps(5) y el to% a tu tirilla de hablar */
-@keyframes dialogue-face-talk {
+/* Ajusta steps(5) y el porcentaje final a tu tirilla de hablar de Carmina */
+@keyframes dialogue-face-talk-carmina {
   from {
     background-position-y: 0%;
   }
   to {
-    background-position-y: 102.0001%;
+    background-position-y: 102%;
   }
 }
 
-/* IDLE: ajusta steps(4) y el to% a tu tirilla neutral
-   (si tu neutral tiene 4 frames verticales, esto está bien;
-    si son 5, cambia steps(4) por steps(5) y el 100–102% según veas) */
-@keyframes dialogue-face-idle {
+/* Ajusta steps(4) y el porcentaje final a tu tirilla neutral de Carmina */
+@keyframes dialogue-face-idle-carmina {
   from {
     background-position-y: 0%;
   }
@@ -75,14 +79,69 @@
   }
 }
 
+/* ========================================================= */
+/*     TAMAÑO + ANIMACIÓN PARA ASESOR                        */
+/* ========================================================= */
+
+/* Asesor: tamaño de sprite dentro del marco */
+/* AQUÍ PUEDES CAMBIAR INDEPENDIENTEMENTE LOS VALORES */
+.dialogue-face--talking-advisor,
+.dialogue-face--idle-advisor {
+  width: 119%;          /* por ejemplo, un poco más grande que Carmina */
+  height: 119%;
+  background-size: 115% auto;
+}
+
+/* MODO HABLANDO ASESOR */
+.dialogue-face--talking-advisor {
+  /* ajusta duración y steps al número de frames
+     de asesor_player_talking.png */
+  animation: dialogue-face-talk-advisor 1.4s steps(5) infinite;
+}
+
+/* MODO NEUTRAL ASESOR */
+.dialogue-face--idle-advisor {
+  /* ajusta duración y steps al número de frames
+     de asesor_player_neutral.png */
+  animation: dialogue-face-idle-advisor 1.7s steps(4) infinite;
+}
+
+/* IDLE ASESOR */
+@keyframes dialogue-face-idle-advisor {
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    /* igual: ajusta según el alto total de la tirilla del asesor */
+    background-position-y: 142.6%;
+  }
+}
+
+/* TALK ASESOR */
+@keyframes dialogue-face-talk-advisor {
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    /* si ves que “camina” demasiado la tira, baja este porcentaje
+       (por ejemplo 100%, 95%, etc.) */
+    background-position-y: 131.7%;
+  }
+}
+
+
+/* ========================================================= */
+/*     PANEL DE TEXTO                                        */
+/* ========================================================= */
+
 /* Caja grande de texto: ancho fijo, alto flexible */
 .dialogue-panel {
   position: relative;
-  width: 640px;               /* ancho fijo */
+  width: 640px;
   max-width: 640px;
   min-height: 150px;
 
-  padding: 28px 40px 28px 40px; /* un poco más de espacio arriba */
+  padding: 28px 40px 28px 40px;
 
   background-color: #131b34;
   border: 3px solid #4c6fbf;
@@ -96,7 +155,7 @@
   box-sizing: border-box;
   image-rendering: pixelated;
 
-  flex-shrink: 0;             /* tampoco se encoge la caja de texto */
+  flex-shrink: 0;
 }
 
 /* Nombre del personaje que habla */
@@ -114,14 +173,14 @@
 /* Texto estilo retro, se adapta al ancho y hace salto de línea */
 .dialogue-text {
   margin: 0;
+  margin-top: 10px;
   font-family: 'VCR OSD Mono', monospace;
   font-size: 25px;
   line-height: 1.2;
   color: #e5f0ff;
   text-shadow: 1px 1px 0 #000;
-  white-space: normal;        /* permite saltos de línea automáticos */
-  word-wrap: break-word;      /* por si hubiera palabras muy largas */
-  margin-top: 10px;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 /* Flechita de "siguiente" abajo a la derecha */
