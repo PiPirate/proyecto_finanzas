@@ -256,7 +256,7 @@ function Unit1GameScene({ onGoalReached }) {
         onNext={handleDialogueNext}
       />
 
-      {/* Menú de la mesa de presupuesto (monitor MK23) */}
+      {/* Menú de la mesa de presupuesto (monitor MK25) */}
       <BudgetConsole
         visible={isBudgetConsoleOpen}
         onClose={() => setIsBudgetConsoleOpen(false)}
