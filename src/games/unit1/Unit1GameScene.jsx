@@ -17,12 +17,13 @@ import hallImage from '../../assets/unit1/mapa_banco.png';
 import girlSpriteSheet from '../../assets/general/la socia caminando.png';
 
 // Rostros
-// Rostro de la socia
 import girlFaceTalking from '../../assets/general/player_face_hablando.png';
 import girlFaceNeutral from '../../assets/general/player_face_neutral.png';
-// Rostro del asesor
 import advisorFaceTalking from '../../assets/unit1/asesor_player_talking.png';
 import advisorFaceNeutral from '../../assets/unit1/asesor_player_neutral.png';
+
+// Icono del cerdito / alcancía
+import pigFace from '../../assets/unit1/icons/pig_icon.png';
 
 // Monitor neutro
 import budgetComputerImage from '../../assets/unit1/null_desktop.png';
@@ -88,6 +89,7 @@ const advisorMainDialogue = [
 ];
 
 // Diálogo corto del asesor después de la primera vez
+// (antes de haber terminado el entrenamiento con MK25)
 const advisorRepeatDialogue = [
   {
     speaker: 'Asesor',
@@ -95,24 +97,93 @@ const advisorRepeatDialogue = [
   },
 ];
 
-// Diálogo del computador después de terminar el entrenamiento
-// (ya lo maneja internamente BudgetConsole con MK25 + Carmina)
+// Escena: regreso al asesor después de terminar con MK25
+const advisorPostMkDialogue = [
+  {
+    speaker: 'Carmina',
+    text: 'Asesor, hemos terminado.',
+  },
+  {
+    speaker: 'Asesor',
+    text: '¡Perfecto! Ya completaste la parte más importante: aprender a definir metas de forma clara y realista.',
+  },
+  {
+    speaker: 'Asesor',
+    text: 'Pero una meta, incluso bien definida, no sirve de nada si no tienes un plan para avanzar hacia ella. Por eso ahora veremos cómo se alimenta el ahorro.',
+  },
+  {
+    speaker: 'Carmina',
+    text: 'O sea, cómo pasar del papel… a la acción real.',
+  },
+  {
+    speaker: 'Asesor',
+    text: 'Exacto. Para eso está la alcancía. Allí vas a practicar cómo tus decisiones pequeñas y constantes hacen crecer tu progreso.',
+  },
+  {
+    speaker: 'Asesor',
+    text: 'Ve hacia la alcancía con forma de cerdito y prepárate para un ejercicio práctico.',
+  },
+];
+
+// Diálogo del asesor después de haber dado la instrucción de la alcancía
+const advisorWaitPigDialogue = [
+  {
+    speaker: 'Asesor',
+    text: 'Te estaré esperando. Ve a la alcancía con forma de cerdito para continuar.',
+  },
+];
 
 // Diálogo de reconexión cuando ya terminaste y vuelves a tocar el computador
-const reconnectingDialogue = [
-  'Reconectando...',
+const reconnectingDialogue = ['Reconectando...'];
+
+// Diálogo de la Alcancía antes del minijuego
+const pigIntroDialogue = [
+  {
+    speaker: 'Alcancía',
+    text: 'Hola, soy la Alcancía. Hasta ahora ya sabes algo muy poderoso: tener metas claras, con un monto y un plazo. Pero esas metas no se cumplen solas.',
+  },
+  {
+    speaker: 'Alcancía',
+    text: 'Para que de verdad se puedan alcanzar, necesitas algo más que buenas intenciones: decisiones pequeñas y constantes. ',
+  },
+
+  {
+    speaker: 'Alcancía',
+    text: 'Eso es el ahorro. Cada vez que eliges guardar un poquito en lugar de gastarlo sin pensar, estás moviendo tu meta del “algún día” al “sí va a pasar”.',
+  },
+
+  {
+    speaker: 'Alcancía',
+    text: 'Por eso este paso es tan importante: aquí vas a ver cómo cada decisión suma o resta a tu objetivo.',
+
+  },
+  {
+    speaker: 'Alcancía',
+    text: 'No se trata de prohibirte todo, sino de entender qué tanto te acerca o te aleja de lo que quieres lograr.',
+  },
+  
+  {
+    speaker: 'Carmina',
+    text: 'O sea que aquí voy a probar si mis decisiones están ayudando o saboteando mi meta.',
+  },
+  {
+    speaker: 'Alcancía',
+    text: 'Exacto. Vamos a jugar para que lo veas clarito, decisión por decisión.',
+  },
 ];
 
 function Unit1GameScene({ onGoalReached }) {
-  // 'intro' | 'advisorMain' | 'advisorRepeat' | 'reconnecting' | null
+  // 'intro' | 'advisorMain' | 'advisorRepeat' | 'advisorPostMk' | 'advisorWaitPig' | 'reconnecting' | 'pigIntro' | null
   const [dialogueMode, setDialogueMode] = useState('intro');
   const [dialogueIndex, setDialogueIndex] = useState(0);
+
+  // Estados de progreso
   const [advisorMainDone, setAdvisorMainDone] = useState(false);
-
-  // ¿Ya se completó TODO el entrenamiento con MK25 (los 3 minijuegos + diálogo final)?
   const [mkTrainingFinished, setMkTrainingFinished] = useState(false);
+  const [advisorPostMkDone, setAdvisorPostMkDone] = useState(false);
+  const [pigIntroDone, setPigIntroDone] = useState(false); // para el futuro minijuego
 
-  // Estado para el menú de presupuesto (monitor MK25)
+  // Menú de presupuesto (monitor MK25)
   const [isBudgetConsoleOpen, setIsBudgetConsoleOpen] = useState(false);
 
   const isDialogueVisible = dialogueMode !== null || isBudgetConsoleOpen;
@@ -132,8 +203,23 @@ function Unit1GameScene({ onGoalReached }) {
       return entry ? entry.text : '';
     }
 
+    if (dialogueMode === 'advisorPostMk') {
+      const entry = advisorPostMkDialogue[dialogueIndex];
+      return entry ? entry.text : '';
+    }
+
+    if (dialogueMode === 'advisorWaitPig') {
+      const entry = advisorWaitPigDialogue[dialogueIndex];
+      return entry ? entry.text : '';
+    }
+
     if (dialogueMode === 'reconnecting') {
       return reconnectingDialogue[dialogueIndex] || '';
+    }
+
+    if (dialogueMode === 'pigIntro') {
+      const entry = pigIntroDialogue[dialogueIndex];
+      return entry ? entry.text : '';
     }
 
     return '';
@@ -152,9 +238,24 @@ function Unit1GameScene({ onGoalReached }) {
       return entry ? entry.speaker : '';
     }
 
+    if (dialogueMode === 'advisorPostMk') {
+      const entry = advisorPostMkDialogue[dialogueIndex];
+      return entry ? entry.speaker : '';
+    }
+
+    if (dialogueMode === 'advisorWaitPig') {
+      const entry = advisorWaitPigDialogue[dialogueIndex];
+      return entry ? entry.speaker : '';
+    }
+
     if (dialogueMode === 'reconnecting') {
-      // Narrador / sistema, sin personaje ni nombre
+      // Narrador / sistema, sin nombre
       return '';
+    }
+
+    if (dialogueMode === 'pigIntro') {
+      const entry = pigIntroDialogue[dialogueIndex];
+      return entry ? entry.speaker : '';
     }
 
     return '';
@@ -177,6 +278,14 @@ function Unit1GameScene({ onGoalReached }) {
       return {
         currentSpeakingSprite: girlFaceTalking,
         currentIdleSprite: girlFaceNeutral,
+      };
+    }
+
+    if (speakerName === 'Alcancía' || speakerName === 'Cerdito') {
+      // Cerdito estático (mismo sprite para hablar/idle)
+      return {
+        currentSpeakingSprite: pigFace,
+        currentIdleSprite: pigFace,
       };
     }
 
@@ -227,10 +336,20 @@ function Unit1GameScene({ onGoalReached }) {
     // Asesor
     if (zoneMeta.type === 'advisor') {
       if (!advisorMainDone) {
+        // Primera gran conversación
         setDialogueMode('advisorMain');
         setDialogueIndex(0);
-      } else {
+      } else if (advisorMainDone && !mkTrainingFinished) {
+        // Todavía no has acabado con MK25
         setDialogueMode('advisorRepeat');
+        setDialogueIndex(0);
+      } else if (advisorMainDone && mkTrainingFinished && !advisorPostMkDone) {
+        // Escena: regreso al asesor, justo después de MK25
+        setDialogueMode('advisorPostMk');
+        setDialogueIndex(0);
+      } else {
+        // Ya tuviste la escena de regreso → espera a que vayas a la alcancía
+        setDialogueMode('advisorWaitPig');
         setDialogueIndex(0);
       }
       return;
@@ -250,6 +369,17 @@ function Unit1GameScene({ onGoalReached }) {
 
       // Si NO has terminado el entrenamiento → abre el monitor con MK25
       setIsBudgetConsoleOpen(true);
+      return;
+    }
+
+    // Alcancía / cerdito
+    if (zoneMeta.type === 'piggy-bank') {
+      // Para activar la alcancía, primero debes haber tenido
+      // la escena de regreso al asesor (advisorPostMk)
+      if (!advisorPostMkDone) return;
+
+      setDialogueMode('pigIntro');
+      setDialogueIndex(0);
       return;
     }
   };
@@ -286,12 +416,45 @@ function Unit1GameScene({ onGoalReached }) {
       return;
     }
 
+    if (dialogueMode === 'advisorPostMk') {
+      if (dialogueIndex < advisorPostMkDialogue.length - 1) {
+        setDialogueIndex((prev) => prev + 1);
+      } else {
+        setDialogueMode(null);
+        setDialogueIndex(0);
+        setAdvisorPostMkDone(true);
+      }
+      return;
+    }
+
+    if (dialogueMode === 'advisorWaitPig') {
+      if (dialogueIndex < advisorWaitPigDialogue.length - 1) {
+        setDialogueIndex((prev) => prev + 1);
+      } else {
+        setDialogueMode(null);
+        setDialogueIndex(0);
+      }
+      return;
+    }
+
     if (dialogueMode === 'reconnecting') {
       if (dialogueIndex < reconnectingDialogue.length - 1) {
         setDialogueIndex((prev) => prev + 1);
       } else {
         setDialogueMode(null);
         setDialogueIndex(0);
+      }
+      return;
+    }
+
+    if (dialogueMode === 'pigIntro') {
+      if (dialogueIndex < pigIntroDialogue.length - 1) {
+        setDialogueIndex((prev) => prev + 1);
+      } else {
+        setDialogueMode(null);
+        setDialogueIndex(0);
+        setPigIntroDone(true);
+        // Aquí más adelante podrás abrir el minijuego del cerdito
       }
       return;
     }
@@ -314,7 +477,7 @@ function Unit1GameScene({ onGoalReached }) {
         />
       </TileMap>
 
-      {/* Cuadro de diálogo normal (Carmina/Asesor/narrador) */}
+      {/* Cuadro de diálogo normal (Carmina / Asesor / Alcancía / narrador) */}
       <DialogueBox
         visible={dialogueMode !== null}
         text={currentDialogueText}

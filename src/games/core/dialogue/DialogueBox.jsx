@@ -33,6 +33,8 @@ export default function DialogueBox({
   // quién está hablando
   const isAdvisor = speakerName === 'Asesor';
   const isCarmina = speakerName === 'Carmina';
+  const isPig =
+    speakerName === 'Alcancía' || speakerName === 'Cerdito';
 
   // hablando mientras el texto se escribe
   const isSpeaking = !isDone;
@@ -45,7 +47,10 @@ export default function DialogueBox({
   // clase de animación según personaje y si habla o está idle
   let animationClass = '';
 
-  if (isSpeaking) {
+  if (isPig) {
+    // cerdito siempre estático (sin animación)
+    animationClass = 'dialogue-face--pig';
+  } else if (isSpeaking) {
     if (isAdvisor) {
       // animación de hablar del asesor
       animationClass = 'dialogue-face--talking-advisor';
@@ -65,9 +70,14 @@ export default function DialogueBox({
 
   const faceClassName = `dialogue-face ${animationClass}`;
 
+  // wrapper normal o especial para el cerdito (para poder cambiarle el tamaño)
+  const wrapperClassName =
+    'dialogue-face-wrapper' +
+    (isPig ? ' dialogue-face-wrapper--pig' : '');
+
   return (
     <div className="dialogue-root" onClick={handleClick}>
-      <div className="dialogue-face-wrapper">
+      <div className={wrapperClassName}>
         <div
           className={faceClassName}
           style={{ backgroundImage: `url(${spriteToUse})` }}

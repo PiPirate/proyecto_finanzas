@@ -197,3 +197,19 @@
 .dialogue-next--visible {
   opacity: 1;
 }
+
+/* ========================================================= */
+/*     CERDITO / ALCANCÍA (ESTÁTICO Y CON TAMAÑO PROPIO)     */
+/* ========================================================= */
+
+/* Marco especial para el cerdito: aquí cambias su tamaño total */
+
+
+/* Sprite del cerdito: sin animación, tipo “imagen fija” */
+.dialogue-face--pig {
+  animation: none;             /* importantísimo: sin animación */
+  width: 105%;                 /* si quieres hacerlo un poco más grande */
+  height: 105%;
+  background-size: 130% auto;  /* controla el zoom del cerdo dentro del marco */
+  background-position: center; /* centrado completo */
+}
