@@ -8,12 +8,14 @@ import './DialogueBox.css';
 // text: string
 // speakingSprite: tirilla cuando está hablando
 // idleSprite: tirilla cuando está en reposo
+// speakerName: nombre que aparece en el panel ("Tú", "Asesor", etc.)
 // onNext: se llama cuando el texto ya terminó y el jugador hace click
 export default function DialogueBox({
   visible,
   text,
   speakingSprite,
   idleSprite,
+  speakerName,
   onNext,
 }) {
   const { displayedText, isDone, showAll } = useTypewriterText(text, 28);
@@ -48,9 +50,16 @@ export default function DialogueBox({
       </div>
 
       <div className="dialogue-panel">
+        {speakerName && (
+          <div className="dialogue-speaker-name">
+            {speakerName}
+          </div>
+        )}
+
         <p className="dialogue-text">
           {displayedText}
         </p>
+
         <span className={`dialogue-next ${isDone ? 'dialogue-next--visible' : ''}`}>
           ▼
         </span>

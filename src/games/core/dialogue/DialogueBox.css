@@ -82,7 +82,7 @@
   max-width: 640px;
   min-height: 150px;
 
-  padding: 24px 40px 28px 40px;
+  padding: 28px 40px 28px 40px; /* un poco más de espacio arriba */
 
   background-color: #131b34;
   border: 3px solid #4c6fbf;
@@ -99,17 +99,29 @@
   flex-shrink: 0;             /* tampoco se encoge la caja de texto */
 }
 
+/* Nombre del personaje que habla */
+.dialogue-speaker-name {
+  position: absolute;
+  top: 6px;
+  left: 18px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #9bb6ff;
+  text-shadow: 1px 1px 0 #000;
+}
+
 /* Texto estilo retro, se adapta al ancho y hace salto de línea */
 .dialogue-text {
   margin: 0;
   font-family: 'VCR OSD Mono', monospace;
   font-size: 25px;
-  line-height: 1.5;
+  line-height: 1.2;
   color: #e5f0ff;
   text-shadow: 1px 1px 0 #000;
-
   white-space: normal;        /* permite saltos de línea automáticos */
   word-wrap: break-word;      /* por si hubiera palabras muy largas */
+  margin-top: 10px;
 }
 
 /* Flechita de "siguiente" abajo a la derecha */
