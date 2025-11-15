@@ -189,8 +189,8 @@ const pigOutroDialogue = [
   },
 ];
 
-// onComplete: callback que se dispara cuando la unidad termina del todo
-function Unit1GameScene({ onComplete }) {
+// onGoalReached: callback que se dispara cuando la unidad termina del todo
+function Unit1GameScene({ onGoalReached }) {
   // 'intro' | 'advisorMain' | 'advisorRepeat' | 'advisorPostMk' | 'advisorWaitPig' | 'reconnecting' | 'pigIntro' | 'pigOutro' | null
   const [dialogueMode, setDialogueMode] = useState('intro');
   const [dialogueIndex, setDialogueIndex] = useState(0);
@@ -207,11 +207,14 @@ function Unit1GameScene({ onComplete }) {
   const [pigIntroDone, setPigIntroDone] = useState(false);
   const [isPiggyGameOpen, setIsPiggyGameOpen] = useState(false);
 
+  // Marca que la unidad ya terminó (bloquea movimiento)
   const [unitFinished, setUnitFinished] = useState(false);
 
-
   const isDialogueVisible =
-    dialogueMode !== null || isBudgetConsoleOpen || isPiggyGameOpen || unitFinished;
+    dialogueMode !== null ||
+    isBudgetConsoleOpen ||
+    isPiggyGameOpen ||
+    unitFinished;
 
   const currentDialogueText = useMemo(() => {
     if (dialogueMode === 'intro') {
@@ -489,12 +492,14 @@ function Unit1GameScene({ onComplete }) {
       if (dialogueIndex < pigOutroDialogue.length - 1) {
         setDialogueIndex((prev) => prev + 1);
       } else {
+        // Aquí SÍ se termina de verdad el tutorial (después del cerdito)
         setDialogueMode(null);
         setDialogueIndex(0);
         setUnitFinished(true);
-        // Aquí marcamos la unidad como completada y avisamos al padre
-        if (onComplete) {
-          onComplete();
+
+        // Avisamos hacia arriba para que TutorialStage muestre el modal
+        if (typeof onGoalReached === 'function') {
+          onGoalReached();
         }
       }
       return;
@@ -531,18 +536,10 @@ function Unit1GameScene({ onComplete }) {
         visible={isBudgetConsoleOpen}
         computerImage={budgetComputerImage}
         onTrainingFinished={() => {
-          // 1) Cerrar el computador dentro de la escena
           setIsBudgetConsoleOpen(false);
           setMkTrainingFinished(true);
-          setUnitFinished(true);
-
-          // 2) Avisar hacia arriba que el tutorial se terminó
-          if (typeof onComplete === 'function') {
-            onComplete(); // 👉 esto es lo que hace que UnitPage pase a EvaluationStage
-          }
         }}
       />
-
 
       <PiggySavingsGame
         visible={isPiggyGameOpen}
