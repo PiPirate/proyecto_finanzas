@@ -1,21 +1,27 @@
-import React from 'react';
+// src/pages/unit1/TutorialStage.jsx
+import React, { useState } from 'react';
 import '../css/TutorialStage.css';
+import {GameWorld} from '../../games/unit2/components/GameWorld';
+import '../../games/unit2/components/styles/globals.css';
 
-export default function TutorialStage({ onComplete, unitColor }) {
+export default function TutorialStage({ onComplete }) {
+  const [completed, setCompleted] = useState(false);
+
+  const handleGoalReached = () => {
+    // Evitamos marcar completado varias veces
+    setCompleted((prev) => (prev ? prev : true));
+  };
+
+  const handleContinue = () => {
+    if (typeof onComplete === 'function') {
+      onComplete();
+    }
+  };
+
   return (
-    <div className="stage-container">
-      <div className="tutorial-empty">
-        <h2 className="tutorial-title">Tutorial Interactivo</h2>
-
-        <p className="tutorial-description">
-          Aquí irá el juego interactivo del tutorial.  
-          Esta vista ha sido limpiada para agregar el juego más adelante.
-        </p>
-
-        <button className="tutorial-continue-btn" onClick={onComplete}>
-          Continuar
-        </button>
-      </div>
+    <div className="tutorial-map-container">
+      {/* Escena del banco */}
+      <GameWorld />
     </div>
   );
 }
