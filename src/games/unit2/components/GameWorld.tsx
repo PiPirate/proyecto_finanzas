@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { TileMap } from './game/TileMap';
 import { Player } from './game/Player';
 import { NPC } from './game/NPC';
-import { DialogueBox } from './game/DialogueBox';
+import DialogueBox from '../../core/dialogue/DialogueBox';
 import { BudgetPanel } from './game/BudgetPanel';
 import { ExpenseGamePanel } from './game/ExpenseGamePanel';
 import { FreelanceGamePanel } from './game/FreelanceGamePanel';
@@ -757,12 +757,20 @@ export function GameWorld({ onComplete }: GameWorldProps = {}) {
         />
       </div>
 
-      {gameState === 'dialogue' && currentDialogueQueue[currentDialogueIndex] && (
-        <DialogueBox 
-          dialogue={currentDialogueQueue[currentDialogueIndex]} 
-          onClose={handleDialogueAdvance}
-        />
-      )}
+      {gameState === 'dialogue' && currentDialogueQueue[currentDialogueIndex] && (() => {
+        const dialogue = currentDialogueQueue[currentDialogueIndex];
+        const speakerName = dialogue.speaker === 'assistant' ? 'MK-25' : dialogue.speaker === 'player' ? 'Tú' : 'Sistema';
+        
+        return (
+          <DialogueBox 
+            text={dialogue.text}
+            speakerName={speakerName}
+            onNext={handleDialogueAdvance}
+            speakingSprite={undefined} // TODO: Add sprite imports
+            idleSprite={undefined} // TODO: Add sprite imports
+          />
+        );
+      })()}
 
       {gameState === 'budget' && (
         <BudgetPanel

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TileMap } from './game/TileMap';
 import { Player } from './game/Player';
-import { DialogueBox } from './game/DialogueBox';
+import DialogueBox from '../../core/dialogue/DialogueBox';
 import { BudgetZones } from './game/BudgetZones';
 import { usePlayerMovement } from './hooks/usePlayerMovement';
 import { tutorialMap, tutorialInteractiveZones } from './data/tutorialMap';
@@ -127,12 +127,19 @@ export function TutorialMode({ onComplete, onBackToMenu }: TutorialModeProps) {
         ))}
 
         {/* Diálogos del asistente */}
-        {showDialogue && (
-          <DialogueBox
-            dialogue={currentDialogue}
-            onClose={handleDialogueContinue}
-          />
-        )}
+        {showDialogue && currentDialogue && (() => {
+          const speakerName = currentDialogue.speaker === 'assistant' ? 'MK-25' : currentDialogue.speaker === 'player' ? 'Tú' : 'Sistema';
+          
+          return (
+            <DialogueBox
+              text={currentDialogue.text}
+              speakerName={speakerName}
+              onNext={handleDialogueContinue}
+              speakingSprite={undefined} // TODO: Add sprite imports
+              idleSprite={undefined} // TODO: Add sprite imports
+            />
+          );
+        })()}
 
         {/* Zonas de presupuesto interactivas */}
         {showBudgetZones && (
