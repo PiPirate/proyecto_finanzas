@@ -5,6 +5,7 @@ import Player from '../core/player/Player';
 import usePlayerMovement from '../core/hooks/usePlayerMovement';
 import DialogueBox from '../core/dialogue/DialogueBox';
 import BudgetConsole from './BudgetConsole';
+import PiggySavingsGame from './PiggySavingsGame';
 
 import {
   unit1MapMatrix,
@@ -146,22 +147,18 @@ const pigIntroDialogue = [
     speaker: 'Alcancía',
     text: 'Para que de verdad se puedan alcanzar, necesitas algo más que buenas intenciones: decisiones pequeñas y constantes. ',
   },
-
   {
     speaker: 'Alcancía',
     text: 'Eso es el ahorro. Cada vez que eliges guardar un poquito en lugar de gastarlo sin pensar, estás moviendo tu meta del “algún día” al “sí va a pasar”.',
   },
-
   {
     speaker: 'Alcancía',
     text: 'Por eso este paso es tan importante: aquí vas a ver cómo cada decisión suma o resta a tu objetivo.',
-
   },
   {
     speaker: 'Alcancía',
     text: 'No se trata de prohibirte todo, sino de entender qué tanto te acerca o te aleja de lo que quieres lograr.',
   },
-  
   {
     speaker: 'Carmina',
     text: 'O sea que aquí voy a probar si mis decisiones están ayudando o saboteando mi meta.',
@@ -172,8 +169,29 @@ const pigIntroDialogue = [
   },
 ];
 
-function Unit1GameScene({ onGoalReached }) {
-  // 'intro' | 'advisorMain' | 'advisorRepeat' | 'advisorPostMk' | 'advisorWaitPig' | 'reconnecting' | 'pigIntro' | null
+// Diálogo final del cerdito tras el minijuego (marca unidad completada)
+const pigOutroDialogue = [
+  {
+    speaker: 'Alcancía',
+    text: 'Con esto completas el recorrido de la Unidad 1.',
+  },
+  {
+    speaker: 'Alcancía',
+    text: 'Ya sabes: Tener metas específicas, organizarlas en un presupuesto, y alimentarlas con decisiones pequeñas pero consistentes.',
+  },
+  {
+    speaker: 'Carmina',
+    text: 'Gracias, en serio. Creo que ahora sí entendemos cómo funciona todo.',
+  },
+  {
+    speaker: 'Alcancía',
+    text: '¡Estás lista para el desafío final! El lugar donde pondrás en práctica todo lo que aprendiste.',
+  },
+];
+
+// onComplete: callback que se dispara cuando la unidad termina del todo
+function Unit1GameScene({ onComplete }) {
+  // 'intro' | 'advisorMain' | 'advisorRepeat' | 'advisorPostMk' | 'advisorWaitPig' | 'reconnecting' | 'pigIntro' | 'pigOutro' | null
   const [dialogueMode, setDialogueMode] = useState('intro');
   const [dialogueIndex, setDialogueIndex] = useState(0);
 
@@ -181,12 +199,16 @@ function Unit1GameScene({ onGoalReached }) {
   const [advisorMainDone, setAdvisorMainDone] = useState(false);
   const [mkTrainingFinished, setMkTrainingFinished] = useState(false);
   const [advisorPostMkDone, setAdvisorPostMkDone] = useState(false);
-  const [pigIntroDone, setPigIntroDone] = useState(false); // para el futuro minijuego
 
   // Menú de presupuesto (monitor MK25)
   const [isBudgetConsoleOpen, setIsBudgetConsoleOpen] = useState(false);
 
-  const isDialogueVisible = dialogueMode !== null || isBudgetConsoleOpen;
+  // Juego del cerdito
+  const [pigIntroDone, setPigIntroDone] = useState(false);
+  const [isPiggyGameOpen, setIsPiggyGameOpen] = useState(false);
+
+  const isDialogueVisible =
+    dialogueMode !== null || isBudgetConsoleOpen || isPiggyGameOpen;
 
   const currentDialogueText = useMemo(() => {
     if (dialogueMode === 'intro') {
@@ -222,6 +244,11 @@ function Unit1GameScene({ onGoalReached }) {
       return entry ? entry.text : '';
     }
 
+    if (dialogueMode === 'pigOutro') {
+      const entry = pigOutroDialogue[dialogueIndex];
+      return entry ? entry.text : '';
+    }
+
     return '';
   }, [dialogueMode, dialogueIndex]);
 
@@ -249,12 +276,16 @@ function Unit1GameScene({ onGoalReached }) {
     }
 
     if (dialogueMode === 'reconnecting') {
-      // Narrador / sistema, sin nombre
       return '';
     }
 
     if (dialogueMode === 'pigIntro') {
       const entry = pigIntroDialogue[dialogueIndex];
+      return entry ? entry.speaker : '';
+    }
+
+    if (dialogueMode === 'pigOutro') {
+      const entry = pigOutroDialogue[dialogueIndex];
       return entry ? entry.speaker : '';
     }
 
@@ -282,14 +313,12 @@ function Unit1GameScene({ onGoalReached }) {
     }
 
     if (speakerName === 'Alcancía' || speakerName === 'Cerdito') {
-      // Cerdito estático (mismo sprite para hablar/idle)
       return {
         currentSpeakingSprite: pigFace,
         currentIdleSprite: pigFace,
       };
     }
 
-    // Modos sin personaje (por ejemplo "reconnecting")
     return {
       currentSpeakingSprite: null,
       currentIdleSprite: null,
@@ -319,9 +348,7 @@ function Unit1GameScene({ onGoalReached }) {
   });
 
   const handleTileClick = ({ x, y, value }) => {
-    // si hay diálogo o menú abierto, ignoramos clicks
     if (isDialogueVisible) return;
-
     if (value !== 2) return;
 
     const dx = Math.abs(x - tilePosition.x);
@@ -330,25 +357,20 @@ function Unit1GameScene({ onGoalReached }) {
 
     const zoneMeta =
       unit1InteractiveZones.find((z) => z.x === x && z.y === y) || null;
-
     if (!zoneMeta) return;
 
     // Asesor
     if (zoneMeta.type === 'advisor') {
       if (!advisorMainDone) {
-        // Primera gran conversación
         setDialogueMode('advisorMain');
         setDialogueIndex(0);
       } else if (advisorMainDone && !mkTrainingFinished) {
-        // Todavía no has acabado con MK25
         setDialogueMode('advisorRepeat');
         setDialogueIndex(0);
       } else if (advisorMainDone && mkTrainingFinished && !advisorPostMkDone) {
-        // Escena: regreso al asesor, justo después de MK25
         setDialogueMode('advisorPostMk');
         setDialogueIndex(0);
       } else {
-        // Ya tuviste la escena de regreso → espera a que vayas a la alcancía
         setDialogueMode('advisorWaitPig');
         setDialogueIndex(0);
       }
@@ -357,29 +379,30 @@ function Unit1GameScene({ onGoalReached }) {
 
     // Mesa de presupuesto (computador)
     if (zoneMeta.type === 'budget-station') {
-      // No puedes usarla antes de hablar con el asesor
       if (!advisorMainDone) return;
 
-      // Si ya terminaste el entrenamiento con MK25, solo muestra "reconectando..."
       if (mkTrainingFinished) {
         setDialogueMode('reconnecting');
         setDialogueIndex(0);
         return;
       }
 
-      // Si NO has terminado el entrenamiento → abre el monitor con MK25
       setIsBudgetConsoleOpen(true);
       return;
     }
 
     // Alcancía / cerdito
     if (zoneMeta.type === 'piggy-bank') {
-      // Para activar la alcancía, primero debes haber tenido
-      // la escena de regreso al asesor (advisorPostMk)
       if (!advisorPostMkDone) return;
 
-      setDialogueMode('pigIntro');
-      setDialogueIndex(0);
+      if (!pigIntroDone) {
+        setDialogueMode('pigIntro');
+        setDialogueIndex(0);
+        return;
+      }
+
+      // Si ya vimos el intro, abrimos directamente el minijuego
+      setIsPiggyGameOpen(true);
       return;
     }
   };
@@ -454,7 +477,21 @@ function Unit1GameScene({ onGoalReached }) {
         setDialogueMode(null);
         setDialogueIndex(0);
         setPigIntroDone(true);
-        // Aquí más adelante podrás abrir el minijuego del cerdito
+        setIsPiggyGameOpen(true); // lanza el minijuego del cerdito
+      }
+      return;
+    }
+
+    if (dialogueMode === 'pigOutro') {
+      if (dialogueIndex < pigOutroDialogue.length - 1) {
+        setDialogueIndex((prev) => prev + 1);
+      } else {
+        setDialogueMode(null);
+        setDialogueIndex(0);
+        // Aquí marcamos la unidad como completada y avisamos al padre
+        if (onComplete) {
+          onComplete();
+        }
       }
       return;
     }
@@ -477,7 +514,6 @@ function Unit1GameScene({ onGoalReached }) {
         />
       </TileMap>
 
-      {/* Cuadro de diálogo normal (Carmina / Asesor / Alcancía / narrador) */}
       <DialogueBox
         visible={dialogueMode !== null}
         text={currentDialogueText}
@@ -487,16 +523,21 @@ function Unit1GameScene({ onGoalReached }) {
         onNext={handleDialogueNext}
       />
 
-      {/* Menú de la mesa de presupuesto (monitor MK25) */}
       <BudgetConsole
         visible={isBudgetConsoleOpen}
         computerImage={budgetComputerImage}
         onTrainingFinished={() => {
-          // Se termina TODO el entrenamiento de MK25:
-          // 1) se cierra el ordenador
-          // 2) se marca como completado
           setIsBudgetConsoleOpen(false);
           setMkTrainingFinished(true);
+        }}
+      />
+
+      <PiggySavingsGame
+        visible={isPiggyGameOpen}
+        onFinished={() => {
+          setIsPiggyGameOpen(false);   // se cierra la ventana del juego
+          setDialogueMode('pigOutro'); // y pasamos al diálogo final del cerdito
+          setDialogueIndex(0);
         }}
       />
     </div>
