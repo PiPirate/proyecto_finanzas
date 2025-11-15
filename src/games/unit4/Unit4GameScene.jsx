@@ -417,20 +417,23 @@ function Unit4GameScene({ onGoalReached }) {
 
   return (
     <div className="unit4-game-container">
-      <TileMap
-        mapMatrix={unit4MapMatrix}
-        tileSize={unit4TileSize}
-        mapImage={cafeImage}
-        onTileClick={handleTileClick}
-      >
-        <Player
-          pixelPosition={pixelPosition}
+      {/* Wrapper escalable solo para Unit 4 */}
+      <div className="unit4-game-inner">
+        <TileMap
+          mapMatrix={unit4MapMatrix}
           tileSize={unit4TileSize}
-          isMoving={isMoving}
-          spriteSheet={girlSpriteSheet}
-          direction={direction}
-        />
-      </TileMap>
+          mapImage={cafeImage}
+          onTileClick={handleTileClick}
+        >
+          <Player
+            pixelPosition={pixelPosition}
+            tileSize={unit4TileSize}
+            isMoving={isMoving}
+            spriteSheet={girlSpriteSheet}
+            direction={direction}
+          />
+        </TileMap>
+      </div>
 
       <DialogueBoxUnit4
         visible={dialogueMode !== null}
