@@ -3,7 +3,7 @@ import { Play, Pause, Volume2, VolumeX, Maximize, CheckCircle } from 'lucide-rea
 import '../css/VideoStage.css';
 
 
-import demoVideo from '../../assets/unit1/demoVideo.mp4'; 
+import demoVideo from '../../assets/unit1/Modulo1.mp4'; 
 
 
 export default function VideoStage({ onComplete, unitColor }) {
@@ -57,13 +57,36 @@ export default function VideoStage({ onComplete, unitColor }) {
     return `${minutes}:${seconds}`;
   };
 
-  const keyPoints = [
-    { id: 1, title: 'Específica', description: 'Define exactamente qué quieres lograr' },
-    { id: 2, title: 'Medible', description: 'Establece métricas claras de éxito' },
-    { id: 3, title: 'Alcanzable', description: 'Asegúrate de que sea realista' },
-    { id: 4, title: 'Relevante', description: 'Alineada con tus objetivos de vida' },
-    { id: 5, title: 'Temporal', description: 'Define un plazo específico' }
-  ];
+const keyPoints = [
+  { 
+    id: 1, 
+    title: 'Del deseo a la meta', 
+    description: 'Pasa de “quiero ahorrar” a una meta concreta.'
+  },
+  { 
+    id: 2, 
+    title: 'Meta conectada a tu vida', 
+    description: 'Que la meta encaje con tu realidad y prioridades.'
+  },
+  { 
+    id: 3, 
+    title: 'Pasos pequeños', 
+    description: 'Divide la meta en aportes mensuales manejables.'
+  },
+  { 
+    id: 4, 
+    title: 'Primer paso hoy', 
+    description: 'Elige una acción pequeña que puedas hacer hoy.'
+  },
+  { 
+    id: 5, 
+    title: 'Revisión y ajuste', 
+    description: 'Ajusta la meta si cambian tus ingresos o gastos.'
+  }
+];
+
+
+
 
   return (
     <div className="stage-container">
@@ -152,7 +175,7 @@ export default function VideoStage({ onComplete, unitColor }) {
             <div className="example-box">
               <div className="example-label">Ejemplo</div>
               <div className="example-content">
-                "Ahorrar $5,000 en 12 meses para el enganche de un auto"
+                "Meta: reparar tu celular en 3 meses. Cuesta 300; ahorras 100 cada mes."
               </div>
             </div>
           </div>

@@ -900,6 +900,8 @@ function PostTrainingDialogue({ onFinished }) {
 
 /* ========= BUDGET CONSOLE PRINCIPAL ========= */
 
+/* ========= BUDGET CONSOLE PRINCIPAL ========= */
+
 export default function BudgetConsole({
   visible,
   computerImage,
@@ -973,7 +975,8 @@ export default function BudgetConsole({
     !postTrainingMode;
 
   const handleOverlayClick = () => {
-    if (miniGame1Active || miniGame2Active || miniGame3Active || postTrainingMode) return;
+    if (miniGame1Active || miniGame2Active || miniGame3Active || postTrainingMode)
+      return;
 
     if (!isDone) {
       showAll();
