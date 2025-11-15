@@ -3,7 +3,7 @@ import { Play, Pause, Volume2, VolumeX, Maximize, CheckCircle } from 'lucide-rea
 import '../css/VideoStage.css';
 
 
-import demoVideo from '../../assets/unit1/demoVideo.mp4'; 
+import demoVideo from '../../assets/unit4/VideoModulo4.mp4'; 
 
 
 export default function VideoStage({ onComplete, unitColor }) {
@@ -57,13 +57,35 @@ export default function VideoStage({ onComplete, unitColor }) {
     return `${minutes}:${seconds}`;
   };
 
-  const keyPoints = [
-    { id: 1, title: 'Específica', description: 'Define exactamente qué quieres lograr' },
-    { id: 2, title: 'Medible', description: 'Establece métricas claras de éxito' },
-    { id: 3, title: 'Alcanzable', description: 'Asegúrate de que sea realista' },
-    { id: 4, title: 'Relevante', description: 'Alineada con tus objetivos de vida' },
-    { id: 5, title: 'Temporal', description: 'Define un plazo específico' }
-  ];
+const keyPoints = [
+  { 
+    id: 1, 
+    title: 'Verifica a quién pagas', 
+    description: 'Confirma nombre y datos antes de enviar dinero.'
+  },
+  { 
+    id: 2, 
+    title: 'Revisa el monto', 
+    description: 'Chequea valor y concepto del pago antes de aceptar.'
+  },
+  { 
+    id: 3, 
+    title: 'Cuida tus claves', 
+    description: 'No compartas PIN ni códigos por chat o llamada.'
+  },
+  { 
+    id: 4, 
+    title: 'Detecta mensajes raros', 
+    description: 'Desconfía de enlaces con urgencia, premios o amenazas.'
+  },
+  { 
+    id: 5, 
+    title: 'Si dudas, detente', 
+    description: 'No completes el pago y contacta al soporte oficial.'
+  }
+];
+
+
 
   return (
     <div className="stage-container">
@@ -152,7 +174,7 @@ export default function VideoStage({ onComplete, unitColor }) {
             <div className="example-box">
               <div className="example-label">Ejemplo</div>
               <div className="example-content">
-                "Ahorrar $5,000 en 12 meses para el enganche de un auto"
+                "Antes de pagar tu café con QR, confirmas que el nombre del local en la app coincide con el letrero y revisas el monto antes de aceptar."
               </div>
             </div>
           </div>

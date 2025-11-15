@@ -8,7 +8,7 @@ export default function Unit1Page() {
   return (
     <UnitPage
       unitNumber={1}
-      unitTitle="Metas Financieras SMART"
+      unitTitle="Préstamos inteligentes"
       unitColor="linear-gradient(135deg, #2563eb, #1d4ed8)"
       VideoStage={VideoStage}
       TutorialStage={TutorialStage}
