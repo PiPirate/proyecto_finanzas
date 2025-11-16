@@ -1,21 +1,50 @@
-import React from 'react';
+// src/pages/unit3/TutorialStage.jsx
+import React, { useState } from 'react';
 import '../css/TutorialStage.css';
+import Unit3GameScene from '../../games/unit3/Unit3GameScene';
 
-export default function TutorialStage({ onComplete, unitColor }) {
+export default function TutorialStage({ onComplete }) {
+  const [completed, setCompleted] = useState(false);
+
+  const handleGoalReached = () => {
+    // Evita volver a marcar completado si ya ocurrió
+    setCompleted((prev) => (prev ? prev : true));
+  };
+
+  const handleContinue = () => {
+    if (typeof onComplete === 'function') {
+      onComplete(); // 👉 Avanza a la prueba evaluativa de la unidad 3
+    }
+  };
+
   return (
-    <div className="stage-container">
-      <div className="tutorial-empty">
-        <h2 className="tutorial-title">Tutorial Interactivo</h2>
+    <div className="tutorial-map-container">
+      {/* Escena interactiva de la Unidad 3 */}
+      <Unit3GameScene onGoalReached={handleGoalReached} />
 
-        <p className="tutorial-description">
-          Aquí irá el juego interactivo del tutorial.  
-          Esta vista ha sido limpiada para agregar el juego más adelante.
-        </p>
+      {/* Modal de éxito al terminar TODO el tutorial */}
+      {completed && (
+        <div className="tutorial-overlay">
+          <div className="tutorial-success" onClick={(e) => e.stopPropagation()}>
+            <h2 className="tutorial-success-title">¡Has finalizado el tutorial!</h2>
 
-        <button className="tutorial-continue-btn" onClick={onComplete}>
-          Continuar
-        </button>
-      </div>
+            <p className="tutorial-success-text">
+              Completaste correctamente el recorrido interactivo de esta unidad.
+              <br />
+              Ahora continuarás con la prueba evaluativa para poner en práctica
+              lo aprendido.
+            </p>
+
+            <button
+              type="button"
+              className="tutorial-continue-btn"
+              onClick={handleContinue}
+            >
+              Ir a la prueba evaluativa
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
