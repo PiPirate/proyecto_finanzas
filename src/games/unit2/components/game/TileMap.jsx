@@ -1,12 +1,13 @@
 import React from 'react';
 import mapImage from "../../../../assets/unit2/Casa.png";
 
-export function TileMap({ mapData }) {
+export default function TileMap({ mapData }) {
   const TILE_SIZE = 64;
 
   return (
     <div className="tile-map">
-      {/* ASSET: Imagen del mapa completo de la casa */}
+
+      {/* Imagen del mapa completo */}
       <div
         className="tile-map-image"
         style={{
@@ -18,7 +19,7 @@ export function TileMap({ mapData }) {
         }}
       />
 
-      {/* Grid de referencia (opcional, para debug) */}
+      {/* Grid opcional para debug */}
       {process.env.NODE_ENV === 'development' && (
         <div className="tile-grid">
           {mapData.map((row, y) =>
@@ -32,7 +33,7 @@ export function TileMap({ mapData }) {
                   top: `${y * TILE_SIZE}px`,
                   width: `${TILE_SIZE}px`,
                   height: `${TILE_SIZE}px`,
-                  border: `1px solid rgba(255, 255, 255, 0.1)`,
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
                   pointerEvents: 'none',
                 }}
               />
@@ -40,6 +41,7 @@ export function TileMap({ mapData }) {
           )}
         </div>
       )}
+
     </div>
   );
 }

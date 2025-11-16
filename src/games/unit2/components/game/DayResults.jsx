@@ -1,30 +1,24 @@
 import React from 'react';
 
-interface DayResultsProps {
-  day: number;
-  budget: {
-    total: number;
-    needs: number;
-    wants: number;
-    savings: number;
-    savingsGoal: number;
-  };
-  score: number;
-  comfortLevel: number;
-  streak: number;
-  onContinue: () => void;
-}
-
-export function DayResults({ day, budget, score, comfortLevel, streak, onContinue }: DayResultsProps) {
+export default function DayResults({ 
+  day, 
+  budget, 
+  score, 
+  comfortLevel, 
+  streak, 
+  onContinue 
+}) {
   const savingsAchieved = budget.savings >= budget.savingsGoal;
   const positiveBalance = budget.total >= 0;
 
   return (
     <div className="day-results">
       <div className="results-modal">
-        <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>Día {day} Completado</h2>
+        <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>
+          Día {day} Completado
+        </h2>
 
-        {/* ASSET: Imagen de resultados (celebración o preocupación) */}
+        {/* Imagen dependiente del resultado */}
         <div className="results-image">
           {savingsAchieved && positiveBalance ? (
             <div className="celebration-icon">🎉</div>
@@ -33,7 +27,9 @@ export function DayResults({ day, budget, score, comfortLevel, streak, onContinu
           )}
         </div>
 
+        {/* Estadísticas */}
         <div className="results-stats">
+
           <div className="stat-item">
             <span className="stat-icon">📊</span>
             <span className="stat-label">Puntuación</span>
@@ -51,19 +47,27 @@ export function DayResults({ day, budget, score, comfortLevel, streak, onContinu
             <span className="stat-label">Nivel de confort</span>
             <span className="stat-value">{comfortLevel}%</span>
           </div>
+
         </div>
 
+        {/* Resumen del presupuesto */}
         <div className="results-budget">
-          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>Presupuesto final del día</h3>
+          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>
+            Presupuesto final del día
+          </h3>
+
           <div className="budget-summary">
+
             <div className="summary-row">
               <span>🛒 Necesidades:</span>
               <span>${budget.needs.toLocaleString()}</span>
             </div>
+
             <div className="summary-row">
               <span>🎮 Gustos:</span>
               <span>${budget.wants.toLocaleString()}</span>
             </div>
+
             <div className="summary-row summary-row--highlight">
               <span>🐷 Ahorro:</span>
               <span>
@@ -71,26 +75,34 @@ export function DayResults({ day, budget, score, comfortLevel, streak, onContinu
                 {savingsAchieved && ' ✅'}
               </span>
             </div>
-            <div className={`summary-row summary-row--total ${budget.total < 0 ? 'negative' : ''}`}>
+
+            <div
+              className={`summary-row summary-row--total ${budget.total < 0 ? 'negative' : ''}`}
+            >
               <span>💰 Saldo Total:</span>
               <span style={{ color: budget.total < 0 ? '#dc2626' : '#16a34a' }}>
                 ${budget.total.toLocaleString()}
               </span>
             </div>
+
           </div>
         </div>
 
+        {/* Mensaje final */}
         <div className="results-feedback">
           {savingsAchieved && positiveBalance && (
             <p className="feedback feedback--positive">
               ¡Excelente! Mantuviste tu meta de ahorro y terminaste con saldo positivo.
             </p>
           )}
+
           {!savingsAchieved && positiveBalance && (
             <p className="feedback feedback--warning">
-              Mantuviste saldo positivo, pero no alcanzaste tu meta de ahorro. Intenta priorizar el ahorro desde el inicio.
+              Mantuviste saldo positivo, pero no alcanzaste tu meta de ahorro.
+              Intenta priorizar el ahorro desde el inicio.
             </p>
           )}
+
           {budget.total < 0 && (
             <p className="feedback feedback--negative">
               Terminaste con saldo negativo. Revisa tus gastos y prioriza necesidades sobre gustos.
@@ -98,8 +110,9 @@ export function DayResults({ day, budget, score, comfortLevel, streak, onContinu
           )}
         </div>
 
-        <button 
-          onClick={onContinue} 
+        {/* Botón continuar */}
+        <button
+          onClick={onContinue}
           style={{
             width: '100%',
             marginTop: '24px',
@@ -109,11 +122,12 @@ export function DayResults({ day, budget, score, comfortLevel, streak, onContinu
             color: 'white',
             border: 'none',
             borderRadius: '8px',
-            cursor: 'pointer'
+            cursor: 'pointer',
           }}
         >
-          {day < 5 ? 'Continuar al Día ' + (day + 1) : 'Ver Resultados Finales'} →
+          {day < 5 ? `Continuar al Día ${day + 1}` : 'Ver Resultados Finales'} →
         </button>
+
       </div>
     </div>
   );

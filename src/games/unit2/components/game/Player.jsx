@@ -1,7 +1,7 @@
 import React from 'react';
 import player_sprite from "../../../../assets/general/la socia caminando.png";
 
-export function Player({ position, direction, isMoving }) {
+export default function Player({ position, direction, isMoving }) {
   const TILE_SIZE = 64;
 
   return (
@@ -17,7 +17,6 @@ export function Player({ position, direction, isMoving }) {
         zIndex: 10,
       }}
     >
-      {/* ASSET: Sprite sheet del personaje */}
       <div
         className="player-sprite"
         style={{
@@ -29,7 +28,6 @@ export function Player({ position, direction, isMoving }) {
         }}
       />
 
-      {/* Sombra del personaje */}
       <div className="player-shadow" />
     </div>
   );

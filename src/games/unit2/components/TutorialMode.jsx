@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { TileMap } from './game/TileMap';
-import { Player } from './game/Player';
-import DialogueBox from '../../core/dialogue/DialogueBox';
-import { BudgetZones } from './game/BudgetZones';
-import { usePlayerMovement } from './hooks/usePlayerMovement.ts';
-import { tutorialMap, tutorialInteractiveZones } from './data/tutorialMap';
-import { tutorialDialogues } from './data/tutorialDialogues';
+import TileMap from './game/TileMap.jsx';
+import Player from './game/Player.jsx';
+import DialogueBox from '../../core/dialogue/DialogueBox.jsx';
+import BudgetZones from './game/BudgetZones.jsx';
+import { usePlayerMovement } from './hooks/usePlayerMovement.js';
+import { tutorialMap, tutorialInteractiveZones } from './data/tutorialMap.js';
+import { tutorialDialogues } from './data/tutorialDialogues.js';
 
-interface TutorialModeProps {
-  onComplete: () => void;
-  onBackToMenu: () => void;
-}
-
-export function TutorialMode({ onComplete, onBackToMenu }: TutorialModeProps) {
+export default function TutorialMode({ onComplete, onBackToMenu }) {
   const [tutorialStep, setTutorialStep] = useState(0);
   const [showDialogue, setShowDialogue] = useState(true);
   const [currentDialogue, setCurrentDialogue] = useState(tutorialDialogues[0]);
@@ -40,10 +35,11 @@ export function TutorialMode({ onComplete, onBackToMenu }: TutorialModeProps) {
     }
   }, [position]);
 
-  const handleZoneInteraction = (zone: any) => {
+  const handleZoneInteraction = (zone) => {
     if (zone.type === 'assistant') {
       setCurrentDialogue(tutorialDialogues[tutorialStep]);
       setShowDialogue(true);
+
     } else if (zone.type === 'budget_table') {
       setShowBudgetZones(true);
     }
@@ -53,37 +49,45 @@ export function TutorialMode({ onComplete, onBackToMenu }: TutorialModeProps) {
     if (tutorialStep < tutorialDialogues.length - 1) {
       setTutorialStep(tutorialStep + 1);
       setCurrentDialogue(tutorialDialogues[tutorialStep + 1]);
+
     } else {
       setShowDialogue(false);
-      // Si completamos todos los diálogos, mostrar zonas de presupuesto
+
       if (!showBudgetZones) {
         setShowBudgetZones(true);
       }
     }
   };
 
-  const handleBudgetComplete = (finalBudget: typeof budget) => {
+  const handleBudgetComplete = (finalBudget) => {
     setBudget(finalBudget);
-    // Continuar con el siguiente paso del tutorial
+
     if (tutorialStep < tutorialDialogues.length - 1) {
       setTutorialStep(tutorialStep + 1);
       setCurrentDialogue(tutorialDialogues[tutorialStep + 1]);
       setShowDialogue(true);
       setShowBudgetZones(false);
+
     } else {
-      // Tutorial completado
       onComplete();
     }
   };
 
   return (
     <div className="tutorial-mode">
+      
       <div className="tutorial-header">
         <div className="tutorial-info">
-          <span className="tutorial-step">Tutorial: Paso {tutorialStep + 1}/{tutorialDialogues.length}</span>
-          <span className="tutorial-income">Ingreso Mensual: ${monthlyIncome.toLocaleString()}</span>
+          <span className="tutorial-step">
+            Tutorial: Paso {tutorialStep + 1}/{tutorialDialogues.length}
+          </span>
+
+          <span className="tutorial-income">
+            Ingreso Mensual: ${monthlyIncome.toLocaleString()}
+          </span>
         </div>
-        <button 
+
+        <button
           onClick={onBackToMenu}
           style={{
             padding: '8px 16px',
@@ -98,17 +102,16 @@ export function TutorialMode({ onComplete, onBackToMenu }: TutorialModeProps) {
       </div>
 
       <div className="game-viewport">
-        {/* ASSET: Mapa de la casa */}
+        
         <TileMap mapData={tutorialMap} />
 
-        {/* Jugador */}
         <Player
           position={position}
           direction={direction}
           isMoving={isMoving}
         />
 
-        {/* Zonas interactivas (visual) */}
+        {/* Zonas interactivas visuales */}
         {tutorialInteractiveZones.map((zone) => (
           <div
             key={zone.id}
@@ -126,22 +129,25 @@ export function TutorialMode({ onComplete, onBackToMenu }: TutorialModeProps) {
           </div>
         ))}
 
-        {/* Diálogos del asistente */}
         {showDialogue && currentDialogue && (() => {
-          const speakerName = currentDialogue.speaker === 'assistant' ? 'MK-25' : currentDialogue.speaker === 'player' ? 'Tú' : 'Sistema';
-          
+          const speakerName =
+            currentDialogue.speaker === 'assistant'
+              ? 'MK-25'
+              : currentDialogue.speaker === 'player'
+              ? 'Tú'
+              : 'Sistema';
+
           return (
             <DialogueBox
               text={currentDialogue.text}
               speakerName={speakerName}
               onNext={handleDialogueContinue}
-              speakingSprite={undefined} // TODO: Add sprite imports
-              idleSprite={undefined} // TODO: Add sprite imports
+              speakingSprite={undefined}
+              idleSprite={undefined}
             />
           );
         })()}
 
-        {/* Zonas de presupuesto interactivas */}
         {showBudgetZones && (
           <BudgetZones
             totalIncome={monthlyIncome}
@@ -153,7 +159,13 @@ export function TutorialMode({ onComplete, onBackToMenu }: TutorialModeProps) {
       </div>
 
       <div className="tutorial-controls">
-        <p style={{ fontSize: '14px', textAlign: 'center', opacity: 0.8 }}>
+        <p
+          style={{
+            fontSize: '14px',
+            textAlign: 'center',
+            opacity: 0.8,
+          }}
+        >
           Usa las flechas ⬆️⬇️⬅️➡️ o WASD para moverte
         </p>
       </div>

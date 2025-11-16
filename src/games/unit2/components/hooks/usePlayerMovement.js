@@ -1,18 +1,11 @@
 import { useState, useEffect } from 'react';
 
-interface Position {
-  x: number;
-  y: number;
-}
-
-type Direction = 'up' | 'down' | 'left' | 'right';
-
-export function usePlayerMovement(initialPosition: Position, mapData: number[][]) {
-  const [position, setPosition] = useState<Position>(initialPosition);
-  const [direction, setDirection] = useState<Direction>('down');
+export function usePlayerMovement(initialPosition, mapData) {
+  const [position, setPosition] = useState(initialPosition);
+  const [direction, setDirection] = useState('down');
   const [isMoving, setIsMoving] = useState(false);
 
-  const isValidMove = (x: number, y: number): boolean => {
+  const isValidMove = (x, y) => {
     if (y < 0 || y >= mapData.length || x < 0 || x >= mapData[0].length) {
       return false;
     }
@@ -20,7 +13,7 @@ export function usePlayerMovement(initialPosition: Position, mapData: number[][]
   };
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e) => {
       const key = e.key.toLowerCase();
       let newX = position.x;
       let newY = position.y;
@@ -56,7 +49,6 @@ export function usePlayerMovement(initialPosition: Position, mapData: number[][]
         setDirection(newDirection);
         setPosition({ x: newX, y: newY });
 
-        // Reset moving state después de la animación
         setTimeout(() => setIsMoving(false), 200);
       }
     };

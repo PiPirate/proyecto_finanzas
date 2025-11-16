@@ -1,46 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { ExpenseCard } from './game/ExpenseCard';
-import { BudgetDisplay } from './game/BudgetDisplay';
-import { DayResults } from './game/DayResults';
-import { GameOver } from './game/GameOver';
-import { expenseCards } from './data/expenseCards';
+import ExpenseCard from './game/ExpenseCard.js';
+import BudgetDisplay from './game/BudgetDisplay.js';
+import DayResults from './game/DayResults.js';
+import GameOver from './game/GameOver.js';
+import { expenseCards } from './data/expenseCards.js';
 
-interface GameModeProps {
-  onBackToMenu: () => void;
-}
-
-interface Budget {
-  total: number;
-  needs: number;
-  wants: number;
-  savings: number;
-  savingsGoal: number;
-}
-
-interface ExpenseCardData {
-  id: string;
-  title: string;
-  description: string;
-  amount: number;
-  type: 'need' | 'want' | 'unexpected';
-  category: string;
-  postponable: boolean;
-  postponePenalty?: number;
-  discardPenalty?: number;
-}
-
-export function GameMode({ onBackToMenu }: GameModeProps) {
+export default function GameMode({ onBackToMenu }) {
   const [currentDay, setCurrentDay] = useState(1);
-  const [budget, setBudget] = useState<Budget>({
+  const [budget, setBudget] = useState({
     total: 10000,
     needs: 5000,
     wants: 3000,
     savings: 2000,
     savingsGoal: 2000,
   });
-  const [currentHand, setCurrentHand] = useState<ExpenseCardData[]>([]);
-  const [playedCards, setPlayedCards] = useState<string[]>([]);
-  const [postponedCards, setPostponedCards] = useState<ExpenseCardData[]>([]);
+
+  const [currentHand, setCurrentHand] = useState([]);
+  const [playedCards, setPlayedCards] = useState([]);
+  const [postponedCards, setPostponedCards] = useState([]);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [comfortLevel, setComfortLevel] = useState(100);
@@ -48,7 +25,7 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
 
-  // Inicializar primer día
+  // Iniciar primer día
   useEffect(() => {
     drawCards();
   }, []);
@@ -57,31 +34,28 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
     const availableCards = expenseCards.filter(
       (card) => !playedCards.includes(card.id)
     );
+
     const numCards = Math.floor(Math.random() * 3) + 5; // 5-7 cartas
     const shuffled = [...availableCards].sort(() => Math.random() - 0.5);
     const drawn = shuffled.slice(0, Math.min(numCards, availableCards.length));
-    
-    // Agregar cartas pospuestas del día anterior
+
     setCurrentHand([...postponedCards, ...drawn]);
     setPostponedCards([]);
   };
 
-  const handlePayNow = (card: ExpenseCardData) => {
+  const handlePayNow = (card) => {
     const category = card.type === 'need' ? 'needs' : 'wants';
     const availableBudget = budget[category];
 
     if (availableBudget >= card.amount) {
-      // Pagar la carta
       setBudget((prev) => ({
         ...prev,
         [category]: prev[category] - card.amount,
       }));
 
-      // Remover carta de la mano
       setCurrentHand((prev) => prev.filter((c) => c.id !== card.id));
       setPlayedCards((prev) => [...prev, card.id]);
 
-      // Aumentar puntuación si es necesidad
       if (card.type === 'need') {
         setScore((prev) => prev + 10);
         setStreak((prev) => prev + 1);
@@ -89,18 +63,16 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
         setStreak(0);
       }
     } else {
-      // No hay suficiente presupuesto
       alert(`No tienes suficiente presupuesto en ${category === 'needs' ? 'Necesidades' : 'Gustos'}. Disponible: $${availableBudget}`);
     }
   };
 
-  const handlePostpone = (card: ExpenseCardData) => {
+  const handlePostpone = (card) => {
     if (!card.postponable) {
       alert('Esta carta no se puede posponer');
       return;
     }
 
-    // Agregar penalización si existe
     const postponedCard = {
       ...card,
       amount: card.amount + (card.postponePenalty || 0),
@@ -111,9 +83,9 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
     setScore((prev) => prev - 5);
   };
 
-  const handleDiscard = (card: ExpenseCardData) => {
-    // Penalización de confort
+  const handleDiscard = (card) => {
     const penalty = card.discardPenalty || 10;
+
     setComfortLevel((prev) => Math.max(0, prev - penalty));
     setCurrentHand((prev) => prev.filter((c) => c.id !== card.id));
     setPlayedCards((prev) => [...prev, card.id]);
@@ -127,8 +99,8 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
       return;
     }
 
-    // Verificar si el ahorro se mantuvo
     const savingsKept = budget.savings >= budget.savingsGoal;
+
     if (savingsKept) {
       setScore((prev) => prev + 20);
     }
@@ -140,12 +112,10 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
     setShowDayResults(false);
 
     if (currentDay >= 5) {
-      // Fin del juego
       const finalWon = budget.savings >= budget.savingsGoal && budget.total >= 0;
       setGameWon(finalWon);
       setGameOver(true);
     } else {
-      // Siguiente día
       setCurrentDay((prev) => prev + 1);
       drawCards();
     }
@@ -160,6 +130,7 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
       savings: 2000,
       savingsGoal: 2000,
     });
+
     setCurrentHand([]);
     setPlayedCards([]);
     setPostponedCards([]);
@@ -209,7 +180,8 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
             <span>😊 Confort: {comfortLevel}%</span>
           </div>
         </div>
-        <button 
+
+        <button
           onClick={onBackToMenu}
           style={{
             padding: '6px 12px',
@@ -217,7 +189,7 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
             border: '1px solid #ccc',
             borderRadius: '4px',
             cursor: 'pointer',
-            fontSize: '14px'
+            fontSize: '14px',
           }}
         >
           ← Volver al Menú
@@ -228,7 +200,10 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
 
       <div className="game-content">
         <div className="cards-area">
-          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>Gastos del día ({currentHand.length} pendientes)</h3>
+          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>
+            Gastos del día ({currentHand.length} pendientes)
+          </h3>
+
           <div className="cards-hand">
             {currentHand.map((card) => (
               <ExpenseCard
@@ -243,9 +218,12 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
 
           {currentHand.length === 0 && (
             <div className="day-complete">
-              <p style={{ textAlign: 'center', marginBottom: '16px' }}>¡Todos los gastos resueltos!</p>
-              <button 
-                onClick={handleEndDay} 
+              <p style={{ textAlign: 'center', marginBottom: '16px' }}>
+                ¡Todos los gastos resueltos!
+              </p>
+
+              <button
+                onClick={handleEndDay}
                 style={{
                   padding: '12px 32px',
                   fontSize: '16px',
@@ -255,7 +233,7 @@ export function GameMode({ onBackToMenu }: GameModeProps) {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   display: 'block',
-                  margin: '0 auto'
+                  margin: '0 auto',
                 }}
               >
                 Terminar Día {currentDay}

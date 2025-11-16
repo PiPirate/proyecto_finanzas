@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-interface MemoryCard {
-  id: string;
-  content: string;
-  type: 'image' | 'text';
-  matchId: string; // ID para emparejar
-}
-
-interface MemoryGamePanelProps {
-  zone: 'needs' | 'wants' | 'savings';
-  onComplete: () => void;
-  onClose: () => void;
-}
-
 // Datos de emparejamiento para cada zona
 const memoryGameData = {
   needs: {
@@ -53,25 +40,25 @@ const memoryGameData = {
   }
 };
 
-export function MemoryGamePanel({ zone, onComplete, onClose }: MemoryGamePanelProps) {
+export default function MemoryGamePanel({ zone, onComplete, onClose }) {
   const gameData = memoryGameData[zone];
-  const [cards, setCards] = useState<MemoryCard[]>([]);
-  const [selectedCards, setSelectedCards] = useState<string[]>([]);
-  const [matchedPairs, setMatchedPairs] = useState<string[]>([]);
+  const [cards, setCards] = useState([]);
+  const [selectedCards, setSelectedCards] = useState([]);
+  const [matchedPairs, setMatchedPairs] = useState([]);
   const [attempts, setAttempts] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // Crear las cartas mezcladas
-    const imageCards: MemoryCard[] = gameData.pairs.map(pair => ({
+    // Crear cartas mezcladas
+    const imageCards = gameData.pairs.map(pair => ({
       id: `img-${pair.id}`,
       content: pair.image,
       type: 'image',
       matchId: pair.id
     }));
 
-    const textCards: MemoryCard[] = gameData.pairs.map(pair => ({
+    const textCards = gameData.pairs.map(pair => ({
       id: `txt-${pair.id}`,
       content: pair.text,
       type: 'text',
@@ -82,21 +69,16 @@ export function MemoryGamePanel({ zone, onComplete, onClose }: MemoryGamePanelPr
     setCards(allCards);
   }, [zone]);
 
-  const handleCardClick = (cardId: string) => {
-    // No permitir seleccionar más de 2 cartas
+  const handleCardClick = (cardId) => {
     if (selectedCards.length >= 2) return;
-    
-    // No permitir seleccionar la misma carta dos veces
     if (selectedCards.includes(cardId)) return;
-    
-    // No permitir seleccionar cartas ya emparejadas
+
     const card = cards.find(c => c.id === cardId);
     if (!card || matchedPairs.includes(card.matchId)) return;
 
     const newSelected = [...selectedCards, cardId];
     setSelectedCards(newSelected);
 
-    // Verificar empareamiento cuando hay 2 cartas seleccionadas
     if (newSelected.length === 2) {
       const card1 = cards.find(c => c.id === newSelected[0]);
       const card2 = cards.find(c => c.id === newSelected[1]);
@@ -104,23 +86,20 @@ export function MemoryGamePanel({ zone, onComplete, onClose }: MemoryGamePanelPr
       setAttempts(prev => prev + 1);
 
       if (card1 && card2 && card1.matchId === card2.matchId) {
-        // ¡Match correcto!
         setMatchedPairs(prev => [...prev, card1.matchId]);
         setMessage('✅ ¡Correcto!');
-        
+
         setTimeout(() => {
           setSelectedCards([]);
           setMessage('');
-          
-          // Verificar si completó el juego
+
           if (matchedPairs.length + 1 === gameData.pairs.length) {
             setIsComplete(true);
           }
         }, 800);
       } else {
-        // No coinciden
         setMessage('❌ No coinciden. ¡Inténtalo de nuevo!');
-        
+
         setTimeout(() => {
           setSelectedCards([]);
           setMessage('');
@@ -129,20 +108,25 @@ export function MemoryGamePanel({ zone, onComplete, onClose }: MemoryGamePanelPr
     }
   };
 
-  const isCardSelected = (cardId: string) => selectedCards.includes(cardId);
-  const isCardMatched = (cardId: string) => {
-    const card = cards.find(c => c.id === cardId);
+  const isCardSelected = (id) => selectedCards.includes(id);
+  const isCardMatched = (id) => {
+    const card = cards.find(c => c.id === id);
     return card ? matchedPairs.includes(card.matchId) : false;
   };
 
+  // --- COMPLETADO ---
   if (isComplete) {
-    const rating = attempts <= gameData.pairs.length + 2 ? '🏆 ¡EXCELENTE!' 
-                 : attempts <= gameData.pairs.length * 2 ? '⭐ ¡Bien hecho!' 
-                 : '👍 ¡Completado!';
+    const rating =
+      attempts <= gameData.pairs.length + 2
+        ? '🏆 ¡EXCELENTE!'
+        : attempts <= gameData.pairs.length * 2
+        ? '⭐ ¡Bien hecho!'
+        : '👍 ¡Completado!';
 
     return (
       <div className="game-panel-overlay">
         <div className="game-panel memory-game-panel">
+
           <div className="panel-header">
             <h2>🎉 ¡Juego Completado!</h2>
           </div>
@@ -150,26 +134,33 @@ export function MemoryGamePanel({ zone, onComplete, onClose }: MemoryGamePanelPr
           <div className="panel-content">
             <div className="memory-complete">
               <div className="complete-icon">🎊</div>
+
               <h3>{rating}</h3>
               <p>Completaste el juego en <strong>{attempts}</strong> intentos</p>
-              
+
               <div className="complete-lesson">
                 <h4>📚 Lección aprendida:</h4>
+
                 {zone === 'needs' && (
-                  <p>Las <strong>necesidades</strong> son gastos esenciales que NO puedes evitar. 
-                  Siempre prioriza comida, vivienda, salud y transporte básico.</p>
+                  <p>
+                    Las <strong>necesidades</strong> son esenciales: comida, vivienda, salud y transporte.
+                  </p>
                 )}
+
                 {zone === 'wants' && (
-                  <p>Los <strong>gustos</strong> hacen la vida disfrutable pero son opcionales. 
-                  Puedes tenerlos cuando tu presupuesto lo permita, ¡sin culpa!</p>
+                  <p>
+                    Los <strong>gustos</strong> son opcionales. Se disfrutan cuando tu presupuesto lo permite.
+                  </p>
                 )}
+
                 {zone === 'savings' && (
-                  <p>El <strong>ahorro</strong> es tu red de seguridad. Guarda PRIMERO antes de gastar. 
-                  Tu yo del futuro te lo agradecerá.</p>
+                  <p>
+                    El <strong>ahorro</strong> es tu red de seguridad. Guarda primero antes de gastar.
+                  </p>
                 )}
               </div>
 
-              <button 
+              <button
                 onClick={onComplete}
                 style={{
                   width: '100%',
@@ -186,20 +177,24 @@ export function MemoryGamePanel({ zone, onComplete, onClose }: MemoryGamePanelPr
               </button>
             </div>
           </div>
+
         </div>
       </div>
     );
   }
 
+  // --- PANEL DE JUEGO ---
   return (
     <div className="game-panel-overlay">
       <div className="game-panel memory-game-panel">
+
         <div className="panel-header">
           <div>
             <h2>{gameData.title}</h2>
             <p className="panel-subtitle">{gameData.description}</p>
           </div>
-          <button 
+
+          <button
             onClick={onClose}
             style={{
               background: 'transparent',
@@ -218,14 +213,21 @@ export function MemoryGamePanel({ zone, onComplete, onClose }: MemoryGamePanelPr
             <span className="stat-label">Intentos:</span>
             <span className="stat-value">{attempts}</span>
           </div>
+
           <div className="stat-item">
             <span className="stat-label">Parejas:</span>
-            <span className="stat-value">{matchedPairs.length}/{gameData.pairs.length}</span>
+            <span className="stat-value">
+              {matchedPairs.length}/{gameData.pairs.length}
+            </span>
           </div>
         </div>
 
         {message && (
-          <div className={`memory-message ${message.includes('✅') ? 'success' : 'error'}`}>
+          <div
+            className={`memory-message ${
+              message.includes('✅') ? 'success' : 'error'
+            }`}
+          >
             {message}
           </div>
         )}
@@ -233,15 +235,18 @@ export function MemoryGamePanel({ zone, onComplete, onClose }: MemoryGamePanelPr
         <div className="panel-content">
           <div className="memory-cards-grid">
             {cards.map((card) => {
-              const isSelected = isCardSelected(card.id);
-              const isMatched = isCardMatched(card.id);
-              
+              const selected = isCardSelected(card.id);
+              const matched = isCardMatched(card.id);
+
               return (
                 <button
                   key={card.id}
-                  className={`memory-card ${isSelected ? 'selected' : ''} ${isMatched ? 'matched' : ''} ${card.type}`}
+                  className={`memory-card 
+                    ${selected ? 'selected' : ''} 
+                    ${matched ? 'matched' : ''} 
+                    ${card.type}`}
                   onClick={() => handleCardClick(card.id)}
-                  disabled={isMatched}
+                  disabled={matched}
                 >
                   {card.type === 'image' ? (
                     <span className="card-emoji">{card.content}</span>
@@ -254,9 +259,13 @@ export function MemoryGamePanel({ zone, onComplete, onClose }: MemoryGamePanelPr
           </div>
 
           <div className="memory-instructions">
-            <p>💡 <strong>Instrucciones:</strong> Haz clic en una imagen y luego en su descripción correspondiente</p>
+            <p>
+              💡 <strong>Instrucciones:</strong> Haz clic en una imagen y luego
+              en su descripción correspondiente.
+            </p>
           </div>
         </div>
+
       </div>
     </div>
   );

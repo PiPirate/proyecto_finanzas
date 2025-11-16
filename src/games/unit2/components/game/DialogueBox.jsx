@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-interface DialogueData {
-  speaker: 'assistant' | 'player' | 'system';
-  text: string;
-  emotion?: 'neutral' | 'happy' | 'thinking' | 'surprised';
-}
-
-interface DialogueBoxProps {
-  dialogue: DialogueData;
-  onClose: () => void;
-}
-
-export function DialogueBox({ dialogue, onClose }: DialogueBoxProps) {
+export default function DialogueBox({ dialogue, onClose }) {
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const TYPING_SPEED = 30;
@@ -19,6 +8,7 @@ export function DialogueBox({ dialogue, onClose }: DialogueBoxProps) {
   useEffect(() => {
     setDisplayedText('');
     setIsComplete(false);
+
     let currentIndex = 0;
 
     const interval = setInterval(() => {
@@ -52,6 +42,7 @@ export function DialogueBox({ dialogue, onClose }: DialogueBoxProps) {
   return (
     <div className="dialogue-box" onClick={handleClick}>
       <div className="dialogue-container">
+        
         <div className="dialogue-avatar">
           <div
             className={`dialogue-face dialogue-face--${dialogue.speaker} dialogue-face--${dialogue.emotion || 'neutral'}`}
@@ -68,15 +59,19 @@ export function DialogueBox({ dialogue, onClose }: DialogueBoxProps) {
 
         <div className="dialogue-content">
           <div className="dialogue-speaker">{speakerName}</div>
+          
           <div className="dialogue-text">
             {displayedText}
             {!isComplete && <span className="dialogue-cursor">▋</span>}
           </div>
         </div>
+
       </div>
 
       <div className="dialogue-actions">
-        <span className="dialogue-hint">{isComplete ? 'Click o ENTER para continuar' : 'Click para saltar'}</span>
+        <span className="dialogue-hint">
+          {isComplete ? 'Click o ENTER para continuar' : 'Click para saltar'}
+        </span>
       </div>
     </div>
   );
