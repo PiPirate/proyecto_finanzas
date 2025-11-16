@@ -1,182 +1,194 @@
-// src/games/unit2/components/TutorialMode.jsx
+// TutorialMode.jsx
+import React, { useState, useEffect } from 'react';
 
-import React, { useState, useEffect } from "react";
-import TileMap from "./game/TileMap.jsx";
-import Player from "./game/Player.jsx";
-import DialogueBox from "../../core/dialogue/DialogueBox.jsx";
+// Componentes del juego
+import TileMap from './game/TileMap';
+import Player from '../../core/player/Player';
+import DialogueBox from '../../core/dialogue/DialogueBox';
+import { BudgetZones } from './game/BudgetZones';
 
-import { tutorialMap, tutorialInteractiveZones } from "./data/tutorialMap.js";
-import { tutorialDialogues } from "./data/tutorialDialogues.js";
+// Nuevo hook de movimiento
+import usePlayerMovement from '../../core/hooks/usePlayerMovement';
 
-export default function TutorialMode({ onComplete }) {
-  const [playerPos, setPlayerPos] = useState({ x: 8, y: 10 });
-  const [direction, setDirection] = useState("down");
-  const [isMoving, setIsMoving] = useState(false);
+// Datos del tutorial
+import { tutorialMap, tutorialInteractiveZones } from './data/tutorialMap';
+import { tutorialDialogues } from './data/tutorialDialogues';
 
-  const [dialogueQueue, setDialogueQueue] = useState([]);
-  const [dialogueIndex, setDialogueIndex] = useState(0);
+export function TutorialMode({ onComplete, onBackToMenu }) {
+  const [tutorialStep, setTutorialStep] = useState(0);
+  const [showDialogue, setShowDialogue] = useState(true);
+  const [currentDialogue, setCurrentDialogue] = useState(tutorialDialogues[0]);
+  const [showBudgetZones, setShowBudgetZones] = useState(false);
 
-  const [gameState, setGameState] = useState("dialogue"); // inicia en diálogo
-  const TILE_SIZE = 64;
+  const [monthlyIncome] = useState(10000);
+  const [budget, setBudget] = useState({
+    needs: 0,
+    wants: 0,
+    savings: 0,
+  });
 
-  /** INICIO DEL TUTORIAL **/
-  useEffect(() => {
-    setTimeout(() => {
-      startDialogueSequence([
-        tutorialDialogues.find((d) => d.id === "intro_1"),
-        tutorialDialogues.find((d) => d.id === "intro_2"),
-        tutorialDialogues.find((d) => d.id === "cubetas_1"),
-        tutorialDialogues.find((d) => d.id === "cubetas_2"),
-      ]);
-    }, 300);
-  }, []);
+  const tileSize = 64;
 
-  const isWalkable = (x, y) => {
-    if (y < 0 || y >= tutorialMap.length || x < 0 || x >= tutorialMap[0].length)
-      return false;
-    return tutorialMap[y][x] === 0;
-  };
+  // Nuevo sistema de movimiento
+  const {
+    tilePosition,
+    pixelPosition,
+    isMoving,
+    direction
+  } = usePlayerMovement({
+    initialTilePosition: { x: 8, y: 10 },
+    tileSize,
+    mapMatrix: tutorialMap,
+    blockingTileTypes: [1],    // 1 = bloqueado
+    interactiveTileTypes: [2], // 2 = zonas interactivas
+    moveDuration: 260,
+    onStep: handleStep,
+  });
 
-  const startDialogueSequence = (dialogs) => {
-    setDialogueQueue(dialogs);
-    setDialogueIndex(0);
-    setGameState("dialogue");
-  };
+  // Llamado cuando el jugador pisa un tile
+  function handleStep({ tilePosition }) {
+    const zone = tutorialInteractiveZones.find(
+      (z) => z.x === tilePosition.x && z.y === tilePosition.y
+    );
 
-  const handleDialogueAdvance = () => {
-    if (dialogueIndex < dialogueQueue.length - 1) {
-      setDialogueIndex(dialogueIndex + 1);
+    if (zone && !showDialogue) {
+      handleZoneInteraction(zone);
+    }
+  }
+
+  function handleZoneInteraction(zone) {
+    if (zone.type === "assistant") {
+      setCurrentDialogue(tutorialDialogues[tutorialStep]);
+      setShowDialogue(true);
+
+    } else if (zone.type === "budget_table") {
+      setShowBudgetZones(true);
+    }
+  }
+
+  // Continuar diálogo
+  function handleDialogueContinue() {
+    if (tutorialStep < tutorialDialogues.length - 1) {
+      setTutorialStep(tutorialStep + 1);
+      setCurrentDialogue(tutorialDialogues[tutorialStep + 1]);
+
     } else {
-      setGameState("exploring");
-    }
-  };
+      setShowDialogue(false);
 
-  const handleMove = (dir) => {
-    if (gameState !== "exploring") return;
-
-    setDirection(dir);
-    let nx = playerPos.x;
-    let ny = playerPos.y;
-
-    if (dir === "up") ny--;
-    if (dir === "down") ny++;
-    if (dir === "left") nx--;
-    if (dir === "right") nx++;
-
-    if (isWalkable(nx, ny)) {
-      setIsMoving(true);
-      setPlayerPos({ x: nx, y: ny });
-      setTimeout(() => setIsMoving(false), 200);
-    }
-  };
-
-  /** INTERACCIÓN CON ZONAS **/
-  const handleInteract = () => {
-    if (gameState !== "exploring") return;
-
-    let ix = playerPos.x;
-    let iy = playerPos.y;
-
-    if (direction === "up") iy--;
-    if (direction === "down") iy++;
-    if (direction === "left") ix--;
-    if (direction === "right") ix++;
-
-    const zone = tutorialInteractiveZones.find((z) => z.x === ix && z.y === iy);
-
-    if (!zone) return;
-
-    switch (zone.id) {
-      case "assistant":
-        startDialogueSequence([
-          tutorialDialogues.find((d) => d.id === "necesidades_1"),
-          tutorialDialogues.find((d) => d.id === "gustos_1"),
-          tutorialDialogues.find((d) => d.id === "ahorro_1"),
-          tutorialDialogues.find((d) => d.id === "regla_1"),
-          tutorialDialogues.find((d) => d.id === "practica_1"),
-        ]);
-        break;
-
-      case "budget_table":
-        startDialogueSequence([
-          tutorialDialogues.find((d) => d.id === "feedback_1"),
-        ]);
-        setTimeout(() => {
-          if (onComplete) onComplete();
-        }, 1500);
-        break;
-
-      default:
-        startDialogueSequence([
-          {
-            speaker: "system",
-            text: "Esta zona será importante más adelante.",
-            emotion: "neutral",
-          },
-        ]);
-    }
-  };
-
-  /** EVENTOS DE TECLADO **/
-  useEffect(() => {
-    const handleKey = (e) => {
-      const key = e.key.toLowerCase();
-
-      if (key === "enter" || key === " " || key === "z") {
-        e.preventDefault();
-        if (gameState === "dialogue") handleDialogueAdvance();
-        else handleInteract();
-        return;
+      if (!showBudgetZones) {
+        setShowBudgetZones(true);
       }
+    }
+  }
 
-      if (gameState !== "exploring") return;
+  // Presupuesto completado
+  function handleBudgetComplete(finalBudget) {
+    setBudget(finalBudget);
 
-      if (key === "arrowup" || key === "w") handleMove("up");
-      if (key === "arrowdown" || key === "s") handleMove("down");
-      if (key === "arrowleft" || key === "a") handleMove("left");
-      if (key === "arrowright" || key === "d") handleMove("right");
-    };
+    if (tutorialStep < tutorialDialogues.length - 1) {
+      setTutorialStep(tutorialStep + 1);
+      setCurrentDialogue(tutorialDialogues[tutorialStep + 1]);
+      setShowDialogue(true);
+      setShowBudgetZones(false);
 
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [playerPos, dialogueIndex, gameState]);
+    } else {
+      onComplete();
+    }
+  }
 
   return (
     <div className="tutorial-mode">
 
-      {/* MAPA */}
-      <div className="tutorial-map-container">
-        <TileMap mapData={tutorialMap} />
+      {/* HEADER */}
+      <div className="tutorial-header">
+        <div className="tutorial-info">
+          <span className="tutorial-step">
+            Tutorial: Paso {tutorialStep + 1}/{tutorialDialogues.length}
+          </span>
+          <span className="tutorial-income">
+            Ingreso Mensual: ${monthlyIncome.toLocaleString()}
+          </span>
+        </div>
 
-        {/* PLAYER */}
-        <Player
-          position={playerPos}
-          direction={direction}
-          isMoving={isMoving}
-        />
+        <button 
+          onClick={onBackToMenu}
+          style={{
+            padding: '8px 16px',
+            background: 'transparent',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          ← Volver al Menú
+        </button>
       </div>
 
-      {/* DIÁLOGO */}
-      {gameState === "dialogue" &&
-        dialogueQueue[dialogueIndex] &&
-        (() => {
-          const dlg = dialogueQueue[dialogueIndex];
-          const speaker =
-            dlg.speaker === "assistant" ? "Asesor" :
-            dlg.speaker === "system" ? "Sistema" :
-            "Tú";
+      {/* GAME VIEWPORT */}
+      <div className="game-viewport">
 
-          return (
-            <DialogueBox
-              visible={true}
-              text={dlg.text}
-              speakerName={speaker}
-              speakingSprite={null}
-              idleSprite={null}
-              onNext={handleDialogueAdvance}
-            />
-          );
-        })()}
+        <TileMap mapData={tutorialMap} />
+
+        {/* PLAYER usando pixelPosition */}
+        <Player
+          pixelPosition={pixelPosition}
+          tileSize={tileSize}
+          direction={direction}
+          isMoving={isMoving}
+          spriteSheet={undefined} // aquí pones tu sprite
+        />
+
+        {/* Zonas interactivas visibles */}
+        {tutorialInteractiveZones.map((zone) => (
+          <div
+            key={zone.id}
+            className={`interactive-zone interactive-zone--${zone.type}`}
+            style={{
+              left: `${zone.x * tileSize}px`,
+              top: `${zone.y * tileSize}px`
+            }}
+          >
+            {zone.type === 'assistant' && "🤖"}
+            {zone.type === 'needs_zone' && "🛒"}
+            {zone.type === 'wants_zone' && "🎮"}
+            {zone.type === 'savings_zone' && "🐷"}
+            {zone.type === 'budget_table' && "📊"}
+          </div>
+        ))}
+
+        {/* Diálogos */}
+        {showDialogue && currentDialogue && (
+          <DialogueBox
+            text={currentDialogue.text}
+            speakerName={
+              currentDialogue.speaker === 'assistant'
+                ? 'MK-25'
+                : currentDialogue.speaker === 'player'
+                ? 'Tú'
+                : 'Sistema'
+            }
+            onNext={handleDialogueContinue}
+            speakingSprite={undefined}
+            idleSprite={undefined}
+          />
+        )}
+
+        {/* Zonas presupuesto */}
+        {showBudgetZones && (
+          <BudgetZones
+            totalIncome={monthlyIncome}
+            currentBudget={budget}
+            onComplete={handleBudgetComplete}
+            tutorialMode={true}
+          />
+        )}
+      </div>
+
+      <div className="tutorial-controls">
+        <p style={{ fontSize: "14px", textAlign: "center", opacity: 0.8 }}>
+          Usa las flechas ⬆️⬇️⬅️➡️ o WASD para moverte
+        </p>
+      </div>
     </div>
   );
 }
