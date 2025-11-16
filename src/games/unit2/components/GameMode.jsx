@@ -1,12 +1,14 @@
+// src/games/unit2/components/GameMode.jsx
 import React, { useState, useEffect } from 'react';
-import ExpenseCard from './game/ExpenseCard.js';
-import BudgetDisplay from './game/BudgetDisplay.js';
-import DayResults from './game/DayResults.js';
-import GameOver from './game/GameOver.js';
+import ExpenseCard from './game/ExpenseCard.jsx';
+import BudgetDisplay from './game/BudgetDisplay.jsx';
+import DayResults from './game/DayResults.jsx';
+import GameOver from './game/GameOver.jsx';
 import { expenseCards } from './data/expenseCards.js';
 
 export default function GameMode({ onBackToMenu }) {
   const [currentDay, setCurrentDay] = useState(1);
+
   const [budget, setBudget] = useState({
     total: 10000,
     needs: 5000,
@@ -18,14 +20,18 @@ export default function GameMode({ onBackToMenu }) {
   const [currentHand, setCurrentHand] = useState([]);
   const [playedCards, setPlayedCards] = useState([]);
   const [postponedCards, setPostponedCards] = useState([]);
+
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [comfortLevel, setComfortLevel] = useState(100);
+
   const [showDayResults, setShowDayResults] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
 
-  // Iniciar primer día
+  // ───────────────────────────────────────────────
+  // INICIAR DÍA 1
+  // ───────────────────────────────────────────────
   useEffect(() => {
     drawCards();
   }, []);
@@ -43,66 +49,69 @@ export default function GameMode({ onBackToMenu }) {
     setPostponedCards([]);
   };
 
+  // ───────────────────────────────────────────────
+  // ACCIONES DE CARTAS
+  // ───────────────────────────────────────────────
   const handlePayNow = (card) => {
     const category = card.type === 'need' ? 'needs' : 'wants';
+
     const availableBudget = budget[category];
+    if (availableBudget < card.amount) {
+      alert(`No tienes suficiente presupuesto en ${category === "needs" ? "Necesidades" : "Gustos"}.`);
+      return;
+    }
 
-    if (availableBudget >= card.amount) {
-      setBudget((prev) => ({
-        ...prev,
-        [category]: prev[category] - card.amount,
-      }));
+    setBudget(prev => ({
+      ...prev,
+      [category]: prev[category] - card.amount,
+      total: prev.total - card.amount
+    }));
 
-      setCurrentHand((prev) => prev.filter((c) => c.id !== card.id));
-      setPlayedCards((prev) => [...prev, card.id]);
+    setCurrentHand(prev => prev.filter(c => c.id !== card.id));
+    setPlayedCards(prev => [...prev, card.id]);
 
-      if (card.type === 'need') {
-        setScore((prev) => prev + 10);
-        setStreak((prev) => prev + 1);
-      } else {
-        setStreak(0);
-      }
+    if (card.type === "need") {
+      setScore(prev => prev + 10);
+      setStreak(prev => prev + 1);
     } else {
-      alert(`No tienes suficiente presupuesto en ${category === 'needs' ? 'Necesidades' : 'Gustos'}. Disponible: $${availableBudget}`);
+      setStreak(0);
     }
   };
 
   const handlePostpone = (card) => {
-    if (!card.postponable) {
-      alert('Esta carta no se puede posponer');
-      return;
-    }
-
-    const postponedCard = {
+    // En expenseCards NO existen penalizaciones → las removemos para evitar errores
+    const postponed = {
       ...card,
-      amount: card.amount + (card.postponePenalty || 0),
+      amount: card.amount, 
     };
 
-    setPostponedCards((prev) => [...prev, postponedCard]);
-    setCurrentHand((prev) => prev.filter((c) => c.id !== card.id));
-    setScore((prev) => prev - 5);
+    setPostponedCards(prev => [...prev, postponed]);
+    setCurrentHand(prev => prev.filter(c => c.id !== card.id));
+    setScore(prev => prev - 5);
   };
 
   const handleDiscard = (card) => {
-    const penalty = card.discardPenalty || 10;
-
-    setComfortLevel((prev) => Math.max(0, prev - penalty));
-    setCurrentHand((prev) => prev.filter((c) => c.id !== card.id));
-    setPlayedCards((prev) => [...prev, card.id]);
-    setScore((prev) => prev - 3);
+    const penalty = 10; // valor por defecto
+    setComfortLevel(prev => Math.max(0, prev - penalty));
+    setCurrentHand(prev => prev.filter(c => c.id !== card.id));
+    setPlayedCards(prev => [...prev, card.id]);
+    setScore(prev => prev - 3);
     setStreak(0);
   };
 
+  // ───────────────────────────────────────────────
+  // FIN DEL DÍA
+  // ───────────────────────────────────────────────
   const handleEndDay = () => {
     if (currentHand.length > 0) {
-      alert('Debes resolver todas las cartas antes de terminar el día');
+      alert("Debes resolver todas las cartas antes de terminar el día.");
       return;
     }
 
     const savingsKept = budget.savings >= budget.savingsGoal;
 
     if (savingsKept) {
-      setScore((prev) => prev + 20);
+      setScore(prev => prev + 20);
     }
 
     setShowDayResults(true);
@@ -112,15 +121,23 @@ export default function GameMode({ onBackToMenu }) {
     setShowDayResults(false);
 
     if (currentDay >= 5) {
-      const finalWon = budget.savings >= budget.savingsGoal && budget.total >= 0;
+      const finalWon =
+        budget.savings >= budget.savingsGoal &&
+        budget.total >= 0 &&
+        comfortLevel > 20;
+
       setGameWon(finalWon);
       setGameOver(true);
-    } else {
-      setCurrentDay((prev) => prev + 1);
-      drawCards();
+      return;
     }
+
+    setCurrentDay(prev => prev + 1);
+    drawCards();
   };
 
+  // ───────────────────────────────────────────────
+  // REINICIAR JUEGO
+  // ───────────────────────────────────────────────
   const handleRestart = () => {
     setCurrentDay(1);
     setBudget({
@@ -140,9 +157,13 @@ export default function GameMode({ onBackToMenu }) {
     setShowDayResults(false);
     setGameOver(false);
     setGameWon(false);
+
     drawCards();
   };
 
+  // ───────────────────────────────────────────────
+  // PANTALLAS ESPECIALES
+  // ───────────────────────────────────────────────
   if (gameOver) {
     return (
       <GameOver
@@ -169,6 +190,9 @@ export default function GameMode({ onBackToMenu }) {
     );
   }
 
+  // ───────────────────────────────────────────────
+  // UI PRINCIPAL DEL JUEGO
+  // ───────────────────────────────────────────────
   return (
     <div className="game-mode">
       <div className="game-header">
@@ -183,14 +207,7 @@ export default function GameMode({ onBackToMenu }) {
 
         <button
           onClick={onBackToMenu}
-          style={{
-            padding: '6px 12px',
-            background: 'transparent',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '14px',
-          }}
+          className="back-menu-btn"
         >
           ← Volver al Menú
         </button>
@@ -200,12 +217,12 @@ export default function GameMode({ onBackToMenu }) {
 
       <div className="game-content">
         <div className="cards-area">
-          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>
+          <h3 style={{ textAlign: "center", marginBottom: "16px" }}>
             Gastos del día ({currentHand.length} pendientes)
           </h3>
 
           <div className="cards-hand">
-            {currentHand.map((card) => (
+            {currentHand.map(card => (
               <ExpenseCard
                 key={card.id}
                 card={card}
@@ -218,23 +235,13 @@ export default function GameMode({ onBackToMenu }) {
 
           {currentHand.length === 0 && (
             <div className="day-complete">
-              <p style={{ textAlign: 'center', marginBottom: '16px' }}>
+              <p style={{ textAlign: "center", marginBottom: "16px" }}>
                 ¡Todos los gastos resueltos!
               </p>
 
               <button
                 onClick={handleEndDay}
-                style={{
-                  padding: '12px 32px',
-                  fontSize: '16px',
-                  background: '#4CAF50',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  display: 'block',
-                  margin: '0 auto',
-                }}
+                className="end-day-btn"
               >
                 Terminar Día {currentDay}
               </button>

@@ -143,6 +143,7 @@ export default function GameWorld({ onComplete }) {
   const handleInteract = useCallback(() => {
     if (gameState !== "exploring") return;
 
+    // Tile que está justo enfrente
     let ix = playerPos.x;
     let iy = playerPos.y;
 
@@ -151,12 +152,24 @@ export default function GameWorld({ onComplete }) {
     if (direction === "left") ix--;
     if (direction === "right") ix++;
 
-    const obj = getObjectAt(ix, iy);
+    // 1️⃣ Primero: intentar tile exacto enfrente
+    let obj = getObjectAt(ix, iy);
+
+    // 2️⃣ Si no hay objeto enfrente, intentar cualquier zona muy cerca (1 tile)
+    if (!obj) {
+      obj = interactiveObjects.find(o =>
+        Math.abs(o.x - playerPos.x) <= 1 &&
+        Math.abs(o.y - playerPos.y) <= 1
+      );
+    }
+
+    // 3️⃣ Si al final hay objeto → interactuar
     if (obj) {
       setCurrentObject(obj);
       handleObjectInteraction(obj);
     }
   }, [playerPos, direction, gameState, storyProgress]);
+
 
   const handleObjectInteraction = (obj) => {
 
@@ -196,8 +209,8 @@ export default function GameWorld({ onComplete }) {
             obj.id === "needs_area"
               ? "needs"
               : obj.id === "wants_area"
-              ? "wants"
-              : "savings";
+                ? "wants"
+                : "savings";
 
           setTimeout(() => {
             setCurrentMemoryZone(zone);
@@ -611,16 +624,17 @@ export default function GameWorld({ onComplete }) {
             dialogue.speaker === "assistant"
               ? "MK-25"
               : dialogue.speaker === "player"
-              ? "Tú"
-              : "Sistema";
+                ? "Tú"
+                : "Sistema";
 
           return (
             <DialogueBox
+              visible={true}
               text={dialogue.text}
               speakerName={speakerName}
+              speakingSprite={null}
+              idleSprite={null}
               onNext={handleDialogueAdvance}
-              speakingSprite={undefined}
-              idleSprite={undefined}
             />
           );
         })()}

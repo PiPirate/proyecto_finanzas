@@ -1,76 +1,82 @@
-import React, { useState, useEffect } from 'react';
+// src/games/core/dialogue/DialogueBox.jsx
+import React from 'react';
+import useTypewriterText from '../../../core/hooks/useTypewriterText.js';
+import './DialogueBox.css';
 
-export default function DialogueBox({ dialogue, onClose }) {
-  const [displayedText, setDisplayedText] = useState('');
-  const [isComplete, setIsComplete] = useState(false);
-  const TYPING_SPEED = 30;
+export default function DialogueBox({
+  visible = true,
+  text,
+  speakingSprite,
+  idleSprite,
+  speakerName,
+  onNext,
+}) {
+  const { displayedText, isDone, showAll } = useTypewriterText(text, 28);
 
-  useEffect(() => {
-    setDisplayedText('');
-    setIsComplete(false);
-
-    let currentIndex = 0;
-
-    const interval = setInterval(() => {
-      if (currentIndex < dialogue.text.length) {
-        setDisplayedText(dialogue.text.slice(0, currentIndex + 1));
-        currentIndex++;
-      } else {
-        setIsComplete(true);
-        clearInterval(interval);
-      }
-    }, TYPING_SPEED);
-
-    return () => clearInterval(interval);
-  }, [dialogue]);
+  if (!visible) return null;
 
   const handleClick = () => {
-    if (!isComplete) {
-      setDisplayedText(dialogue.text);
-      setIsComplete(true);
-    } else {
-      onClose();
+    if (!isDone) {
+      showAll();
+    } else if (onNext) {
+      onNext();
     }
   };
 
-  const speakerName = {
-    assistant: '🤖 Asistente Virtual',
-    player: '👤 Tú',
-    system: '💬 Sistema',
-  }[dialogue.speaker];
+  const isAdvisor = speakerName === 'Asesor' || speakerName === "MK-25";
+  const isCarmina = speakerName === 'Carmina' || speakerName === "Tú";
+  const isPig = speakerName === 'Alcancía';
+
+  const isSpeaking = !isDone;
+
+  const spriteToUse = isSpeaking
+    ? (speakingSprite || idleSprite)
+    : (idleSprite || speakingSprite);
+
+  let animationClass = '';
+
+  if (isPig) {
+    animationClass = 'dialogue-face--pig';
+  } else if (isSpeaking) {
+    animationClass = isAdvisor
+      ? 'dialogue-face--talking-advisor'
+      : 'dialogue-face--talking-carmina';
+  } else {
+    animationClass = isAdvisor
+      ? 'dialogue-face--idle-advisor'
+      : 'dialogue-face--idle-carmina';
+  }
+
+  const faceClassName = `dialogue-face ${animationClass}`;
+  const wrapperClassName =
+    'dialogue-face-wrapper' + (isPig ? ' dialogue-face-wrapper--pig' : '');
 
   return (
-    <div className="dialogue-box" onClick={handleClick}>
-      <div className="dialogue-container">
-        
-        <div className="dialogue-avatar">
-          <div
-            className={`dialogue-face dialogue-face--${dialogue.speaker} dialogue-face--${dialogue.emotion || 'neutral'}`}
-            style={{
-              width: '80px',
-              height: '80px',
-              backgroundImage: `var(--${dialogue.speaker}-face-${isComplete ? 'idle' : 'talking'})`,
-              backgroundSize: 'contain',
-              backgroundRepeat: 'no-repeat',
-              imageRendering: 'pixelated',
-            }}
-          />
-        </div>
-
-        <div className="dialogue-content">
-          <div className="dialogue-speaker">{speakerName}</div>
-          
-          <div className="dialogue-text">
-            {displayedText}
-            {!isComplete && <span className="dialogue-cursor">▋</span>}
-          </div>
-        </div>
-
+    <div className="dialogue-root" onClick={handleClick}>
+      <div className={wrapperClassName}>
+        <div
+          className={faceClassName}
+          style={{ backgroundImage: `url(${spriteToUse})` }}
+        />
       </div>
 
-      <div className="dialogue-actions">
-        <span className="dialogue-hint">
-          {isComplete ? 'Click o ENTER para continuar' : 'Click para saltar'}
+      <div className="dialogue-panel">
+        {speakerName && (
+          <div className="dialogue-speaker-name">
+            {speakerName}
+          </div>
+        )}
+
+        <p className="dialogue-text">
+          {displayedText}
+        </p>
+
+        <span
+          className={`dialogue-next ${
+            isDone ? 'dialogue-next--visible' : ''
+          }`}
+        >
+          ▼
         </span>
       </div>
     </div>
