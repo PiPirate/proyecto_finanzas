@@ -3,7 +3,7 @@ import { TileMap } from './game/TileMap';
 import { Player } from './game/Player';
 import DialogueBox from '../../core/dialogue/DialogueBox';
 import { BudgetZones } from './game/BudgetZones';
-import { usePlayerMovement } from './hooks/usePlayerMovement';
+import { usePlayerMovement } from './hooks/usePlayerMovement.ts';
 import { tutorialMap, tutorialInteractiveZones } from './data/tutorialMap';
 import { tutorialDialogues } from './data/tutorialDialogues';
 

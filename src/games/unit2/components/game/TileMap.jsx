@@ -1,10 +1,7 @@
 import React from 'react';
+import mapImage from "../../../../assets/unit2/Casa.png";
 
-interface TileMapProps {
-  mapData: number[][];
-}
-
-export function TileMap({ mapData }: TileMapProps) {
+export function TileMap({ mapData }) {
   const TILE_SIZE = 64;
 
   return (
@@ -15,7 +12,7 @@ export function TileMap({ mapData }: TileMapProps) {
         style={{
           width: `${mapData[0].length * TILE_SIZE}px`,
           height: `${mapData.length * TILE_SIZE}px`,
-          backgroundImage: 'var(--map-image)',
+          backgroundImage: `url(${mapImage})`,
           backgroundSize: 'cover',
           imageRendering: 'pixelated',
         }}
@@ -35,7 +32,7 @@ export function TileMap({ mapData }: TileMapProps) {
                   top: `${y * TILE_SIZE}px`,
                   width: `${TILE_SIZE}px`,
                   height: `${TILE_SIZE}px`,
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: `1px solid rgba(255, 255, 255, 0.1)`,
                   pointerEvents: 'none',
                 }}
               />

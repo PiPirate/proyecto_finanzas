@@ -1,12 +1,7 @@
 import React from 'react';
+import player_sprite from "../../../../assets/general/la socia caminando.png";
 
-interface PlayerProps {
-  position: { x: number; y: number };
-  direction: 'up' | 'down' | 'left' | 'right';
-  isMoving: boolean;
-}
-
-export function Player({ position, direction, isMoving }: PlayerProps) {
+export function Player({ position, direction, isMoving }) {
   const TILE_SIZE = 64;
 
   return (
@@ -22,13 +17,13 @@ export function Player({ position, direction, isMoving }: PlayerProps) {
         zIndex: 10,
       }}
     >
-      {/* ASSET: Sprite sheet del personaje (caminar + idle) */}
+      {/* ASSET: Sprite sheet del personaje */}
       <div
         className="player-sprite"
         style={{
           width: '100%',
           height: '100%',
-          backgroundImage: 'var(--player-sprite)',
+          backgroundImage: `url(${player_sprite})`,
           backgroundSize: 'cover',
           imageRendering: 'pixelated',
         }}
