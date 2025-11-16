@@ -32,11 +32,8 @@ body {
    MUNDO DEL JUEGO (POKÉMON STYLE)
    ============================================ */
 .game-world {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  background: #0f3460;
 }
 
 .game-hud {
@@ -2300,4 +2297,25 @@ body {
 .day-complete h2 {
   margin: 0 0 1rem 0;
   color: #4caf50;
+}
+
+/* ===========================
+   NPC STYLE GLOBAL
+   =========================== */
+
+.npc {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    pointer-events: none;
+    z-index: 5;
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Permite que cada NPC use su propia imagen con una variable CSS */
+.npc[data-img] {
+    background-image: var(--npc-img);
 }
