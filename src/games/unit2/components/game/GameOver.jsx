@@ -1,24 +1,16 @@
 import React from 'react';
 
-export default function GameOver({ 
-  won, 
-  finalScore, 
-  finalBudget, 
-  comfortLevel, 
-  onRestart, 
-  onBackToMenu 
-}) {
+export function GameOver({ won, finalScore, finalBudget, comfortLevel, onRestart, onBackToMenu }) {
   const grade =
     finalScore >= 200 ? 'A' :
     finalScore >= 150 ? 'B' :
-    finalScore >= 100 ? 'C' :
-    'D';
+    finalScore >= 100 ? 'C' : 'D';
 
   return (
     <div className="game-over">
       <div className="game-over-modal">
-
-        {/* Imagen de victoria o derrota */}
+        
+        {/* IMAGEN / ANIMACIÓN DE VICTORIA O DERROTA */}
         <div className="game-over-image">
           {won ? (
             <div className="victory-animation">
@@ -33,8 +25,9 @@ export default function GameOver({
           )}
         </div>
 
+        {/* ESTADÍSTICAS PRINCIPALES */}
         <div className="final-stats">
-          {/* Puntuación */}
+
           <div className="stat-card">
             <div className="stat-icon">📊</div>
             <div className="stat-content">
@@ -44,7 +37,6 @@ export default function GameOver({
             </div>
           </div>
 
-          {/* Confort */}
           <div className="stat-card">
             <div className="stat-icon">😊</div>
             <div className="stat-content">
@@ -53,7 +45,6 @@ export default function GameOver({
             </div>
           </div>
 
-          {/* Saldo */}
           <div className="stat-card">
             <div className="stat-icon">💰</div>
             <div className="stat-content">
@@ -68,11 +59,9 @@ export default function GameOver({
           </div>
         </div>
 
-        {/* Resumen Final */}
+        {/* RESUMEN FINAL */}
         <div className="final-summary">
-          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>
-            Resumen Final
-          </h3>
+          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>Resumen Final</h3>
 
           <div className="summary-grid">
             <div className="summary-item">
@@ -102,30 +91,31 @@ export default function GameOver({
           </div>
         </div>
 
-        {/* Mensaje final */}
+        {/* MENSAJE MOTIVACIONAL / RETROALIMENTACIÓN FINAL */}
         <div className="final-message">
           {won ? (
             <>
               <p className="message-title">¡Felicitaciones!</p>
               <p className="message-text">
-                Lograste completar las 5 rondas manteniendo tu meta de ahorro 
-                y un saldo positivo. Has demostrado habilidad para gestionar 
-                tu presupuesto personal.
+                Lograste completar las 5 rondas manteniendo tu meta de ahorro y un saldo positivo.
+                Has demostrado habilidad real para manejar tu presupuesto personal.
               </p>
             </>
           ) : (
             <>
               <p className="message-title">¡Buen intento!</p>
               <p className="message-text">
-                Recuerda: prioriza necesidades, separa tu ahorro desde el inicio, 
-                y ajusta tus gustos según tu presupuesto. ¡Inténtalo nuevamente!
+                Recuerda: prioriza tus necesidades, separa tu ahorro desde el inicio 
+                y ajusta tus gustos según tu situación financiera.  
+                ¡Puedes hacerlo mejor en la próxima ronda!
               </p>
             </>
           )}
         </div>
 
+        {/* BOTONES FINALES */}
         <div className="final-actions">
-          <button
+          <button 
             onClick={onRestart}
             style={{
               padding: '12px 32px',
@@ -135,13 +125,13 @@ export default function GameOver({
               border: 'none',
               borderRadius: '8px',
               cursor: 'pointer',
-              marginRight: '12px',
+              marginRight: '12px'
             }}
           >
             🔄 Jugar de Nuevo
           </button>
 
-          <button
+          <button 
             onClick={onBackToMenu}
             style={{
               padding: '12px 32px',
@@ -149,7 +139,7 @@ export default function GameOver({
               background: 'transparent',
               border: '1px solid #ccc',
               borderRadius: '8px',
-              cursor: 'pointer',
+              cursor: 'pointer'
             }}
           >
             🏠 Volver al Menú

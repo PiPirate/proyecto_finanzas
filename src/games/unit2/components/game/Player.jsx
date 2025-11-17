@@ -1,12 +1,13 @@
 import React from 'react';
-import player_sprite from "../../../../assets/general/la socia caminando.png";
 
-export default function Player({ position, direction, isMoving }) {
+export function Player({ position, direction, isMoving }) {
   const TILE_SIZE = 64;
 
   return (
     <div
-      className={`player player--${direction} ${isMoving ? 'player--moving' : 'player--idle'}`}
+      className={`player player--${direction} ${
+        isMoving ? 'player--moving' : 'player--idle'
+      }`}
       style={{
         position: 'absolute',
         left: `${position.x * TILE_SIZE}px`,
@@ -14,20 +15,23 @@ export default function Player({ position, direction, isMoving }) {
         width: `${TILE_SIZE}px`,
         height: `${TILE_SIZE}px`,
         transition: 'left 0.2s ease, top 0.2s ease',
-        zIndex: 10,
+        zIndex: 10
       }}
     >
+
+      {/* SPRITE DEL PERSONAJE */}
       <div
         className="player-sprite"
         style={{
           width: '100%',
           height: '100%',
-          backgroundImage: `url(${player_sprite})`,
+          backgroundImage: 'var(--player-sprite)',   // Se mantiene variable CSS
           backgroundSize: 'cover',
-          imageRendering: 'pixelated',
+          imageRendering: 'pixelated'                // Importante para estilo retro
         }}
       />
 
+      {/* SOMBRA DEL PERSONAJE */}
       <div className="player-shadow" />
     </div>
   );

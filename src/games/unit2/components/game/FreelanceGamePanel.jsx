@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-export default function FreelanceGamePanel({ onComplete, onClose }) {
+export function FreelanceGamePanel({ onComplete, onClose }) {
   const [timeLeft, setTimeLeft] = useState(10);
   const [clicks, setClicks] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [moneyEarned, setMoneyEarned] = useState(0);
 
+  // Timer
   useEffect(() => {
     if (timeLeft > 0 && !isComplete) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -17,13 +18,12 @@ export default function FreelanceGamePanel({ onComplete, onClose }) {
 
   const handleClick = () => {
     if (!isComplete) {
-      setClicks(clicks + 1);
+      setClicks(prev => prev + 1);
     }
   };
 
   const finishWork = () => {
-    // $50 por click, máximo $800
-    const earned = Math.min(clicks * 50, 800);
+    const earned = Math.min(clicks * 50, 800); // $50 por click, máx $800
     setMoneyEarned(earned);
     setIsComplete(true);
   };
@@ -32,7 +32,7 @@ export default function FreelanceGamePanel({ onComplete, onClose }) {
     onComplete(moneyEarned);
   };
 
-  // --- PANEL DE RESULTADO ---
+  // --- Pantalla final ---
   if (isComplete) {
     return (
       <div className="game-panel-overlay">
@@ -43,37 +43,31 @@ export default function FreelanceGamePanel({ onComplete, onClose }) {
 
           <div className="panel-content text-center">
             <div className="freelance-result">
-
               <p className="freelance-result-icon">💰</p>
               <h3>¡Ganaste ${moneyEarned}!</h3>
-              <p className="freelance-note">
-                {clicks} tareas completadas en 10 segundos
-              </p>
+              <p className="freelance-note">{clicks} tareas completadas en 10 segundos</p>
 
               <div className="freelance-warning">
-                <p>⚠️ <strong>Penalización:</strong> -50 puntos de balance vida-trabajo</p>
-                <p style={{ fontSize: "14px" }}>
-                  Trabajar de más afecta tu bienestar general.
-                </p>
+                <p>⚠️ <strong>Penalización:</strong> -50 puntos de bienestar</p>
+                <p style={{ fontSize: '14px' }}>El sobretrabajo afecta tu salud.</p>
               </div>
 
-              <button
+              <button 
                 onClick={handleAccept}
                 style={{
-                  width: "100%",
-                  marginTop: "16px",
-                  padding: "12px 32px",
-                  fontSize: "16px",
-                  background: "#4CAF50",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                  cursor: "pointer"
+                  width: '100%',
+                  marginTop: '16px',
+                  padding: '12px 32px',
+                  fontSize: '16px',
+                  background: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
                 }}
               >
                 Aceptar Pago
               </button>
-
             </div>
           </div>
         </div>
@@ -81,25 +75,23 @@ export default function FreelanceGamePanel({ onComplete, onClose }) {
     );
   }
 
-  // --- PANEL DE JUEGO ---
+  // --- Pantalla del minijuego ---
   return (
     <div className="game-panel-overlay">
       <div className="game-panel freelance-panel">
-
         <div className="panel-header">
           <div>
             <h2>💼 Trabajo Freelance</h2>
-            <p className="panel-subtitle">¡Haz clic rápido para completar tareas!</p>
+            <p className="panel-subtitle">Haz clic lo más rápido que puedas</p>
           </div>
 
-          <button
+          <button 
             onClick={onClose}
             style={{
-              background: "transparent",
-              border: "none",
-              fontSize: "20px",
-              cursor: "pointer",
-              padding: "4px 8px",
+              background: 'transparent',
+              border: 'none',
+              fontSize: '20px',
+              cursor: 'pointer'
             }}
           >
             ✕
@@ -108,13 +100,12 @@ export default function FreelanceGamePanel({ onComplete, onClose }) {
 
         <div className="panel-content">
           <div className="freelance-game">
-
             <div className="freelance-timer">
               <p className="timer-label">Tiempo restante</p>
               <p className="timer-value">{timeLeft}s</p>
             </div>
 
-            <button
+            <button 
               className="freelance-work-button"
               onClick={handleClick}
             >
@@ -133,10 +124,8 @@ export default function FreelanceGamePanel({ onComplete, onClose }) {
             <div className="freelance-tip">
               <p>💡 Tip: Haz clic lo más rápido posible durante 10 segundos</p>
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
   );

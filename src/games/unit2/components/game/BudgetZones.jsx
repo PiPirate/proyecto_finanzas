@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function BudgetZones({ totalIncome, currentBudget, onComplete, tutorialMode }) {
+export function BudgetZones({ totalIncome, currentBudget, onComplete, tutorialMode }) {
   const [needs, setNeeds] = useState(currentBudget.needs || Math.floor(totalIncome * 0.5));
   const [wants, setWants] = useState(currentBudget.wants || Math.floor(totalIncome * 0.3));
   const [savings, setSavings] = useState(currentBudget.savings || Math.floor(totalIncome * 0.2));
@@ -117,22 +117,20 @@ export default function BudgetZones({ totalIncome, currentBudget, onComplete, tu
           />
         </div>
 
-        {/* Regla 50-30-20 */}
         <div
           style={{
             marginTop: '24px',
             padding: '16px',
             background: '#eff6ff',
-            borderRadius: '8px',
+            borderRadius: '8px'
           }}
         >
           <p style={{ fontSize: '14px', textAlign: 'center' }}>
-            💡 Regla guía: <strong>50% Necesidades</strong> /{' '}
-            <strong>30% Gustos</strong> / <strong>20% Ahorro</strong>
+            💡 Regla guía: <strong>50% Necesidades</strong> / <strong>30% Gustos</strong> /{' '}
+            <strong>20% Ahorro</strong>
           </p>
         </div>
 
-        {/* Botón Confirmar */}
         <div style={{ marginTop: '24px' }}>
           <button
             onClick={handleConfirm}
@@ -145,7 +143,7 @@ export default function BudgetZones({ totalIncome, currentBudget, onComplete, tu
               color: 'white',
               border: 'none',
               borderRadius: '8px',
-              cursor: remaining < 0 ? 'not-allowed' : 'pointer',
+              cursor: remaining < 0 ? 'not-allowed' : 'pointer'
             }}
           >
             Confirmar Presupuesto

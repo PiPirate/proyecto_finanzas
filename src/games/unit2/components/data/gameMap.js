@@ -1,49 +1,3 @@
-// Mapa del juego (0 = caminable, 1 = bloqueado)
-export const gameMap = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1],
-  [1,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,1],
-  [1,0,0,0,0,1,1,0,0,1,0,0,0,0,0,1],
-  [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],  
-];
-
-// Sistema de narrativa y progresión
-export const storyProgress = {
-  intro: {
-    completed: false,
-    title: "Tu nueva vida independiente",
-    description: "Habla con MK-25 para comenzar"
-  },
-  learnBudget: {
-    completed: false,
-    title: "Planifica tu primer mes",
-    description: "Distribuye tu salario en la Mesa de Planificación"
-  },
-  exploreZones: {
-    completed: false,
-    title: "Conoce tu nueva casa",
-    description: "Explora las 3 zonas de tu hogar"
-  },
-  firstWeek: {
-    completed: false,
-    title: "Tu primera semana solo",
-    description: "Sobrevive 7 días gestionando gastos"
-  },
-  fullMonth: {
-    completed: false,
-    title: "Un mes completo",
-    description: "Completa 30 días sin quedarte en bancarrota"
-  }
-};
-
 // Objetos interactivos
 export const interactiveObjects = [
   {
@@ -52,54 +6,64 @@ export const interactiveObjects = [
     y: 2,
     type: 'npc',
     name: 'MK-25',
+    icon: '🤖',
     dialogue: null,
   },
-  
+
   {
     id: 'planning_desk',
     x: 4.5,
     y: 3,
     type: 'budget',
-    name: 'Mesa de Planificación',
+    name: 'Presupuesto',
+    icon: '📊',
     action: 'budget',
     dialogue: null,
   },
+
   {
     id: 'needs_area',
     x: 2,
     y: 8,
     type: 'zone',
-    name: 'Refrigerador',
+    name: 'Necesidades',
+    icon: '🛒',
     dialogue: null,
   },
+
   {
     id: 'wants_area',
     x: 10.5,
     y: 8,
     type: 'zone',
-    name: 'Zona de Ocio',
+    name: 'Gustos',
+    icon: '🎮',
     dialogue: null,
   },
+
   {
     id: 'savings_area',
     x: 14,
     y: 2,
     type: 'zone',
-    name: 'Alcancía',
+    name: 'Ahorro',
+    icon: '🐷',
     dialogue: null,
   },
+
   {
     id: 'management_pc',
     x: 10,
     y: 1,
     type: 'computer',
-    name: 'Simulador de Vida',
+    name: 'Simulador',
+    icon: '💻',
     action: 'expense_game',
     dialogue: null,
   },
 ];
 
-// Diálogos de MK-25 (sin cambios)
+// Diálogos de MK-25
 export const mk25Dialogues = {
   intro: [
     { speaker: 'assistant', text: '¡Hey! Soy MK-25, tu asistente de finanzas personales. ¡Felicidades por mudarte solo por primera vez!', emotion: 'happy' },
@@ -153,25 +117,72 @@ export const mk25Dialogues = {
   ],
 };
 
+// Diálogos según zona
 export const zoneDialogues = {
   needs: [
-    { speaker: 'system', text: '🛒 NECESIDADES: gastos básicos esenciales.', emotion: 'neutral' },
-    { speaker: 'system', text: 'Renta, comida, transporte, servicios...', emotion: 'neutral' },
-    { speaker: 'system', text: 'Tip: nunca ignores necesidades.', emotion: 'thinking' },
+    { speaker: 'assistant', text: '🛒 NECESIDADES: gastos básicos esenciales.', emotion: 'neutral' },
+    { speaker: 'assistant', text: 'Renta, comida, transporte, servicios...', emotion: 'neutral' },
+    { speaker: 'assistant', text: 'Tip: nunca ignores necesidades.', emotion: 'thinking' },
   ],
   wants: [
-    { speaker: 'system', text: '🎮 GUSTOS: cosas que quieres pero no necesitas.', emotion: 'neutral' },
-    { speaker: 'system', text: 'Netflix, comida rápida, ropa extra...', emotion: 'happy' },
-    { speaker: 'system', text: 'Tip: úsalos con moderación.', emotion: 'thinking' },
+    { speaker: 'assistant', text: '🎮 GUSTOS: cosas que quieres pero no necesitas.', emotion: 'neutral' },
+    { speaker: 'assistant', text: 'Netflix, comida rápida, ropa extra...', emotion: 'happy' },
+    { speaker: 'assistant', text: 'Tip: úsalos con moderación.', emotion: 'thinking' },
   ],
   savings: [
-    { speaker: 'system', text: '🐷 AHORRO: tu seguridad y metas a futuro.', emotion: 'neutral' },
-    { speaker: 'system', text: 'Ahorra ANTES de gastar.', emotion: 'thinking' },
-    { speaker: 'system', text: 'Protege tu ahorro como prioridad.', emotion: 'happy' },
+    { speaker: 'assistant', text: '🐷 AHORRO: tu seguridad y metas a futuro.', emotion: 'neutral' },
+    { speaker: 'assistant', text: 'Ahorra ANTES de gastar.', emotion: 'thinking' },
+    { speaker: 'assistant', text: 'Protege tu ahorro como prioridad.', emotion: 'happy' },
   ],
   freelance: [
-    { speaker: 'system', text: '💼 TRABAJO FREELANCE: para emergencias.', emotion: 'neutral' },
-    { speaker: 'system', text: 'Ganas $500-$800 haciendo clics.', emotion: 'thinking' },
-    { speaker: 'system', text: 'Pero baja tu bienestar.', emotion: 'neutral' },
+    { speaker: 'assistant', text: '💼 TRABAJO FREELANCE: para emergencias.', emotion: 'neutral' },
+    { speaker: 'assistant', text: 'Ganas $500-$800 haciendo clics.', emotion: 'thinking' },
+    { speaker: 'assistant', text: 'Pero baja tu bienestar.', emotion: 'neutral' },
   ],
 };
+
+// Sistema de narrativa y progresión
+export const storyProgress = {
+  intro: {
+    completed: false,
+    title: "Tu nueva vida independiente",
+    description: "Habla con MK-25 para comenzar"
+  },
+  learnBudget: {
+    completed: false,
+    title: "Planifica tu primer mes",
+    description: "Distribuye tu salario en la Mesa de Planificación"
+  },
+  exploreZones: {
+    completed: false,
+    title: "Conoce tu nueva casa",
+    description: "Explora las 3 zonas de tu hogar"
+  },
+  firstWeek: {
+    completed: false,
+    title: "Tu primera semana solo",
+    description: "Sobrevive 7 días gestionando gastos"
+  },
+  fullMonth: {
+    completed: false,
+    title: "Un mes completo",
+    description: "Completa 30 días sin quedarte en bancarrota"
+  }
+};
+
+// Mapa del juego (0 = caminable, 1 = bloqueado)
+export const gameMap = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1],
+  [1,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,1],
+  [1,0,0,0,0,1,1,0,0,1,0,0,0,0,0,1],
+  [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];

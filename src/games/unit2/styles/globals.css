@@ -1,6 +1,8 @@
 /* ============================================
    CONFIGURACIÓN BASE MÍNIMA
    ============================================ */
+@import './minigames.css';
+
 * {
   box-sizing: border-box;
 }
@@ -32,8 +34,12 @@ body {
    MUNDO DEL JUEGO (POKÉMON STYLE)
    ============================================ */
 .game-world {
+  width: fit-content;
+  height: fit-content;
   display: flex;
   flex-direction: column;
+  background: transparent;
+  margin: 0 auto;
 }
 
 .game-hud {
@@ -130,10 +136,17 @@ body {
   position: relative;
   flex: 1;
   overflow: hidden;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #2c3e50;
+}
+
+.game-world-container {
+  position: relative;
+  image-rendering: pixelated;
+  width: fit-content;
+  height: fit-content;
 }
 
 /* ============================================
@@ -144,41 +157,154 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  animation: object-float 2s ease-in-out infinite;
+  position: relative;
 }
 
-.object-icon {
-  font-size: 2.5rem;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+/* Efecto de brillo/iluminación en el punto del objeto */
+.object-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, rgba(255, 215, 0, 0.2) 50%, transparent 70%);
+  border-radius: 50%;
+  animation: glow-pulse 1.5s ease-in-out infinite;
+  pointer-events: none;
 }
 
+/* Brillo específico para MK-25 (verde y más grande) */
+.npc-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(0, 255, 0, 0.4) 0%, rgba(0, 255, 0, 0.2) 50%, transparent 70%);
+  border-radius: 50%;
+  animation: glow-pulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { 
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% { 
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+/* Nombre del objeto con la fuente del diálogo */
 .object-label {
-  font-size: 0.9rem;
-  color: white;
+  position: absolute;
+  top: -35px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #e5f0ff;
+  text-shadow: 
+    1px 1px 0 #000,
+    0 0 8px rgba(255, 215, 0, 0.8);
   text-align: center;
-  margin-top: 0.5rem;
+  white-space: nowrap;
+  background: rgba(19, 27, 52, 0.85);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 2px solid rgba(76, 111, 191, 0.6);
 }
 
 .interaction-prompt {
   position: absolute;
-  bottom: -20px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
+  bottom: -28px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  background: rgba(19, 27, 52, 0.95);
+  border: 2px solid #4c6fbf;
+  color: #9bb6ff;
+  padding: 3px 8px;
+  border-radius: 6px;
   white-space: nowrap;
-  animation: prompt-bounce 0.5s ease-in-out infinite;
-}
-
-@keyframes object-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  text-shadow: 1px 1px 0 #000;
+  animation: prompt-bounce 0.8s ease-in-out infinite;
 }
 
 @keyframes prompt-bounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ============================================
+   BARRA DE INSTRUCCIONES INFERIOR
+   ============================================ */
+.interaction-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(19, 27, 52, 0.98), rgba(19, 27, 52, 0.85));
+  border-top: 3px solid #4c6fbf;
+  padding: 16px 24px;
+  z-index: 2000;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.interaction-bar-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.interaction-bar-object {
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #e5f0ff;
+  text-shadow: 
+    1px 1px 0 #000,
+    0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+/* Estilo especial para MK-25 (verde) */
+.interaction-bar-object--mk25 {
+  color: #00ff00;
+  text-shadow: 
+    1px 1px 0 #000,
+    0 0 10px rgba(0, 255, 0, 0.8),
+    0 0 20px rgba(0, 255, 0, 0.6);
+}
+
+.interaction-bar-key {
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: #9bb6ff;
+  text-shadow: 1px 1px 0 #000;
+  background: rgba(76, 111, 191, 0.3);
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: 2px solid #4c6fbf;
+  animation: prompt-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes prompt-pulse {
+  0%, 100% { 
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.05);
+  }
 }
 
 /* ============================================
@@ -358,6 +484,514 @@ body {
 
 .budget-tip p {
   margin: 0;
+}
+
+/* ============================================
+   DISEÑO DE CELULAR PARA PRESUPUESTO
+   ============================================ */
+.mobile-phone-frame {
+  position: relative;
+  width: 420px;
+  height: 85vh;
+  max-height: 820px;
+  background: #1a1a1a;
+  border-radius: 40px;
+  padding: 12px;
+  box-shadow: 
+    0 0 0 2px #0a0a0a,
+    0 0 0 14px #2a2a2a,
+    0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: phone-entrance 0.5s ease-out;
+}
+
+@keyframes phone-entrance {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 30px;
+  background: #1a1a1a;
+  border-radius: 0 0 20px 20px;
+  z-index: 10;
+}
+
+.phone-notch::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 6px;
+  background: #0a0a0a;
+  border-radius: 3px;
+}
+
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+}
+
+.budget-intro-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  flex: 1;
+  text-align: center;
+}
+
+.app-icon {
+  font-size: 1.75rem;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.intro-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.assistant-message {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.assistant-avatar {
+  font-size: 2rem;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.message-bubble {
+  flex: 1;
+  background: white;
+  padding: 1rem;
+  border-radius: 16px 16px 16px 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.message-bubble--final {
+  background: #fff3e0;
+  border-left: 4px solid #ff9800;
+}
+
+.message-bubble p {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.message-bubble p:first-child {
+  margin-top: 0;
+}
+
+.message-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.message-title {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #667eea;
+}
+
+.rule-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rule-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 16px;
+  border: 3px solid;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.rule-card:hover {
+  transform: translateY(-4px);
+}
+
+.rule-card--needs {
+  border-color: #ff6b6b;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+}
+
+.rule-card--wants {
+  border-color: #4ecdc4;
+  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+}
+
+.rule-card--savings {
+  border-color: #95e1d3;
+  background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
+}
+
+.rule-card h3 {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.rule-card p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.rule-icon {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.rule-percent {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.rule-reason {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 2px dashed #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rule-reason strong {
+  font-size: 0.85rem;
+  color: #667eea;
+}
+
+.rule-reason span {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.3;
+}
+
+.start-planning-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.start-planning-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+}
+
+.start-planning-btn:active {
+  transform: translateY(0);
+}
+
+.budget-planning-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+.planning-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.balance-display {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.balance-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.balance-amount {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+}
+
+.balance-pending {
+  color: #ff9800;
+}
+
+.balance-complete {
+  color: #4caf50;
+}
+
+.balance-exceeded {
+  color: #f44336;
+}
+
+.balance-hint {
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.budget-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.slider-group {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 16px;
+  border-left: 6px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.slider-group--needs {
+  border-color: #ff6b6b;
+}
+
+.slider-group--wants {
+  border-color: #4ecdc4;
+}
+
+.slider-group--savings {
+  border-color: #95e1d3;
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.slider-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.slider-icon {
+  font-size: 2rem;
+}
+
+.slider-label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.slider-sublabel {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.125rem;
+}
+
+.slider-value {
+  text-align: right;
+}
+
+.value-amount {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+}
+
+.value-percent {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.125rem;
+}
+
+.budget-range {
+  width: 100%;
+  height: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #e0e0e0;
+  border-radius: 4px;
+  outline: none;
+  margin: 0.75rem 0;
+}
+
+.budget-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 3px solid;
+}
+
+.budget-range--needs::-webkit-slider-thumb {
+  border-color: #ff6b6b;
+}
+
+.budget-range--wants::-webkit-slider-thumb {
+  border-color: #4ecdc4;
+}
+
+.budget-range--savings::-webkit-slider-thumb {
+  border-color: #95e1d3;
+}
+
+.budget-range::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 3px solid;
+}
+
+.budget-range--needs::-moz-range-thumb {
+  border-color: #ff6b6b;
+}
+
+.budget-range--wants::-moz-range-thumb {
+  border-color: #4ecdc4;
+}
+
+.budget-range--savings::-moz-range-thumb {
+  border-color: #95e1d3;
+}
+
+.range-markers {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #999;
+  padding: 0 0.25rem;
+}
+
+.marker-recommended {
+  color: #667eea;
+  font-weight: bold;
+}
+
+.confirm-budget-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: auto;
+}
+
+.confirm-budget-btn:hover:not(.confirm-budget-btn--disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+}
+
+.confirm-budget-btn:active:not(.confirm-budget-btn--disabled) {
+  transform: translateY(0);
+}
+
+.confirm-budget-btn--disabled {
+  background: linear-gradient(135deg, #9e9e9e 0%, #757575 100%);
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ============================================
@@ -1145,6 +1779,180 @@ body {
 }
 
 /* ============================================
+   DIÁLOGOS (ESTILO RETRO)
+   ============================================ */
+
+/* Contenedor general del diálogo */
+.dialogue-root {
+  position: absolute;
+  left: 50%;
+  bottom: 80px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+/* Marco de la carita (mismo marco para todos los personajes) */
+.dialogue-face-wrapper {
+  width: 140px;
+  height: 190px;
+  background-color: #121a2f;
+  border: 3px solid #4c6fbf;
+  border-radius: 10px;
+  box-shadow: 0 0 0 2px #192243;
+  image-rendering: pixelated;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* BASE: configuración general para cualquier sprite de cara */
+.dialogue-face {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  image-rendering: pixelated;
+}
+
+/* ========================================================= */
+/*     TAMAÑO + ANIMACIÓN PARA CARMINA (JUGADOR)            */
+/* ========================================================= */
+
+/* Carmina: tamaño de sprite dentro del marco */
+.dialogue-face--talking-carmina,
+.dialogue-face--idle-carmina {
+  width: 103%;
+  height: 107%;
+  background-size: 108% auto;
+}
+
+/* Carmina hablando */
+.dialogue-face--talking-carmina {
+  animation: dialogue-face-talk-carmina 1.5s steps(5) infinite;
+}
+
+/* Carmina neutral */
+.dialogue-face--idle-carmina {
+  animation: dialogue-face-idle-carmina 2.5s steps(4) infinite;
+}
+
+@keyframes dialogue-face-talk-carmina {
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    background-position-y: 102%;
+  }
+}
+
+@keyframes dialogue-face-idle-carmina {
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    background-position-y: 137.1%;
+  }
+}
+
+/* ========================================================= */
+/*     TAMAÑO + ANIMACIÓN PARA ASESOR (MK-25)               */
+/* ========================================================= */
+
+/* Asesor: imagen estática del protagonista (sin animación) */
+.dialogue-face--talking-advisor,
+.dialogue-face--idle-advisor {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  animation: none;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* ========================================================= */
+/*     PANEL DE TEXTO                                        */
+/* ========================================================= */
+
+/* Caja grande de texto: ancho fijo, alto flexible */
+.dialogue-panel {
+  position: relative;
+  width: 640px;
+  max-width: 640px;
+  min-height: 150px;
+  padding: 28px 40px 28px 40px;
+  background-color: #131b34;
+  border: 3px solid #4c6fbf;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 2px #192243,
+    0 12px 0 rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+/* Nombre del personaje que habla */
+.dialogue-speaker-name {
+  position: absolute;
+  top: 6px;
+  left: 18px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #9bb6ff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Texto estilo retro, se adapta al ancho y hace salto de línea */
+.dialogue-text {
+  margin: 0;
+  margin-top: 10px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 25px;
+  line-height: 1.2;
+  color: #e5f0ff;
+  text-shadow: 1px 1px 0 #000;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* Flechita de "siguiente" abajo a la derecha */
+.dialogue-next {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  font-size: 20px;
+  color: #e5f0ff;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.dialogue-next--visible {
+  opacity: 1;
+}
+
+/* ========================================================= */
+/*     CERDITO / ALCANCÍA (ESTÁTICO Y CON TAMAÑO PROPIO)     */
+/* ========================================================= */
+
+/* Sprite del cerdito: sin animación, tipo "imagen fija" */
+.dialogue-face--pig {
+  animation: none;
+  width: 105%;
+  height: 105%;
+  background-size: 130% auto;
+  background-position: center;
+}
+
+/* ============================================
    MAPA Y TILES
    ============================================ */
 .tile-map {
@@ -1155,7 +1963,6 @@ body {
 .tile-map-image {
   image-rendering: pixelated;
   background-color: #3d5a80;
-  height: 832px;
 }
 
 .tile-grid {
@@ -1176,6 +1983,54 @@ body {
 .player {
   position: absolute;
   z-index: 10;
+}
+
+.player-sprite {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  background-image: var(--player-sprite);
+  background-size: contain;
+  background-position: center;
+  image-rendering: pixelated;
+}
+
+.player-shadow {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 8px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.player--moving .player-sprite {
+  animation: player-walk 0.4s steps(4) infinite;
+}
+
+.player--idle .player-sprite {
+  animation: player-idle 1.2s steps(4) infinite;
+}
+
+.player--left .player-sprite {
+  transform: scaleX(-1);
+}
+
+@keyframes player-walk {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes player-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
 }
 
 /* ============================================
@@ -1220,14 +2075,15 @@ body {
 .npc-name-tag {
   position: absolute;
   bottom: -20px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
+  background: rgba(0, 100, 0, 0.9);
+  color: #00ff00;
   padding: 0.25rem 0.75rem;
   border-radius: 0.5rem;
   font-size: 0.75rem;
   font-weight: bold;
   white-space: nowrap;
-  z-index: 3;
+  z-index: 100;
+  border: 2px solid #00ff00;
 }
 
 .npc--moving .npc-icon {
@@ -2161,25 +3017,4 @@ body {
 .day-complete h2 {
   margin: 0 0 1rem 0;
   color: #4caf50;
-}
-
-/* ===========================
-   NPC STYLE GLOBAL
-   =========================== */
-
-.npc {
-    position: absolute;
-    width: 64px;
-    height: 64px;
-    pointer-events: none;
-    z-index: 5;
-
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* Permite que cada NPC use su propia imagen con una variable CSS */
-.npc[data-img] {
-    background-image: var(--npc-img);
 }

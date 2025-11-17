@@ -1,133 +1,154 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function DayResults({ 
-  day, 
-  budget, 
-  score, 
-  comfortLevel, 
-  streak, 
-  onContinue 
-}) {
-  const savingsAchieved = budget.savings >= budget.savingsGoal;
-  const positiveBalance = budget.total >= 0;
+export function BudgetZones({ totalIncome, currentBudget, onComplete, tutorialMode }) {
+  const [needs, setNeeds] = useState(currentBudget.needs || Math.floor(totalIncome * 0.5));
+  const [wants, setWants] = useState(currentBudget.wants || Math.floor(totalIncome * 0.3));
+  const [savings, setSavings] = useState(currentBudget.savings || Math.floor(totalIncome * 0.2));
+
+  const total = needs + wants + savings;
+  const remaining = totalIncome - total;
+
+  const needsPercent = Math.round((needs / totalIncome) * 100);
+  const wantsPercent = Math.round((wants / totalIncome) * 100);
+  const savingsPercent = Math.round((savings / totalIncome) * 100);
+
+  const handleConfirm = () => {
+    if (remaining < 0) {
+      alert('Has excedido tu ingreso mensual. Ajusta las cantidades.');
+      return;
+    }
+    if (savings === 0 && tutorialMode) {
+      alert('Recuerda: ¡Siempre separa algo para el ahorro!');
+      return;
+    }
+    onComplete({ needs, wants, savings });
+  };
 
   return (
-    <div className="day-results">
-      <div className="results-modal">
+    <div className="budget-zones-overlay">
+      <div className="budget-zones-modal">
         <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>
-          Día {day} Completado
+          Distribuye tu presupuesto mensual
         </h2>
 
-        {/* Imagen dependiente del resultado */}
-        <div className="results-image">
-          {savingsAchieved && positiveBalance ? (
-            <div className="celebration-icon">🎉</div>
-          ) : (
-            <div className="concern-icon">😰</div>
-          )}
+        <div style={{ marginBottom: '24px' }}>
+          <p style={{ textAlign: 'center' }}>
+            Ingreso mensual: <strong>${totalIncome.toLocaleString()}</strong>
+          </p>
+          <p style={{ textAlign: 'center', color: remaining < 0 ? '#ef4444' : '#22c55e' }}>
+            {remaining >= 0
+              ? `Restante: $${remaining.toLocaleString()}`
+              : `Excedido: $${Math.abs(remaining).toLocaleString()}`}
+          </p>
         </div>
 
-        {/* Estadísticas */}
-        <div className="results-stats">
-
-          <div className="stat-item">
-            <span className="stat-icon">📊</span>
-            <span className="stat-label">Puntuación</span>
-            <span className="stat-value">{score}</span>
+        {/* NECESIDADES */}
+        <div className="budget-zone budget-zone--needs">
+          <div className="zone-header">
+            <div className="zone-icon">🛒</div>
+            <div className="zone-info">
+              <h3>Necesidades</h3>
+              <p style={{ fontSize: '14px', opacity: 0.7 }}>Gastos básicos esenciales</p>
+            </div>
           </div>
 
-          <div className="stat-item">
-            <span className="stat-icon">🔥</span>
-            <span className="stat-label">Racha máxima</span>
-            <span className="stat-value">{streak}</span>
+          <div className="zone-amount">
+            <span className="amount">${needs.toLocaleString()}</span>
+            <span className="percentage">({needsPercent}%)</span>
           </div>
 
-          <div className="stat-item">
-            <span className="stat-icon">😊</span>
-            <span className="stat-label">Nivel de confort</span>
-            <span className="stat-value">{comfortLevel}%</span>
-          </div>
-
+          <input
+            type="range"
+            value={needs}
+            onChange={(e) => setNeeds(Number(e.target.value))}
+            max={totalIncome}
+            step={100}
+            className="zone-slider"
+          />
         </div>
 
-        {/* Resumen del presupuesto */}
-        <div className="results-budget">
-          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>
-            Presupuesto final del día
-          </h3>
-
-          <div className="budget-summary">
-
-            <div className="summary-row">
-              <span>🛒 Necesidades:</span>
-              <span>${budget.needs.toLocaleString()}</span>
+        {/* GUSTOS */}
+        <div className="budget-zone budget-zone--wants">
+          <div className="zone-header">
+            <div className="zone-icon">🎮</div>
+            <div className="zone-info">
+              <h3>Gustos</h3>
+              <p style={{ fontSize: '14px', opacity: 0.7 }}>Entretenimiento y opcionales</p>
             </div>
-
-            <div className="summary-row">
-              <span>🎮 Gustos:</span>
-              <span>${budget.wants.toLocaleString()}</span>
-            </div>
-
-            <div className="summary-row summary-row--highlight">
-              <span>🐷 Ahorro:</span>
-              <span>
-                ${budget.savings.toLocaleString()} / ${budget.savingsGoal.toLocaleString()}
-                {savingsAchieved && ' ✅'}
-              </span>
-            </div>
-
-            <div
-              className={`summary-row summary-row--total ${budget.total < 0 ? 'negative' : ''}`}
-            >
-              <span>💰 Saldo Total:</span>
-              <span style={{ color: budget.total < 0 ? '#dc2626' : '#16a34a' }}>
-                ${budget.total.toLocaleString()}
-              </span>
-            </div>
-
           </div>
+
+          <div className="zone-amount">
+            <span className="amount">${wants.toLocaleString()}</span>
+            <span className="percentage">({wantsPercent}%)</span>
+          </div>
+
+          <input
+            type="range"
+            value={wants}
+            onChange={(e) => setWants(Number(e.target.value))}
+            max={totalIncome}
+            step={100}
+            className="zone-slider"
+          />
         </div>
 
-        {/* Mensaje final */}
-        <div className="results-feedback">
-          {savingsAchieved && positiveBalance && (
-            <p className="feedback feedback--positive">
-              ¡Excelente! Mantuviste tu meta de ahorro y terminaste con saldo positivo.
-            </p>
-          )}
+        {/* AHORRO */}
+        <div className="budget-zone budget-zone--savings">
+          <div className="zone-header">
+            <div className="zone-icon">🐷</div>
+            <div className="zone-info">
+              <h3>Ahorro</h3>
+              <p style={{ fontSize: '14px', opacity: 0.7 }}>Para tus metas financieras</p>
+            </div>
+          </div>
 
-          {!savingsAchieved && positiveBalance && (
-            <p className="feedback feedback--warning">
-              Mantuviste saldo positivo, pero no alcanzaste tu meta de ahorro.
-              Intenta priorizar el ahorro desde el inicio.
-            </p>
-          )}
+          <div className="zone-amount">
+            <span className="amount">${savings.toLocaleString()}</span>
+            <span className="percentage">({savingsPercent}%)</span>
+          </div>
 
-          {budget.total < 0 && (
-            <p className="feedback feedback--negative">
-              Terminaste con saldo negativo. Revisa tus gastos y prioriza necesidades sobre gustos.
-            </p>
-          )}
+          <input
+            type="range"
+            value={savings}
+            onChange={(e) => setSavings(Number(e.target.value))}
+            max={totalIncome}
+            step={100}
+            className="zone-slider"
+          />
         </div>
 
-        {/* Botón continuar */}
-        <button
-          onClick={onContinue}
+        <div
           style={{
-            width: '100%',
             marginTop: '24px',
-            padding: '12px 32px',
-            fontSize: '16px',
-            background: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
+            padding: '16px',
+            background: '#eff6ff',
+            borderRadius: '8px'
           }}
         >
-          {day < 5 ? `Continuar al Día ${day + 1}` : 'Ver Resultados Finales'} →
-        </button>
+          <p style={{ fontSize: '14px', textAlign: 'center' }}>
+            💡 Regla guía: <strong>50% Necesidades</strong> / <strong>30% Gustos</strong> /{' '}
+            <strong>20% Ahorro</strong>
+          </p>
+        </div>
 
+        <div style={{ marginTop: '24px' }}>
+          <button
+            onClick={handleConfirm}
+            disabled={remaining < 0}
+            style={{
+              width: '100%',
+              padding: '12px',
+              fontSize: '16px',
+              background: remaining < 0 ? '#ccc' : '#4CAF50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: remaining < 0 ? 'not-allowed' : 'pointer'
+            }}
+          >
+            Confirmar Presupuesto
+          </button>
+        </div>
       </div>
     </div>
   );
