@@ -1,33 +1,17 @@
 import React from 'react';
 
-export function ExpenseCard({
-  card,
-  daysLeft,
-  onPayNow,
-  onPayFromSavings,
-  onPostpone,
-  onDiscard,
-  canPostpone = true
-}) {
+export function ExpenseCard({ card, daysLeft, onPayNow, onPayFromSavings, onPostpone, onDiscard, canPostpone = true }) {
   const isUrgent = daysLeft !== undefined && daysLeft <= 1;
   const isNeed = card.type === 'need';
 
   return (
-    <div
-      className={`expense-card ${
-        isNeed ? 'expense-card--need' : 'expense-card--want'
-      } ${isUrgent ? 'expense-card--urgent' : ''}`}
-    >
-      {/* ENCABEZADO */}
+    <div className={`expense-card ${isNeed ? 'expense-card--need' : 'expense-card--want'} ${isUrgent ? 'expense-card--urgent' : ''}`}>
       <div className="card-header">
         <div className="card-icon">{card.icon}</div>
-
         <div className="card-title-area">
           <h4>{card.name}</h4>
-
           <div className="card-badges">
-            {/* Tipo de gasto */}
-            <span
+            <span 
               style={{
                 display: 'inline-block',
                 padding: '4px 8px',
@@ -39,10 +23,8 @@ export function ExpenseCard({
             >
               {isNeed ? 'Necesidad' : 'Gusto'}
             </span>
-
-            {/* Urgencia */}
             {daysLeft !== undefined && (
-              <span
+              <span 
                 style={{
                   display: 'inline-block',
                   padding: '4px 8px',
@@ -60,31 +42,26 @@ export function ExpenseCard({
         </div>
       </div>
 
-      {/* DESCRIPCIÓN */}
       <div className="card-body">
         <p className="card-description">{card.description}</p>
       </div>
 
-      {/* COSTO */}
       <div className="card-amount">
         <span className="amount-label">Costo:</span>
         <span className="amount-value">${card.amount.toLocaleString()}</span>
       </div>
 
-      {/* CONSECUENCIA */}
       <div className="card-consequence">
         <p className="consequence-label">Si no pagas:</p>
         <p className="consequence-text">{card.consequence}</p>
         <p className="consequence-impact">
-          Bienestar:{' '}
-          <span className="impact-value">{card.wellbeingImpact}</span>
+          Bienestar: <span className="impact-value">{card.wellbeingImpact}</span>
         </p>
       </div>
 
-      {/* ACCIONES */}
       <div className="card-actions">
-        <button
-          onClick={onPayNow}
+        <button 
+          onClick={onPayNow} 
           style={{
             width: '100%',
             padding: '10px',
@@ -99,12 +76,11 @@ export function ExpenseCard({
         >
           💳 Pagar de {isNeed ? 'Necesidades' : 'Gustos'}
         </button>
-
+        
         <div className="card-secondary-actions">
-          {/* Pagar con Ahorro */}
           {onPayFromSavings && (
-            <button
-              onClick={onPayFromSavings}
+            <button 
+              onClick={onPayFromSavings} 
               style={{
                 padding: '6px 12px',
                 fontSize: '12px',
@@ -118,11 +94,10 @@ export function ExpenseCard({
               🐷 Usar Ahorro
             </button>
           )}
-
-          {/* Posponer */}
+          
           {onPostpone && canPostpone && (
-            <button
-              onClick={onPostpone}
+            <button 
+              onClick={onPostpone} 
               style={{
                 padding: '6px 12px',
                 fontSize: '12px',
@@ -136,10 +111,9 @@ export function ExpenseCard({
               ⏰ Posponer
             </button>
           )}
-
-          {/* No pagar */}
-          <button
-            onClick={onDiscard}
+          
+          <button 
+            onClick={onDiscard} 
             style={{
               padding: '6px 12px',
               fontSize: '12px',

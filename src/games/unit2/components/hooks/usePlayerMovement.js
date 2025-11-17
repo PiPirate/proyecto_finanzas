@@ -9,7 +9,7 @@ export function usePlayerMovement(initialPosition, mapData) {
     if (y < 0 || y >= mapData.length || x < 0 || x >= mapData[0].length) {
       return false;
     }
-    return mapData[y][x] === 0; // 0 = caminable
+    return mapData[y][x] === 0;
   };
 
   useEffect(() => {

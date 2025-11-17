@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { TileMap } from './game/TileMap';
 import { Player } from './game/Player';
@@ -7,68 +9,34 @@ import { BudgetPanel } from './game/BudgetPanel';
 import { ExpenseGamePanel } from './game/ExpenseGamePanel';
 import { FreelanceGamePanel } from './game/FreelanceGamePanel';
 import { MemoryGamePanel } from './game/MemoryGamePanel';
-
-import {
-  gameMap,
-  interactiveObjects,
-  mk25Dialogues,
-  zoneDialogues
-} from './data/gameMap';
-
+import { gameMap, interactiveObjects, mk25Dialogues, zoneDialogues } from './data/gameMap';
 import mk25Sprite from '../assets/mk25sprite.png';
 
-// Estados del juego
-const GAME_STATES = {
-  EXPLORING: 'exploring',
-  DIALOGUE: 'dialogue',
-  BUDGET: 'budget',
-  EXPENSE_GAME: 'expense_game',
-  FREELANCE_GAME: 'freelance_game',
-  MEMORY_GAME: 'memory_game',
-  TOUR: 'tour'
-};
-
-// Direcciones
-const DIR = {
-  UP: 'up',
-  DOWN: 'down',
-  LEFT: 'left',
-  RIGHT: 'right'
-};
-
-// Waypoints del tour
 const TOUR_WAYPOINTS = {
   start: { x: 8, y: 2 },
   needs: { x: 2, y: 9 },
   wants: { x: 10, y: 8 },
   savings: { x: 14, y: 2 },
-  end: { x: 8, y: 2 }
+  end: { x: 8, y: 2 },
 };
 
 export function GameWorld({ onComplete } = {}) {
-  // Estado del jugador
   const [playerPos, setPlayerPos] = useState({ x: 8, y: 10 });
-  const [direction, setDirection] = useState(DIR.DOWN);
+  const [direction, setDirection] = useState('down');
   const [isMoving, setIsMoving] = useState(false);
-
-  // Estado del juego
-  const [gameState, setGameState] = useState(GAME_STATES.EXPLORING);
-
-  // Estado de diálogos
+  const [gameState, setGameState] = useState('exploring');
   const [currentDialogueQueue, setCurrentDialogueQueue] = useState([]);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
-
   const [currentObject, setCurrentObject] = useState(null);
   const [currentMemoryZone, setCurrentMemoryZone] = useState(null);
-
-  // Estado del tour (MK-25)
+  
   const [mk25Pos, setMk25Pos] = useState(TOUR_WAYPOINTS.start);
-  const [mk25Direction, setMk25Direction] = useState(DIR.DOWN);
+  const [mk25Direction, setMk25Direction] = useState('down');
   const [mk25Moving, setMk25Moving] = useState(false);
   const [currentTourStep, setCurrentTourStep] = useState(0);
   const [isOnTour, setIsOnTour] = useState(false);
-
-  // Progreso narrativo
+  const [tourPhase, setTourPhase] = useState('idle');
+  
   const [storyProgress, setStoryProgress] = useState({
     intro: false,
     learnBudget: false,
@@ -84,27 +52,21 @@ export function GameWorld({ onComplete } = {}) {
     wantsZone: false,
     savingsZone: false,
     firstChallenge: false,
-    finalChallenge: false
+    finalChallenge: false,
   });
 
-  // Presupuesto
   const [playerBudget, setPlayerBudget] = useState({
     needs: 0,
     wants: 0,
-    savings: 0
+    savings: 0,
   });
 
-  // Progreso de los 5 días
   const [daysCompleted, setDaysCompleted] = useState(0);
-
-  // Texto inferior de interacción
+  const [showObjective, setShowObjective] = useState(true);
   const [facingObjectName, setFacingObjectName] = useState(null);
 
   const TILE_SIZE = 64;
 
-  /* -------------------------------------------------------------
-    INTRO AUTOMÁTICO
-  ------------------------------------------------------------- */
   useEffect(() => {
     if (!storyProgress.intro) {
       setTimeout(() => {
@@ -114,574 +76,785 @@ export function GameWorld({ onComplete } = {}) {
     }
   }, []);
 
-  /* -------------------------------------------------------------
-    OBJETIVO ACTUAL
-  ------------------------------------------------------------- */
   const getCurrentObjective = () => {
-    if (!storyProgress.learnBudget) return '📊 Ve a la Mesa de Planificación';
-    if (!storyProgress.tourStarted) return '🔍 Inicia el tour con MK-25';
+    if (!storyProgress.learnBudget) {
+      return "📊 Ve a la Mesa de Planificación (arriba izquierda) y habla con ella";
+    }
+    if (!storyProgress.tourStarted) {
+      return "🔍 Inicia el tour para aprender sobre las zonas";
+    }
     if (!storyProgress.tourCompleted) {
       const missing = [];
-      if (!storyProgress.tourNeedsVisited) missing.push('Necesidades 🛒');
-      if (!storyProgress.tourWantsVisited) missing.push('Gustos 🎮');
-      if (!storyProgress.tourSavingsVisited) missing.push('Ahorro 🐷');
-      return `Completa el tour: ${missing.join(', ')}`;
+      if (!storyProgress.tourNeedsVisited) missing.push("Necesidades 🛒");
+      if (!storyProgress.tourWantsVisited) missing.push("Gustos 🎮");
+      if (!storyProgress.tourSavingsVisited) missing.push("Ahorro 🐷");
+      return `🔍 Completa el tour: ${missing.join(", ")}`;
     }
-    if (!storyProgress.firstChallenge) return '💻 Ve a la computadora para el primer desafío';
-    if (!storyProgress.finalChallenge && daysCompleted < 5)
-      return `💻 Completa los 5 días (${daysCompleted}/5)`;
-    return '🎉 ¡Ya completaste todo!';
+    if (!storyProgress.firstChallenge) {
+      return "💻 Ve a la Computadora de Gestión (arriba derecha) para tu primer desafío";
+    }
+    if (!storyProgress.finalChallenge && daysCompleted < 5) {
+      return `💻 Completa el desafío del mes (${daysCompleted}/5 días)`;
+    }
+    return "🎉 ¡Completaste todo! Puedes seguir practicando en la computadora";
   };
 
-  /* -------------------------------------------------------------
-    INICIAR DIÁLOGO
-  ------------------------------------------------------------- */
   const startDialogueSequence = (dialogues) => {
     setCurrentDialogueQueue(dialogues);
     setCurrentDialogueIndex(0);
-    setGameState(GAME_STATES.DIALOGUE);
+    setGameState('dialogue');
   };
 
-  /* -------------------------------------------------------------
-    COLISIONES
-  ------------------------------------------------------------- */
   const isWalkable = (x, y) => {
-    if (y < 0 || y >= gameMap.length || x < 0 || x >= gameMap[0].length) return false;
+    if (y < 0 || y >= gameMap.length || x < 0 || x >= gameMap[0].length) {
+      return false;
+    }
     return gameMap[y][x] === 0;
   };
 
   const getObjectAt = (x, y) => {
-    return interactiveObjects.find(
-      (obj) => Math.abs(obj.x - x) < 0.6 && Math.abs(obj.y - y) < 0.6
-    );
+    return interactiveObjects.find((obj) => Math.abs(obj.x - x) < 0.6 && Math.abs(obj.y - y) < 0.6);
   };
 
-  /* -------------------------------------------------------------
-    MOVIMIENTO DEL JUGADOR
-  ------------------------------------------------------------- */
-  const handleMove = useCallback(
-    (newDir) => {
-      if (gameState !== GAME_STATES.EXPLORING) return;
+  const handleMove = useCallback((newDir) => {
+    if (gameState !== 'exploring') return;
 
-      setDirection(newDir);
+    setDirection(newDir);
 
-      let newX = playerPos.x;
-      let newY = playerPos.y;
+    let newX = playerPos.x;
+    let newY = playerPos.y;
 
-      if (newDir === DIR.UP) newY--;
-      if (newDir === DIR.DOWN) newY++;
-      if (newDir === DIR.LEFT) newX--;
-      if (newDir === DIR.RIGHT) newX++;
+    switch (newDir) {
+      case 'up':
+        newY -= 1;
+        break;
+      case 'down':
+        newY += 1;
+        break;
+      case 'left':
+        newX -= 1;
+        break;
+      case 'right':
+        newX += 1;
+        break;
+    }
 
-      const collideMK25 =
-        Math.abs(newX - mk25Pos.x) < 0.6 && Math.abs(newY - mk25Pos.y) < 0.6;
+    const wouldCollideWithMK25 = Math.abs(newX - mk25Pos.x) < 0.6 && Math.abs(newY - mk25Pos.y) < 0.6;
 
-      if (isWalkable(newX, newY) && !collideMK25) {
-        setIsMoving(true);
-        setPlayerPos({ x: newX, y: newY });
-        setTimeout(() => setIsMoving(false), 200);
-      }
-
-      updateFacingObject(newX, newY, newDir);
-    },
-    [playerPos, gameState, mk25Pos]
-  );
-
-  /* -------------------------------------------------------------
-    QUÉ OBJETO ESTÁ MIRANDO EL JUGADOR
-  ------------------------------------------------------------- */
+    if (isWalkable(newX, newY) && !wouldCollideWithMK25) {
+      setIsMoving(true);
+      setPlayerPos({ x: newX, y: newY });
+      setTimeout(() => setIsMoving(false), 200);
+    }
+    
+    updateFacingObject(newX, newY, newDir);
+  }, [playerPos, gameState, mk25Pos]);
+  
   const updateFacingObject = (x, y, dir) => {
-    let tx = x;
-    let ty = y;
-
-    if (dir === DIR.UP) ty--;
-    if (dir === DIR.DOWN) ty++;
-    if (dir === DIR.LEFT) tx--;
-    if (dir === DIR.RIGHT) tx++;
-
-    const obj = getObjectAt(tx, ty);
-    const nearby = obj && Math.abs(x - obj.x) <= 1 && Math.abs(y - obj.y) <= 1;
-
-    setFacingObjectName(nearby ? obj.name : null);
+    let targetX = x;
+    let targetY = y;
+    
+    switch (dir) {
+      case 'up':
+        targetY -= 1;
+        break;
+      case 'down':
+        targetY += 1;
+        break;
+      case 'left':
+        targetX -= 1;
+        break;
+      case 'right':
+        targetX += 1;
+        break;
+    }
+    
+    const obj = getObjectAt(targetX, targetY);
+    const isNearby = obj ? Math.abs(x - obj.x) <= 1 && Math.abs(y - obj.y) <= 1 : false;
+    
+    if (obj && isNearby) {
+      setFacingObjectName(obj.name);
+    } else {
+      setFacingObjectName(null);
+    }
   };
 
-  /* -------------------------------------------------------------
-    INTERACTUAR (ENTER / Z / ESPACIO)
-  ------------------------------------------------------------- */
   const handleInteract = useCallback(() => {
-    if (gameState !== GAME_STATES.EXPLORING) return;
+    if (gameState !== 'exploring') return;
 
-    let ix = playerPos.x;
-    let iy = playerPos.y;
+    let interactX = playerPos.x;
+    let interactY = playerPos.y;
 
-    if (direction === DIR.UP) iy--;
-    if (direction === DIR.DOWN) iy++;
-    if (direction === DIR.LEFT) ix--;
-    if (direction === DIR.RIGHT) ix++;
+    switch (direction) {
+      case 'up':
+        interactY -= 1;
+        break;
+      case 'down':
+        interactY += 1;
+        break;
+      case 'left':
+        interactX -= 1;
+        break;
+      case 'right':
+        interactX += 1;
+        break;
+    }
 
-    const obj = getObjectAt(ix, iy);
-    if (obj) handleObjectInteraction(obj);
-  }, [playerPos, direction, gameState]);
+    const obj = getObjectAt(interactX, interactY);
+    
+    if (obj) {
+      setCurrentObject(obj);
+      handleObjectInteraction(obj);
+    }
+  }, [playerPos, direction, gameState, storyProgress]);
 
-  /* -------------------------------------------------------------
-    INTERACCIÓN SEGÚN OBJETO
-  ------------------------------------------------------------- */
   const handleObjectInteraction = (obj) => {
     switch (obj.id) {
       case 'mk25_assistant':
-        return handleMK25Interaction();
-
+        handleMK25Interaction();
+        break;
+      
       case 'planning_desk':
         if (!storyProgress.learnBudget) {
-          setGameState(GAME_STATES.BUDGET);
+          setGameState('budget');
         } else {
-          startDialogueSequence([
-            {
-              speaker: 'system',
-              text: 'Ya configuraste tu presupuesto. Puedes volver cuando quieras.',
-              emotion: 'neutral'
-            }
-          ]);
+          startDialogueSequence([{
+            speaker: 'system',
+            text: 'Ya configuraste tu presupuesto. Puedes volver aquí si necesitas ajustarlo más adelante.',
+            emotion: 'neutral',
+          }]);
         }
         break;
-
+      
       case 'needs_area':
-        return tryStartZoneMinigame('needs', '🛒 Zona de Necesidades');
-
+        if (!storyProgress.tourCompleted) {
+          startDialogueSequence([{
+            speaker: 'system',
+            text: '⚠️ Primero completa el tour con MK-25 para desbloquear los minijuegos.',
+            emotion: 'neutral',
+          }]);
+        } else {
+          startDialogueSequence([{
+            speaker: 'system',
+            text: '🛒 Zona de Necesidades. ¿Quieres jugar el minijuego de memoria para repasar?',
+            emotion: 'neutral',
+          }, {
+            speaker: 'system',
+            text: '[Presiona ENTER para jugar]',
+            emotion: 'neutral',
+          }]);
+          setTimeout(() => {
+            setCurrentMemoryZone('needs');
+            setGameState('memory_game');
+          }, 100);
+        }
+        break;
+      
       case 'wants_area':
-        return tryStartZoneMinigame('wants', '🎮 Zona de Gustos');
-
+        if (!storyProgress.tourCompleted) {
+          startDialogueSequence([{
+            speaker: 'system',
+            text: '⚠️ Primero completa el tour con MK-25 para desbloquear los minijuegos.',
+            emotion: 'neutral',
+          }]);
+        } else {
+          startDialogueSequence([{
+            speaker: 'system',
+            text: '🎮 Zona de Gustos. ¿Quieres jugar el minijuego de memoria para repasar?',
+            emotion: 'neutral',
+          }, {
+            speaker: 'system',
+            text: '[Presiona ENTER para jugar]',
+            emotion: 'neutral',
+          }]);
+          setTimeout(() => {
+            setCurrentMemoryZone('wants');
+            setGameState('memory_game');
+          }, 100);
+        }
+        break;
+      
       case 'savings_area':
-        return tryStartZoneMinigame('savings', '🐷 Zona de Ahorro');
-
+        if (!storyProgress.tourCompleted) {
+          startDialogueSequence([{
+            speaker: 'system',
+            text: '⚠️ Primero completa el tour con MK-25 para desbloquear los minijuegos.',
+            emotion: 'neutral',
+          }]);
+        } else {
+          startDialogueSequence([{
+            speaker: 'system',
+            text: '🐷 Zona de Ahorro. ¿Quieres jugar el minijuego de memoria para repasar?',
+            emotion: 'neutral',
+          }, {
+            speaker: 'system',
+            text: '[Presiona ENTER para jugar]',
+            emotion: 'neutral',
+          }]);
+          setTimeout(() => {
+            setCurrentMemoryZone('savings');
+            setGameState('memory_game');
+          }, 100);
+        }
+        break;
+      
       case 'management_pc':
-        return handlePCInteraction();
-
+        if (playerBudget.needs === 0 && playerBudget.wants === 0 && playerBudget.savings === 0) {
+          startDialogueSequence([{
+            speaker: 'system',
+            text: 'Primero necesitas configurar tu presupuesto en la Mesa de Planificación.',
+            emotion: 'neutral',
+          }]);
+        } else if (!storyProgress.tourCompleted) {
+          startDialogueSequence([{
+            speaker: 'assistant',
+            text: 'Primero completa el tour para entender las zonas. Explora el refrigerador, la zona de ocio y la alcancía.',
+            emotion: 'thinking',
+          }]);
+        } else {
+          startDialogueSequence(mk25Dialogues.beforeSimulation);
+          setTimeout(() => {
+            setGameState('expense_game');
+          }, 100);
+        }
+        break;
+      
       case 'freelance_desk':
-        startDialogueSequence(zoneDialogues.freelance);
-        setTimeout(() => setGameState(GAME_STATES.FREELANCE_GAME), 800);
+        if (playerBudget.needs === 0 && playerBudget.wants === 0 && playerBudget.savings === 0) {
+          startDialogueSequence([{
+            speaker: 'system',
+            text: 'Primero necesitas configurar tu presupuesto.',
+            emotion: 'neutral',
+          }]);
+        } else {
+          startDialogueSequence(zoneDialogues.freelance);
+          setTimeout(() => {
+            setGameState('freelance_game');
+          }, 1000);
+        }
         break;
     }
   };
 
-  /* -------------------------------------------------------------
-    INTERACCIÓN CON MK-25
-  ------------------------------------------------------------- */
   const handleMK25Interaction = () => {
     if (!storyProgress.learnBudget) {
-      return startDialogueSequence([
-        {
-          speaker: 'assistant',
-          text: 'Ve a la Mesa de Planificación para configurar tu presupuesto.',
-          emotion: 'neutral'
-        }
-      ]);
-    }
-
-    if (!storyProgress.tourStarted) {
-      setStoryProgress((p) => ({ ...p, tourStarted: true }));
+      startDialogueSequence([{
+        speaker: 'assistant',
+        text: 'Recuerda: ve a la Mesa de Planificación (arriba a la izquierda) para configurar tu presupuesto.',
+        emotion: 'neutral',
+      }]);
+    } else if (!storyProgress.tourStarted) {
+      setStoryProgress(prev => ({ ...prev, tourStarted: true }));
       startDialogueSequence(mk25Dialogues.afterBudget);
-      return setTimeout(() => startTourMovement(), 500);
-    }
-
-    if (!storyProgress.tourCompleted) {
+      setTimeout(() => {
+        startTourMovement();
+      }, 500);
+    } else if (!storyProgress.tourCompleted) {
       const missing = [];
-      if (!storyProgress.tourNeedsVisited) missing.push('🛒 Necesidades');
-      if (!storyProgress.tourWantsVisited) missing.push('🎮 Gustos');
-      if (!storyProgress.tourSavingsVisited) missing.push('🐷 Ahorro');
-
-      return startDialogueSequence([
-        {
-          speaker: 'assistant',
-          text: `Aún falta visitar: ${missing.join(', ')}`,
-          emotion: 'thinking'
-        }
-      ]);
+      if (!storyProgress.needsGameCompleted) missing.push('Refrigerador 🛒');
+      if (!storyProgress.wantsGameCompleted) missing.push('Zona de Ocio 🎮');
+      if (!storyProgress.savingsGameCompleted) missing.push('Alcancía 🐷');
+      
+      startDialogueSequence([{
+        speaker: 'assistant',
+        text: `Completa el tour visitando: ${missing.join(', ')}. ¡Te espero cuando termines!`,
+        emotion: 'thinking',
+      }]);
+    } else if (!storyProgress.firstChallenge) {
+      startDialogueSequence(mk25Dialogues.afterTour);
+    } else {
+      startDialogueSequence(mk25Dialogues.helpReminder);
     }
-
-    startDialogueSequence(mk25Dialogues.helpReminder);
   };
 
-  /* -------------------------------------------------------------
-    INICIO DEL TOUR AUTOMÁTICO
-  ------------------------------------------------------------- */
   const startTourMovement = () => {
     setIsOnTour(true);
-    setGameState(GAME_STATES.TOUR);
+    setGameState('tour');
     setCurrentTourStep(1);
     moveToWaypoint(TOUR_WAYPOINTS.needs, () => {
-      setGameState(GAME_STATES.DIALOGUE);
+      setGameState('dialogue');
       startDialogueSequence([
         {
           speaker: 'assistant',
-          text: '🛒 Zona de necesidades: gastos esenciales.',
-          emotion: 'neutral'
+          text: '🛒 Esta es la zona del REFRIGERADOR. Representa tus NECESIDADES.',
+          emotion: 'happy',
         },
         {
           speaker: 'assistant',
-          text: 'Aquí va el 50% de tu presupuesto.',
-          emotion: 'thinking'
+          text: 'Las necesidades son gastos esenciales para vivir: comida, servicios básicos, transporte al trabajo, medicinas...',
+          emotion: 'neutral',
         },
         {
           speaker: 'assistant',
-          text: '¡Vamos a la siguiente zona!',
-          emotion: 'happy'
+          text: 'Según la regla 50-30-20, debes destinar el 50% de tu salario a necesidades.',
+          emotion: 'thinking',
+        },
+        {
+          speaker: 'assistant',
+          text: '¡Ahora vamos a la siguiente zona! Sígueme...',
+          emotion: 'happy',
         }
       ]);
     });
   };
 
-  /* -------------------------------------------------------------
-    TE TOCA DECIR:
-    👉 “Continuar con la Parte 2”
-  ------------------------------------------------------------- */
-  /* -------------------------------------------------------------
-    MOVER A MK-25 HACIA UN WAYPOINT (ruta automática del tour)
-  ------------------------------------------------------------- */
-  const moveToWaypoint = (target, onArrive) => {
-    setMk25Moving(true);
-
-    const step = () => {
-      setMk25Pos(prev => {
-        const dx = target.x - prev.x;
-        const dy = target.y - prev.y;
-
-        if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
-          setMk25Moving(false);
-          if (onArrive) onArrive();
-          return prev;
+  const continueTourToWants = () => {
+    setGameState('tour');
+    setCurrentTourStep(2);
+    moveToWaypoint(TOUR_WAYPOINTS.wants, () => {
+      setGameState('dialogue');
+      startDialogueSequence([
+        {
+          speaker: 'assistant',
+          text: '🎮 Esta es la ZONA DE OCIO. Representa tus GUSTOS.',
+          emotion: 'happy',
+        },
+        {
+          speaker: 'assistant',
+          text: 'Los gustos son cosas que disfrutas pero no son esenciales: streaming, salidas, hobbies, ropa de moda...',
+          emotion: 'neutral',
+        },
+        {
+          speaker: 'assistant',
+          text: 'Según la regla 50-30-20, puedes destinar el 30% de tu salario a gustos. ¡Diviértete sin culpa!',
+          emotion: 'thinking',
+        },
+        {
+          speaker: 'assistant',
+          text: 'Última parada del tour... ¡Vamos!',
+          emotion: 'happy',
         }
+      ]);
+    });
+  };
 
-        const stepX = dx !== 0 ? dx / Math.abs(dx) : 0;
-        const stepY = dy !== 0 ? dy / Math.abs(dy) : 0;
-
-        if (Math.abs(dx) > Math.abs(dy)) {
-          if (stepX > 0) setMk25Direction(DIR.RIGHT);
-          else setMk25Direction(DIR.LEFT);
-        } else {
-          if (stepY > 0) setMk25Direction(DIR.DOWN);
-          else setMk25Direction(DIR.UP);
+  const continueTourToSavings = () => {
+    setGameState('tour');
+    setCurrentTourStep(3);
+    moveToWaypoint(TOUR_WAYPOINTS.savings, () => {
+      setGameState('dialogue');
+      startDialogueSequence([
+        {
+          speaker: 'assistant',
+          text: '🐷 Esta es la ALCANCÍA. Representa tu AHORRO.',
+          emotion: 'happy',
+        },
+        {
+          speaker: 'assistant',
+          text: 'El ahorro es dinero que guardas para el futuro: emergencias, metas grandes, inversiones, jubilación...',
+          emotion: 'neutral',
+        },
+        {
+          speaker: 'assistant',
+          text: 'Según la regla 50-30-20, debes ahorrar el 20% de tu salario. ¡Tu yo del futuro te lo agradecerá!',
+          emotion: 'thinking',
+        },
+        {
+          speaker: 'assistant',
+          text: '¡Tour completado! Ahora regreso a mi puesto...',
+          emotion: 'happy',
         }
+      ]);
+    });
+  };
 
-        return { x: prev.x + stepX * 0.1, y: prev.y + stepY * 0.1 };
-      });
+  const returnToBase = () => {
+    setGameState('tour');
+    setCurrentTourStep(4);
+    setIsOnTour(false);
+    moveToWaypoint(TOUR_WAYPOINTS.end, () => {
+      setGameState('dialogue');
+      startDialogueSequence([
+        {
+          speaker: 'assistant',
+          text: '✅ ¡Excelente! Ya conoces las 3 categorías del presupuesto 50-30-20.',
+          emotion: 'happy',
+        },
+        {
+          speaker: 'assistant',
+          text: 'Ahora puedes INTERACTUAR con cada zona (Refrigerador 🛒, Zona de Ocio 🎮, Alcancía 🐷) para jugar minijuegos y aprender más.',
+          emotion: 'thinking',
+        },
+        {
+          speaker: 'assistant',
+          text: 'Cuando estés listo, ve a la COMPUTADORA DE GESTIÓN 💻 (arriba derecha) para empezar el simulador de 5 días. ¡Suerte!',
+          emotion: 'happy',
+        }
+      ]);
+      
+      if (onComplete) {
+        setTimeout(() => {
+          onComplete();
+        }, 2000);
+      }
+    });
+  };
 
-      requestAnimationFrame(step);
+  const moveToWaypoint = (target, onComplete) => {
+    const findPath = (start, end) => {
+      const startX = Math.floor(start.x);
+      const startY = Math.floor(start.y);
+      const endX = Math.floor(end.x);
+      const endY = Math.floor(end.y);
+      
+      const queue = [
+        { pos: { x: startX, y: startY }, path: [{ x: startX, y: startY }] }
+      ];
+      const visited = new Set();
+      visited.add(`${startX},${startY}`);
+      
+      while (queue.length > 0) {
+        const { pos, path } = queue.shift();
+        
+        if (pos.x === endX && pos.y === endY) {
+          const finalPath = [...path];
+          finalPath[finalPath.length - 1] = { x: end.x, y: end.y };
+          return finalPath;
+        }
+        
+        const directions = [
+          { x: 0, y: -1 },
+          { x: 0, y: 1 },
+          { x: -1, y: 0 },
+          { x: 1, y: 0 }
+        ];
+        
+        for (const dir of directions) {
+          const newX = pos.x + dir.x;
+          const newY = pos.y + dir.y;
+          const key = `${newX},${newY}`;
+          
+          if (!visited.has(key) && isWalkable(newX, newY)) {
+            visited.add(key);
+            queue.push({
+              pos: { x: newX, y: newY },
+              path: [...path, { x: newX, y: newY }]
+            });
+          }
+        }
+      }
+      
+      console.error(`No se encontró camino de (${startX},${startY}) a (${endX},${endY})`);
+      return [];
     };
-
-    requestAnimationFrame(step);
-  };
-
-  /* -------------------------------------------------------------
-    INICIO DE CADA ZONA DEL TOUR
-  ------------------------------------------------------------- */
-  const handleTourAdvance = () => {
-    if (currentTourStep === 1) {
-      setCurrentTourStep(2);
-      moveToWaypoint(TOUR_WAYPOINTS.wants, () => {
-        startDialogueSequence(mk25Dialogues.tourWants);
-      });
-    } else if (currentTourStep === 2) {
-      setCurrentTourStep(3);
-      moveToWaypoint(TOUR_WAYPOINTS.savings, () => {
-        startDialogueSequence(mk25Dialogues.tourSavings);
-      });
-    } else if (currentTourStep === 3) {
-      setCurrentTourStep(4);
-      moveToWaypoint(TOUR_WAYPOINTS.end, () => {
-        setStoryProgress(p => ({ ...p, tourCompleted: true }));
-        startDialogueSequence(mk25Dialogues.afterTour);
-        setIsOnTour(false);
-      });
-    }
-  };
-
-  /* -------------------------------------------------------------
-    INICIAR MINIJUEGO AL ENTRAR A UNA ZONA (si aplica)
-  ------------------------------------------------------------- */
-  const tryStartZoneMinigame = (zone, zoneLabel) => {
-    if (!storyProgress.tourStarted) return;
-
-    const progressKey = `tour${zoneLabel.includes('Necesidades') ? 'Needs'
-      : zoneLabel.includes('Gustos') ? 'Wants'
-        : 'Savings'}Visited`;
-
-    if (!storyProgress[progressKey]) {
-      setStoryProgress(prev => ({ ...prev, [progressKey]: true }));
-
-      if (zone === 'needs')
-        startDialogueSequence(zoneDialogues.needs);
-      else if (zone === 'wants')
-        startDialogueSequence(zoneDialogues.wants);
-      else if (zone === 'savings')
-        startDialogueSequence(zoneDialogues.savings);
-
-      setTimeout(() => {
-        setCurrentMemoryZone(zone);
-        setGameState(GAME_STATES.MEMORY_GAME);
-      }, 800);
-    }
-  };
-
-  /* -------------------------------------------------------------
-    INTERACCIÓN CON LA COMPUTADORA (simulador principal)
-  ------------------------------------------------------------- */
-  const handlePCInteraction = () => {
-    if (!storyProgress.tourCompleted) {
-      startDialogueSequence([
-        {
-          speaker: 'assistant',
-          text: 'Primero completa el tour para entender tu casa y tus gastos.',
-          emotion: 'neutral'
-        }
-      ]);
+    
+    const movementSteps = findPath(mk25Pos, target);
+    
+    if (movementSteps.length === 0) {
+      console.warn('No se encontró camino válido - saltando al destino');
+      setMk25Pos(target);
+      onComplete();
       return;
     }
-
-    if (!storyProgress.firstChallenge) {
-      setStoryProgress(prev => ({ ...prev, firstChallenge: true }));
-      startDialogueSequence(mk25Dialogues.beforeSimulation);
-      setTimeout(() => {
-        setGameState(GAME_STATES.EXPENSE_GAME);
-      }, 800);
-      return;
-    }
-
-    if (!storyProgress.finalChallenge) {
-      startDialogueSequence([
-        {
-          speaker: 'assistant',
-          text: 'Continúa trabajando en el simulador hasta completar los 5 días.',
-          emotion: 'thinking'
-        }
-      ]);
-      setGameState(GAME_STATES.EXPENSE_GAME);
-      return;
-    }
+    
+    let stepIndex = 0;
+    const moveInterval = setInterval(() => {
+      if (stepIndex >= movementSteps.length) {
+        clearInterval(moveInterval);
+        setMk25Moving(false);
+        onComplete();
+        return;
+      }
+      
+      const nextStep = movementSteps[stepIndex];
+      const prevStep = stepIndex > 0 ? movementSteps[stepIndex - 1] : mk25Pos;
+      
+      if (nextStep.x > prevStep.x) setMk25Direction('right');
+      else if (nextStep.x < prevStep.x) setMk25Direction('left');
+      else if (nextStep.y > prevStep.y) setMk25Direction('down');
+      else if (nextStep.y < prevStep.y) setMk25Direction('up');
+      
+      setMk25Moving(true);
+      setMk25Pos(nextStep);
+      
+      if (stepIndex > 0) {
+        const playerTarget = movementSteps[stepIndex - 1];
+        setPlayerPos(playerTarget);
+        
+        if (playerTarget.x > playerPos.x) setDirection('right');
+        else if (playerTarget.x < playerPos.x) setDirection('left');
+        else if (playerTarget.y > playerPos.y) setDirection('down');
+        else if (playerTarget.y < playerPos.y) setDirection('up');
+        
+        setIsMoving(true);
+        setTimeout(() => setIsMoving(false), 200);
+      }
+      
+      stepIndex++;
+    }, 300);
   };
 
-  /* -------------------------------------------------------------
-    AVANZAR DIÁLOGO
-  ------------------------------------------------------------- */
-  const handleDialogueNext = () => {
-    const nextIndex = currentDialogueIndex + 1;
-
-    if (nextIndex < currentDialogueQueue.length) {
-      setCurrentDialogueIndex(nextIndex);
-      return;
-    }
-
-    setGameState(GAME_STATES.EXPLORING);
-
-    if (isOnTour) {
-      handleTourAdvance();
-    }
+  const checkZonesComplete = () => {
+    setTimeout(() => {
+      if (storyProgress.needsZone && storyProgress.wantsZone && storyProgress.savingsZone) {
+        startDialogueSequence(mk25Dialogues.afterZones);
+      }
+    }, 100);
   };
 
-  /* -------------------------------------------------------------
-    INPUT DE MOVIMIENTO
-  ------------------------------------------------------------- */
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (gameState === GAME_STATES.DIALOGUE) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          handleDialogueNext();
+      const key = e.key.toLowerCase();
+
+      if (key === 'enter' || key === ' ' || key === 'z') {
+        e.preventDefault();
+        if (gameState === 'dialogue') {
+          handleDialogueAdvance();
+        } else {
+          handleInteract();
         }
         return;
       }
 
-      if (gameState !== GAME_STATES.EXPLORING) return;
+      if (gameState !== 'exploring') return;
 
-      if (e.key === 'ArrowUp' || e.key === 'w') handleMove(DIR.UP);
-      if (e.key === 'ArrowDown' || e.key === 's') handleMove(DIR.DOWN);
-      if (e.key === 'ArrowLeft' || e.key === 'a') handleMove(DIR.LEFT);
-      if (e.key === 'ArrowRight' || e.key === 'd') handleMove(DIR.RIGHT);
-
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'z') {
-        handleInteract();
+      switch (key) {
+        case 'arrowup':
+        case 'w':
+          e.preventDefault();
+          handleMove('up');
+          break;
+        case 'arrowdown':
+        case 's':
+          e.preventDefault();
+          handleMove('down');
+          break;
+        case 'arrowleft':
+        case 'a':
+          e.preventDefault();
+          handleMove('left');
+          break;
+        case 'arrowright':
+        case 'd':
+          e.preventDefault();
+          handleMove('right');
+          break;
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [
-    gameState,
-    handleMove,
-    handleInteract,
-    currentDialogueQueue,
-    currentDialogueIndex
-  ]);
+  }, [handleMove, handleInteract, gameState, currentDialogueIndex, currentDialogueQueue]);
 
-  /* -------------------------------------------------------------
-    ACTUALIZAR PRESUPUESTO DESPUÉS DEL MÓDULO DE PRESUPUESTO
-  ------------------------------------------------------------- */
-  const handleBudgetComplete = (newBudget) => {
-    setPlayerBudget(newBudget);
-    setGameState(GAME_STATES.EXPLORING);
-
-    setStoryProgress(prev => ({
-      ...prev,
-      learnBudget: true
-    }));
-  };
-
-  /* -------------------------------------------------------------
-    COMPLETAR MINIJUEGO DE MEMORIA
-  ------------------------------------------------------------- */
-  const handleMemoryComplete = () => {
-    setGameState(GAME_STATES.EXPLORING);
-
-    if (currentMemoryZone === 'needs')
-      setStoryProgress(prev => ({ ...prev, needsGameCompleted: true }));
-    if (currentMemoryZone === 'wants')
-      setStoryProgress(prev => ({ ...prev, wantsGameCompleted: true }));
-    if (currentMemoryZone === 'savings')
-      setStoryProgress(prev => ({ ...prev, savingsGameCompleted: true }));
-
-    setCurrentMemoryZone(null);
-  };
-
-  /* -------------------------------------------------------------
-    COMPLETAR SIMULADOR DE GASTOS (DÍAS 1–5)
-  ------------------------------------------------------------- */
-  const handleExpenseGameComplete = (results) => {
-    const { saved } = results;
-
-    setPlayerBudget(prev => ({
-      ...prev,
-      savings: prev.savings + saved
-    }));
-
-    setDaysCompleted(prev => prev + 1);
-
-    if (daysCompleted + 1 >= 5) {
-      setStoryProgress(prev => ({ ...prev, finalChallenge: true }));
-      startDialogueSequence([
-        {
-          speaker: 'assistant',
-          text: '¡Completaste todos los días del simulador! Habla conmigo para finalizar.',
-          emotion: 'happy'
-        }
-      ]);
+  const handleDialogueAdvance = () => {
+    if (currentDialogueIndex < currentDialogueQueue.length - 1) {
+      setCurrentDialogueIndex(currentDialogueIndex + 1);
+    } else {
+      const isLastDialogue = currentDialogueIndex === currentDialogueQueue.length - 1;
+      
+      if (isOnTour && currentTourStep === 1 && isLastDialogue && !storyProgress.tourWantsVisited) {
+        setGameState('exploring');
+        setStoryProgress(prev => ({ ...prev, tourNeedsVisited: true }));
+        setTimeout(() => {
+          continueTourToWants();
+        }, 500);
+      } else if (isOnTour && currentTourStep === 2 && isLastDialogue && !storyProgress.tourSavingsVisited) {
+        setGameState('exploring');
+        setStoryProgress(prev => ({ ...prev, tourWantsVisited: true }));
+        setTimeout(() => {
+          continueTourToSavings();
+        }, 500);
+      } else if (isOnTour && currentTourStep === 3 && isLastDialogue && !storyProgress.tourCompleted) {
+        setGameState('exploring');
+        setStoryProgress(prev => ({ ...prev, tourSavingsVisited: true, tourCompleted: true }));
+        setTimeout(() => {
+          returnToBase();
+        }, 500);
+      } else {
+        setGameState('exploring');
+      }
+      
+      setCurrentDialogueQueue([]);
+      setCurrentDialogueIndex(0);
+      setCurrentObject(null);
     }
-
-    setGameState(GAME_STATES.EXPLORING);
   };
 
-  /* -------------------------------------------------------------
-    COMPLETAR TRABAJO FREELANCE
-  ------------------------------------------------------------- */
-  const handleFreelanceComplete = (money) => {
-    setPlayerBudget(prev => ({
-      ...prev,
-      savings: prev.savings + money
-    }));
-
-    setGameState(GAME_STATES.EXPLORING);
+  const handleBudgetComplete = (budget) => {
+    setPlayerBudget(budget);
+    setStoryProgress(prev => ({ ...prev, learnBudget: true }));
+    setGameState('exploring');
+    setCurrentObject(null);
+    
+    setTimeout(() => {
+      startDialogueSequence(mk25Dialogues.afterBudget);
+    }, 500);
   };
-  /* -------------------------------------------------------------
-    RENDER PRINCIPAL DEL GAME WORLD
-  ------------------------------------------------------------- */
+
+  const handleExpenseGameComplete = (results) => {
+    setPlayerBudget(results.finalBudget);
+    setDaysCompleted(prev => prev + 1);
+    
+    if (!storyProgress.firstChallenge) {
+      setStoryProgress(prev => ({ ...prev, firstChallenge: true }));
+      setTimeout(() => {
+        startDialogueSequence(mk25Dialogues.afterFirstChallenge);
+      }, 500);
+    }
+    
+    if (daysCompleted + 1 >= 5 && !storyProgress.finalChallenge) {
+      setStoryProgress(prev => ({ ...prev, finalChallenge: true }));
+      setTimeout(() => {
+        startDialogueSequence(mk25Dialogues.finalComplete);
+      }, 500);
+    }
+    
+    setGameState('exploring');
+    setCurrentObject(null);
+  };
+
+  const totalBudget = playerBudget.needs + playerBudget.wants + playerBudget.savings;
+
   return (
     <div className="game-world">
+      <div className="game-hud">
+        <div className="hud-info">
+          <span>💰 ${totalBudget.toLocaleString()}</span>
+          <span>📅 Días: {daysCompleted}/5</span>
+        </div>
+        <div className="hud-controls">
+          <span>WASD/Flechas: Mover | ENTER/Z: Interactuar</span>
+        </div>
+      </div>
 
-      {/* MAPA */}
-      <div className="world-map">
+      <div className="game-world-container">
         <TileMap mapData={gameMap} />
 
-        {/* NPC PRINCIPAL: MK-25 */}
-        <NPC
-          x={mk25Pos.x}
+        {interactiveObjects
+          .filter(obj => {
+            if (obj.id === 'mk25_assistant' && isOnTour) return false;
+            if (obj.id === 'mk25_assistant' && storyProgress.tourStarted && !storyProgress.tourCompleted) return false;
+            return true;
+          })
+          .map((obj) => {
+          const isNearby = Math.abs(playerPos.x - obj.x) <= 1 && Math.abs(playerPos.y - obj.y) <= 1;
+          
+          let targetX = playerPos.x;
+          let targetY = playerPos.y;
+          
+          switch (direction) {
+            case 'up':
+              targetY -= 1;
+              break;
+            case 'down':
+              targetY += 1;
+              break;
+            case 'left':
+              targetX -= 1;
+              break;
+            case 'right':
+              targetX += 1;
+              break;
+          }
+          
+          const facingObject = Math.abs(targetX - obj.x) < 0.6 && Math.abs(targetY - obj.y) < 0.6;
+
+          return (
+            <div
+              key={obj.id}
+              className={`interactive-object ${isNearby && facingObject ? 'interactive-object--highlighted' : ''}`}
+              style={{
+                position: 'absolute',
+                left: `${obj.x * TILE_SIZE}px`,
+                top: `${obj.y * TILE_SIZE}px`,
+                width: `${TILE_SIZE}px`,
+                height: `${TILE_SIZE}px`,
+                pointerEvents: 'none',
+                zIndex: 5,
+              }}
+            >
+              <div className="object-glow"></div>
+              
+              {isNearby && facingObject && (
+                <div className="object-label">{obj.name}</div>
+              )}
+            </div>
+          );
+        })}
+
+        <Player position={playerPos} direction={direction} isMoving={isMoving} />
+        <NPC 
+          x={mk25Pos.x} 
           y={mk25Pos.y}
           sprite={mk25Sprite}
-          name="MK-25"
-          direction={mk25Direction}
+          name="MK-25" 
+          direction={mk25Direction} 
           isMoving={mk25Moving}
           tileSize={TILE_SIZE}
         />
-
-        {/* PLAYER */}
-        <Player
-          position={playerPos}
-          direction={direction}
-          isMoving={isMoving}
-        />
       </div>
 
-      {/* TEXTO DE INTERACCIÓN (abajo) */}
-      {facingObjectName && gameState === GAME_STATES.EXPLORING && (
-        <div className="interaction-hint">
-          <span className="interaction-key">E</span>
-          <span className="interaction-text">
-            Interactuar con {facingObjectName}
-          </span>
-        </div>
-      )}
+      {gameState === 'dialogue' && currentDialogueQueue[currentDialogueIndex] && (() => {
+        const dialogue = currentDialogueQueue[currentDialogueIndex];
+        const speakerName = dialogue.speaker === 'assistant' ? 'MK-25' : dialogue.speaker === 'player' ? 'Tú' : 'Sistema';
+        
+        return (
+          <DialogueBox 
+            text={dialogue.text}
+            speakerName={speakerName}
+            onNext={handleDialogueAdvance}
+            speakingSprite={undefined}
+            idleSprite={undefined}
+          />
+        );
+      })()}
 
-      {/* OBJETIVO DEL JUGADOR (arriba izquierda) */}
-      <div className="objective-box">
-        <p className="objective-title">🎯 Objetivo</p>
-        <p className="objective-text">{getCurrentObjective()}</p>
-      </div>
-
-      {/* DIÁLOGO */}
-      {gameState === GAME_STATES.DIALOGUE && (
-        <DialogueBox
-          visible={true}
-          text={currentDialogueQueue[currentDialogueIndex].text}
-          speakerName={
-            currentDialogueQueue[currentDialogueIndex].speaker === 'assistant'
-              ? 'MK-25'
-              : currentDialogueQueue[currentDialogueIndex].speaker
-          }
-          onNext={handleDialogueNext}
-        />
-      )}
-
-      {/* PANEL DE PRESUPUESTO */}
-      {gameState === GAME_STATES.BUDGET && (
+      {gameState === 'budget' && (
         <BudgetPanel
           totalIncome={10000}
           currentBudget={playerBudget}
           onComplete={handleBudgetComplete}
-          onClose={() => setGameState(GAME_STATES.EXPLORING)}
+          onClose={() => setGameState('exploring')}
         />
       )}
 
-      {/* SIMULADOR DE GASTOS */}
-      {gameState === GAME_STATES.EXPENSE_GAME && (
+      {gameState === 'expense_game' && (
         <ExpenseGamePanel
           currentDay={daysCompleted + 1}
           playerBudget={playerBudget}
           onComplete={handleExpenseGameComplete}
-          onClose={() => setGameState(GAME_STATES.EXPLORING)}
+          onClose={() => setGameState('exploring')}
         />
       )}
 
-      {/* TRABAJO FREELANCE */}
-      {gameState === GAME_STATES.FREELANCE_GAME && (
+      {gameState === 'freelance_game' && (
         <FreelanceGamePanel
-          onComplete={handleFreelanceComplete}
-          onClose={() => setGameState(GAME_STATES.EXPLORING)}
+          currentDay={daysCompleted + 1}
+          playerBudget={playerBudget}
+          onComplete={handleExpenseGameComplete}
+          onClose={() => setGameState('exploring')}
         />
       )}
 
-      {/* MINIJUEGO DE MEMORIA */}
-      {gameState === GAME_STATES.MEMORY_GAME && (
+      {gameState === 'memory_game' && currentMemoryZone && (
         <MemoryGamePanel
           zone={currentMemoryZone}
-          onComplete={handleMemoryComplete}
-          onClose={() => setGameState(GAME_STATES.EXPLORING)}
+          onComplete={() => {
+            setStoryProgress(prev => ({
+              ...prev,
+              [`${currentMemoryZone}GameCompleted`]: true
+            }));
+            
+            setGameState('exploring');
+            setCurrentMemoryZone(null);
+          }}
+          onClose={() => {
+            setGameState('exploring');
+            setCurrentMemoryZone(null);
+          }}
         />
       )}
-
-      {/* OVERLAY DE PANTALLA NEGRA DURANTE EL TOUR */}
-      {isOnTour && (
-        <div className="tour-overlay">
-          <p className="tour-text">🚶‍♂️ Siguiendo a MK-25...</p>
+      
+      {gameState === 'exploring' && facingObjectName && (
+        <div className="interaction-bar">
+          <div className="interaction-bar-content">
+            <span className="interaction-bar-object">
+              {facingObjectName}
+            </span>
+            <span className="interaction-bar-key">▼ Presiona ENTER</span>
+          </div>
         </div>
       )}
     </div>
   );
 }
-export default GameWorld;

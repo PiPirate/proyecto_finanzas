@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-/* -----------------------------------------------------
-   JUEGO 1: NECESIDADES - "¿Puedo vivir sin esto?"
------------------------------------------------------ */
+// ============================================
+// JUEGO 1: NECESIDADES - "¿Puedes vivir sin esto?"
+// ============================================
 const needsItems = [
   { id: '1', emoji: '🏠', name: 'Pagar la renta', isNeed: true, explanation: 'Correcto. La vivienda es una necesidad básica.' },
   { id: '2', emoji: '🎮', name: 'Videojuego nuevo', isNeed: false, explanation: 'Correcto. Los videojuegos son entretenimiento opcional.' },
@@ -14,9 +14,9 @@ const needsItems = [
   { id: '8', emoji: '🎬', name: 'Ir al cine', isNeed: false, explanation: 'Correcto. El cine es entretenimiento opcional.' },
 ];
 
-/* -----------------------------------------------------
-   JUEGO 2: GUSTOS - "Quiero vs Necesito"
------------------------------------------------------ */
+// ============================================
+// JUEGO 2: GUSTOS - "Quiero vs Necesito"
+// ============================================
 const wantsItems = [
   { id: '1', emoji: '🍕', name: 'Pizza a domicilio', category: 'want' },
   { id: '2', emoji: '💊', name: 'Medicinas recetadas', category: 'need' },
@@ -28,9 +28,9 @@ const wantsItems = [
   { id: '8', emoji: '📱', name: 'Plan de celular', category: 'need' },
 ];
 
-/* -----------------------------------------------------
-  JUEGO 3: AHORRO - "Planta tu Futuro"
------------------------------------------------------ */
+// ============================================
+// JUEGO 3: AHORRO - "Planta tu Futuro"
+// ============================================
 const savingsItems = [
   {
     id: '1',
@@ -46,51 +46,52 @@ const savingsItems = [
     emoji: '📈',
     question: '¿Cuándo debo ahorrar?',
     options: [
-      { text: 'Solo si me sobra dinero', isCorrect: false, feedback: 'No. Ahorra PRIMERO.' },
-      { text: 'Desde que recibo mi salario', isCorrect: true, feedback: 'Correcto. Págate a ti primero.' },
+      { text: 'Solo si me sobra dinero', isCorrect: false, feedback: 'No. Ahorra PRIMERO, es tu prioridad.' },
+      { text: 'Desde que recibo mi salario', isCorrect: true, feedback: '¡Exacto! Págate a ti primero.' },
     ]
   },
   {
     id: '3',
     emoji: '🎓',
-    question: 'Ahorrar para un curso es:',
+    question: 'Ahorrar para un curso de capacitación es:',
     options: [
-      { text: 'Un gasto innecesario', isCorrect: false, feedback: 'No. La educación mejora tu futuro.' },
-      { text: 'Invertir en tu futuro', isCorrect: true, feedback: '¡Sí! Es una inversión en ti mismo.' },
+      { text: 'Un gasto innecesario', isCorrect: false, feedback: 'No. La educación mejora tus ingresos futuros.' },
+      { text: 'Invertir en tu futuro', isCorrect: true, feedback: '¡Correcto! Es inversión en ti mismo.' },
     ]
   },
   {
     id: '4',
     emoji: '💼',
-    question: '¿Cuántos meses de gastos debo ahorrar?',
+    question: '¿Cuántos meses de gastos debo tener ahorrados?',
     options: [
-      { text: '1 mes', isCorrect: false, feedback: 'Muy poco. Se recomiendan 3-6 meses.' },
-      { text: '3-6 meses', isCorrect: true, feedback: 'Perfecto. Eso te da tranquilidad.' },
+      { text: 'Solo 1 mes', isCorrect: false, feedback: 'Muy poco. Lo ideal es 3-6 meses.' },
+      { text: 'Al menos 3-6 meses', isCorrect: true, feedback: '¡Perfecto! Eso te da tranquilidad.' },
     ]
   },
   {
     id: '5',
     emoji: '🏖️',
-    question: 'Para irme de vacaciones debo:',
+    question: 'Si quiero irme de vacaciones debo:',
     options: [
-      { text: 'Usar tarjeta de crédito', isCorrect: false, feedback: 'Eso genera deudas.' },
-      { text: 'Ahorrar con anticipación', isCorrect: true, feedback: 'Planificar evita deudas.' },
+      { text: 'Usar mi tarjeta de crédito', isCorrect: false, feedback: 'No. Eso genera deudas e intereses.' },
+      { text: 'Ahorrar con anticipación', isCorrect: true, feedback: '¡Sí! Planifica y ahorra sin deudas.' },
     ]
   },
 ];
 
-/* =====================================================
-   COMPONENTE PRINCIPAL
-===================================================== */
 export function MemoryGamePanel({ zone, onComplete, onClose }) {
-  if (zone === 'needs') return <NeedsGame onComplete={onComplete} onClose={onClose} />;
-  if (zone === 'wants') return <WantsGame onComplete={onComplete} onClose={onClose} />;
-  return <SavingsGame onComplete={onComplete} onClose={onClose} />;
+  if (zone === 'needs') {
+    return <NeedsGame onComplete={onComplete} onClose={onClose} />;
+  } else if (zone === 'wants') {
+    return <WantsGame onComplete={onComplete} onClose={onClose} />;
+  } else {
+    return <SavingsGame onComplete={onComplete} onClose={onClose} />;
+  }
 }
 
-/* =====================================================
-   JUEGO DE NECESIDADES
-===================================================== */
+// ============================================
+// COMPONENTE: Juego de Necesidades
+// ============================================
 function NeedsGame({ onComplete, onClose }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -103,43 +104,38 @@ function NeedsGame({ onComplete, onClose }) {
   const handleAnswer = (canLiveWithout) => {
     if (feedback) return;
 
-    const isCorrect = (canLiveWithout === !currentItem.isNeed);
+    const isCorrect = canLiveWithout === !currentItem.isNeed;
     if (isCorrect) setScore(prev => prev + 1);
-
+    
     setFeedback(isCorrect ? '✓ ' + currentItem.explanation : '✗ ' + currentItem.explanation);
 
     setTimeout(() => {
       if (currentIndex < shuffledItems.length - 1) {
-        setCurrentIndex(i => i + 1);
+        setCurrentIndex(prev => prev + 1);
         setFeedback(null);
       } else {
         setIsComplete(true);
       }
-    }, 1800);
+    }, 2000);
   };
 
   if (isComplete) {
     const percentage = Math.round((score / shuffledItems.length) * 100);
-
     return (
       <div className="game-panel-overlay">
         <div className="minigame-container">
-
-          <div className="minigame-header"><h2>COMPLETADO</h2></div>
-
+          <div className="minigame-header">
+            <h2>COMPLETADO</h2>
+          </div>
           <div className="minigame-content">
             <div className="complete-emoji">✓</div>
             <h3>{percentage >= 75 ? 'EXCELENTE' : percentage >= 50 ? 'BIEN HECHO' : 'SIGUE PRACTICANDO'}</h3>
-
             <div className="score-display">{score}/{shuffledItems.length}</div>
-
             <div className="lesson-box">
-              <p><strong>NECESIDADES</strong> son cosas sin las que NO puedes vivir.</p>
+              <p><strong>NECESIDADES</strong> son gastos que NO puedes evitar. Si no puedes vivir sin ello, es una necesidad.</p>
             </div>
-
             <button className="btn-continue" onClick={onComplete}>CONTINUAR</button>
           </div>
-
         </div>
       </div>
     );
@@ -148,7 +144,6 @@ function NeedsGame({ onComplete, onClose }) {
   return (
     <div className="game-panel-overlay">
       <div className="minigame-container">
-
         <div className="minigame-header">
           <div>
             <h2>NECESIDADES</h2>
@@ -158,7 +153,6 @@ function NeedsGame({ onComplete, onClose }) {
         </div>
 
         <div className="minigame-content">
-
           <div className="item-card">
             <div className="item-emoji-big">{currentItem.emoji}</div>
             <h3>{currentItem.name}</h3>
@@ -166,12 +160,17 @@ function NeedsGame({ onComplete, onClose }) {
 
           {!feedback ? (
             <div className="choice-buttons">
-              <button className="choice-btn choice-btn--no" onClick={() => handleAnswer(false)}>
+              <button 
+                className="choice-btn choice-btn--no"
+                onClick={() => handleAnswer(false)}
+              >
                 <div className="choice-text">NO PUEDO VIVIR SIN ESTO</div>
                 <div className="choice-hint">Es una necesidad</div>
               </button>
-
-              <button className="choice-btn choice-btn--yes" onClick={() => handleAnswer(true)}>
+              <button 
+                className="choice-btn choice-btn--yes"
+                onClick={() => handleAnswer(true)}
+              >
                 <div className="choice-text">SÍ PUEDO VIVIR SIN ESTO</div>
                 <div className="choice-hint">Es opcional</div>
               </button>
@@ -179,16 +178,15 @@ function NeedsGame({ onComplete, onClose }) {
           ) : (
             <div className="feedback-box">{feedback}</div>
           )}
-
         </div>
       </div>
     </div>
   );
 }
 
-/* =====================================================
-   JUEGO DE GUSTOS
-===================================================== */
+// ============================================
+// COMPONENTE: Juego de Gustos
+// ============================================
 function WantsGame({ onComplete, onClose }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -204,45 +202,44 @@ function WantsGame({ onComplete, onClose }) {
     const isCorrect = choice === currentItem.category;
     if (isCorrect) setScore(prev => prev + 1);
 
-    const labels = { want: 'un GUSTO opcional', need: 'una NECESIDAD' };
+    const explanations = {
+      want: 'un GUSTO opcional',
+      need: 'una NECESIDAD esencial'
+    };
 
     setFeedback(
-      isCorrect
-        ? `✓ ¡Correcto! "${currentItem.name}" es ${labels[currentItem.category]}.`
-        : `✗ Incorrecto. "${currentItem.name}" es ${labels[currentItem.category]}.`
+      isCorrect 
+        ? `✓ ¡Correcto! "${currentItem.name}" es ${explanations[currentItem.category]}.`
+        : `✗ Incorrecto. "${currentItem.name}" es ${explanations[currentItem.category]}.`
     );
 
     setTimeout(() => {
       if (currentIndex < shuffledItems.length - 1) {
-        setCurrentIndex(i => i + 1);
+        setCurrentIndex(prev => prev + 1);
         setFeedback(null);
-      } else setIsComplete(true);
-    }, 1800);
+      } else {
+        setIsComplete(true);
+      }
+    }, 2000);
   };
 
   if (isComplete) {
     const percentage = Math.round((score / shuffledItems.length) * 100);
-
     return (
       <div className="game-panel-overlay">
         <div className="minigame-container">
-
-          <div className="minigame-header"><h2>COMPLETADO</h2></div>
-
+          <div className="minigame-header">
+            <h2>COMPLETADO</h2>
+          </div>
           <div className="minigame-content">
             <div className="complete-emoji">✓</div>
-
             <h3>{percentage >= 75 ? 'EXCELENTE' : percentage >= 50 ? 'BIEN HECHO' : 'SIGUE PRACTICANDO'}</h3>
-
             <div className="score-display">{score}/{shuffledItems.length}</div>
-
             <div className="lesson-box">
-              <p>Los <strong>GUSTOS</strong> son opcionales; las <strong>NECESIDADES</strong> son esenciales.</p>
+              <p><strong>GUSTOS</strong> mejoran tu vida pero son opcionales. <strong>NECESIDADES</strong> son esenciales. Pregúntate: ¿realmente lo necesito o solo lo quiero?</p>
             </div>
-
             <button className="btn-continue" onClick={onComplete}>CONTINUAR</button>
           </div>
-
         </div>
       </div>
     );
@@ -251,7 +248,6 @@ function WantsGame({ onComplete, onClose }) {
   return (
     <div className="game-panel-overlay">
       <div className="minigame-container">
-
         <div className="minigame-header">
           <div>
             <h2>GUSTOS VS NECESIDADES</h2>
@@ -261,7 +257,6 @@ function WantsGame({ onComplete, onClose }) {
         </div>
 
         <div className="minigame-content">
-
           <div className="item-card">
             <div className="item-emoji-big">{currentItem.emoji}</div>
             <h3>{currentItem.name}</h3>
@@ -269,83 +264,80 @@ function WantsGame({ onComplete, onClose }) {
 
           {!feedback ? (
             <div className="choice-buttons">
-              <button className="choice-btn choice-btn--want" onClick={() => handleChoice('want')}>
+              <button 
+                className="choice-btn choice-btn--want"
+                onClick={() => handleChoice('want')}
+              >
                 <div className="choice-text">GUSTO</div>
-                <div className="choice-hint">Opcional</div>
+                <div className="choice-hint">Opcional, mejora mi vida</div>
               </button>
-
-              <button className="choice-btn choice-btn--need" onClick={() => handleChoice('need')}>
+              <button 
+                className="choice-btn choice-btn--need"
+                onClick={() => handleChoice('need')}
+              >
                 <div className="choice-text">NECESIDAD</div>
-                <div className="choice-hint">Esencial</div>
+                <div className="choice-hint">Esencial para vivir</div>
               </button>
             </div>
           ) : (
             <div className="feedback-box">{feedback}</div>
           )}
-
         </div>
       </div>
     </div>
   );
 }
 
-/* =====================================================
-   JUEGO DE AHORRO
-===================================================== */
+// ============================================
+// COMPONENTE: Juego de Ahorro
+// ============================================
 function SavingsGame({ onComplete, onClose }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [treeLevel, setTreeLevel] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
-  const [shuffledItems] = useState(() =>
-    [...savingsItems].sort(() => Math.random() - 0.5).slice(0, 5)
-  );
+  const [shuffledItems] = useState(() => [...savingsItems].sort(() => Math.random() - 0.5).slice(0, 5));
 
   const currentItem = shuffledItems[currentIndex];
-  const treeEmojis = ['🌱', '🌿', '🌳', '🌳✨', '🌳🌟', '🌳💎'];
 
-  const handleAnswer = (index) => {
+  const handleAnswer = (optionIndex) => {
     if (feedback) return;
 
-    const option = currentItem.options[index];
-    setFeedback(option.isCorrect ? '✓ ' + option.feedback : '✗ ' + option.feedback);
+    const option = currentItem.options[optionIndex];
+    setFeedback(option.isCorrect ? '✅ ' + option.feedback : '❌ ' + option.feedback);
 
-    if (option.isCorrect) setTreeLevel(level => level + 1);
+    if (option.isCorrect) {
+      setTreeLevel(prev => prev + 1);
+    }
 
     setTimeout(() => {
       if (currentIndex < shuffledItems.length - 1) {
-        setCurrentIndex(i => i + 1);
+        setCurrentIndex(prev => prev + 1);
         setFeedback(null);
-      } else setIsComplete(true);
-    }, 2200);
+      } else {
+        setIsComplete(true);
+      }
+    }, 2500);
   };
+
+  const treeEmojis = ['🌱', '🌿', '🌳', '🌳✨', '🌳🌟', '🌳💎'];
 
   if (isComplete) {
     return (
       <div className="game-panel-overlay">
         <div className="minigame-container">
-          
-          <div className="minigame-header"><h2>COMPLETADO</h2></div>
-
+          <div className="minigame-header">
+            <h2>COMPLETADO</h2>
+          </div>
           <div className="minigame-content">
             <div className="tree-final">{treeEmojis[treeLevel]}</div>
-
-            <h3>
-              {treeLevel >= 4 ? 'EXCELENTE' :
-               treeLevel >= 3 ? 'BIEN HECHO' : 'SIGUE PRACTICANDO'}
-            </h3>
-
-            <div className="score-display">
-              {treeLevel}/{shuffledItems.length}
-            </div>
-
+            <h3>{treeLevel >= 4 ? 'EXCELENTE' : treeLevel >= 3 ? 'BIEN HECHO' : 'SIGUE PRACTICANDO'}</h3>
+            <div className="score-display">{treeLevel}/{shuffledItems.length}</div>
             <div className="lesson-box">
-              <p><strong>AHORRAR</strong> es invertir en tu futuro. Págate a ti primero.</p>
+              <p><strong>AHORRO</strong> es tu red de seguridad. Cada peso que guardas hoy es libertad mañana. Págate a ti primero.</p>
             </div>
-
             <button className="btn-continue" onClick={onComplete}>CONTINUAR</button>
           </div>
-
         </div>
       </div>
     );
@@ -354,7 +346,6 @@ function SavingsGame({ onComplete, onClose }) {
   return (
     <div className="game-panel-overlay">
       <div className="minigame-container">
-
         <div className="minigame-header">
           <div>
             <h2>AHORRO</h2>
@@ -364,7 +355,6 @@ function SavingsGame({ onComplete, onClose }) {
         </div>
 
         <div className="minigame-content">
-
           <div className="tree-container">
             <div className="tree-growth">{treeEmojis[treeLevel]}</div>
             <div className="tree-label">Tu progreso</div>
@@ -376,20 +366,19 @@ function SavingsGame({ onComplete, onClose }) {
 
           {!feedback ? (
             <div className="choice-buttons">
-              {currentItem.options.map((opt, i) => (
-                <button
-                  key={i}
+              {currentItem.options.map((option, index) => (
+                <button 
+                  key={index}
                   className="choice-btn choice-btn--savings"
-                  onClick={() => handleAnswer(i)}
+                  onClick={() => handleAnswer(index)}
                 >
-                  <div className="choice-text">{opt.text}</div>
+                  <div className="choice-text">{option.text}</div>
                 </button>
               ))}
             </div>
           ) : (
             <div className="feedback-box">{feedback}</div>
           )}
-
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ export default function useTypewriterText(text, speed = 28) {
 
       currentIndex++;
       setDisplayedText(text.slice(0, currentIndex));
-
+      
       if (currentIndex >= text.length) {
         setIsDone(true);
       }

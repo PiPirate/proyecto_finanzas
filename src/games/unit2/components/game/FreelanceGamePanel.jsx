@@ -6,7 +6,6 @@ export function FreelanceGamePanel({ onComplete, onClose }) {
   const [isComplete, setIsComplete] = useState(false);
   const [moneyEarned, setMoneyEarned] = useState(0);
 
-  // Timer
   useEffect(() => {
     if (timeLeft > 0 && !isComplete) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -18,12 +17,12 @@ export function FreelanceGamePanel({ onComplete, onClose }) {
 
   const handleClick = () => {
     if (!isComplete) {
-      setClicks(prev => prev + 1);
+      setClicks(clicks + 1);
     }
   };
 
   const finishWork = () => {
-    const earned = Math.min(clicks * 50, 800); // $50 por click, máx $800
+    const earned = Math.min(clicks * 50, 800);
     setMoneyEarned(earned);
     setIsComplete(true);
   };
@@ -32,7 +31,6 @@ export function FreelanceGamePanel({ onComplete, onClose }) {
     onComplete(moneyEarned);
   };
 
-  // --- Pantalla final ---
   if (isComplete) {
     return (
       <div className="game-panel-overlay">
@@ -45,11 +43,13 @@ export function FreelanceGamePanel({ onComplete, onClose }) {
             <div className="freelance-result">
               <p className="freelance-result-icon">💰</p>
               <h3>¡Ganaste ${moneyEarned}!</h3>
-              <p className="freelance-note">{clicks} tareas completadas en 10 segundos</p>
-
+              <p className="freelance-note">
+                {clicks} tareas completadas en 10 segundos
+              </p>
+              
               <div className="freelance-warning">
-                <p>⚠️ <strong>Penalización:</strong> -50 puntos de bienestar</p>
-                <p style={{ fontSize: '14px' }}>El sobretrabajo afecta tu salud.</p>
+                <p>⚠️ <strong>Penalización:</strong> -50 puntos de balance vida-trabajo</p>
+                <p style={{ fontSize: '14px' }}>Trabajar de más afecta tu bienestar general.</p>
               </div>
 
               <button 
@@ -75,23 +75,22 @@ export function FreelanceGamePanel({ onComplete, onClose }) {
     );
   }
 
-  // --- Pantalla del minijuego ---
   return (
     <div className="game-panel-overlay">
       <div className="game-panel freelance-panel">
         <div className="panel-header">
           <div>
             <h2>💼 Trabajo Freelance</h2>
-            <p className="panel-subtitle">Haz clic lo más rápido que puedas</p>
+            <p className="panel-subtitle">¡Haz clic rápido para completar tareas!</p>
           </div>
-
           <button 
             onClick={onClose}
             style={{
               background: 'transparent',
               border: 'none',
               fontSize: '20px',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              padding: '4px 8px'
             }}
           >
             ✕
@@ -115,9 +114,7 @@ export function FreelanceGamePanel({ onComplete, onClose }) {
             </button>
 
             <div className="freelance-earnings">
-              <p>
-                💰 Ganando: <strong>${Math.min(clicks * 50, 800)}</strong>
-              </p>
+              <p>💰 Ganando: <strong>${Math.min(clicks * 50, 800)}</strong></p>
               <p className="earnings-rate">$50 por tarea (máx $800)</p>
             </div>
 

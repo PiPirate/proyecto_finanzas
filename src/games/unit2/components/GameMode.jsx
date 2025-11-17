@@ -12,32 +12,30 @@ export function GameMode({ onBackToMenu }) {
     needs: 5000,
     wants: 3000,
     savings: 2000,
-    savingsGoal: 2000
+    savingsGoal: 2000,
   });
-
   const [currentHand, setCurrentHand] = useState([]);
   const [playedCards, setPlayedCards] = useState([]);
   const [postponedCards, setPostponedCards] = useState([]);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [comfortLevel, setComfortLevel] = useState(100);
-
   const [showDayResults, setShowDayResults] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
 
-  // Inicializar día 1
   useEffect(() => {
     drawCards();
   }, []);
 
   const drawCards = () => {
-    const availableCards = expenseCards.filter(card => !playedCards.includes(card.id));
-    const numCards = Math.floor(Math.random() * 3) + 5; // entre 5 y 7
-
+    const availableCards = expenseCards.filter(
+      (card) => !playedCards.includes(card.id)
+    );
+    const numCards = Math.floor(Math.random() * 3) + 5;
     const shuffled = [...availableCards].sort(() => Math.random() - 0.5);
     const drawn = shuffled.slice(0, Math.min(numCards, availableCards.length));
-
+    
     setCurrentHand([...postponedCards, ...drawn]);
     setPostponedCards([]);
   };
@@ -47,24 +45,22 @@ export function GameMode({ onBackToMenu }) {
     const availableBudget = budget[category];
 
     if (availableBudget >= card.amount) {
-      setBudget(prev => ({
+      setBudget((prev) => ({
         ...prev,
-        [category]: prev[category] - card.amount
+        [category]: prev[category] - card.amount,
       }));
 
-      setCurrentHand(prev => prev.filter(c => c.id !== card.id));
-      setPlayedCards(prev => [...prev, card.id]);
+      setCurrentHand((prev) => prev.filter((c) => c.id !== card.id));
+      setPlayedCards((prev) => [...prev, card.id]);
 
       if (card.type === 'need') {
-        setScore(prev => prev + 10);
-        setStreak(prev => prev + 1);
+        setScore((prev) => prev + 10);
+        setStreak((prev) => prev + 1);
       } else {
         setStreak(0);
       }
     } else {
-      alert(`No tienes suficiente presupuesto en ${
-        category === 'needs' ? 'Necesidades' : 'Gustos'
-      }. Disponible: $${availableBudget}`);
+      alert(`No tienes suficiente presupuesto en ${category === 'needs' ? 'Necesidades' : 'Gustos'}. Disponible: $${availableBudget}`);
     }
   };
 
@@ -76,21 +72,20 @@ export function GameMode({ onBackToMenu }) {
 
     const postponedCard = {
       ...card,
-      amount: card.amount + (card.postponePenalty || 0)
+      amount: card.amount + (card.postponePenalty || 0),
     };
 
-    setPostponedCards(prev => [...prev, postponedCard]);
-    setCurrentHand(prev => prev.filter(c => c.id !== card.id));
-    setScore(prev => prev - 5);
+    setPostponedCards((prev) => [...prev, postponedCard]);
+    setCurrentHand((prev) => prev.filter((c) => c.id !== card.id));
+    setScore((prev) => prev - 5);
   };
 
   const handleDiscard = (card) => {
     const penalty = card.discardPenalty || 10;
-
-    setComfortLevel(prev => Math.max(0, prev - penalty));
-    setCurrentHand(prev => prev.filter(c => c.id !== card.id));
-    setPlayedCards(prev => [...prev, card.id]);
-    setScore(prev => prev - 3);
+    setComfortLevel((prev) => Math.max(0, prev - penalty));
+    setCurrentHand((prev) => prev.filter((c) => c.id !== card.id));
+    setPlayedCards((prev) => [...prev, card.id]);
+    setScore((prev) => prev - 3);
     setStreak(0);
   };
 
@@ -102,7 +97,7 @@ export function GameMode({ onBackToMenu }) {
 
     const savingsKept = budget.savings >= budget.savingsGoal;
     if (savingsKept) {
-      setScore(prev => prev + 20);
+      setScore((prev) => prev + 20);
     }
 
     setShowDayResults(true);
@@ -116,7 +111,7 @@ export function GameMode({ onBackToMenu }) {
       setGameWon(finalWon);
       setGameOver(true);
     } else {
-      setCurrentDay(prev => prev + 1);
+      setCurrentDay((prev) => prev + 1);
       drawCards();
     }
   };
@@ -128,7 +123,7 @@ export function GameMode({ onBackToMenu }) {
       needs: 5000,
       wants: 3000,
       savings: 2000,
-      savingsGoal: 2000
+      savingsGoal: 2000,
     });
     setCurrentHand([]);
     setPlayedCards([]);
@@ -142,7 +137,6 @@ export function GameMode({ onBackToMenu }) {
     drawCards();
   };
 
-  // Render final
   if (gameOver) {
     return (
       <GameOver
@@ -180,8 +174,7 @@ export function GameMode({ onBackToMenu }) {
             <span>😊 Confort: {comfortLevel}%</span>
           </div>
         </div>
-
-        <button
+        <button 
           onClick={onBackToMenu}
           style={{
             padding: '6px 12px',
@@ -196,17 +189,13 @@ export function GameMode({ onBackToMenu }) {
         </button>
       </div>
 
-      {/* Presupuesto */}
       <BudgetDisplay budget={budget} />
 
       <div className="game-content">
         <div className="cards-area">
-          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>
-            Gastos del día ({currentHand.length} pendientes)
-          </h3>
-
+          <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>Gastos del día ({currentHand.length} pendientes)</h3>
           <div className="cards-hand">
-            {currentHand.map(card => (
+            {currentHand.map((card) => (
               <ExpenseCard
                 key={card.id}
                 card={card}
@@ -219,12 +208,9 @@ export function GameMode({ onBackToMenu }) {
 
           {currentHand.length === 0 && (
             <div className="day-complete">
-              <p style={{ textAlign: 'center', marginBottom: '16px' }}>
-                ¡Todos los gastos resueltos!
-              </p>
-
-              <button
-                onClick={handleEndDay}
+              <p style={{ textAlign: 'center', marginBottom: '16px' }}>¡Todos los gastos resueltos!</p>
+              <button 
+                onClick={handleEndDay} 
                 style={{
                   padding: '12px 32px',
                   fontSize: '16px',

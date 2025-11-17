@@ -1,25 +1,23 @@
 import React from 'react';
-import mapImage from '../../assets/mapHome.png';
 
 export function TileMap({ mapData }) {
   const TILE_SIZE = 64;
 
   return (
     <div className="tile-map">
-      {/* Imagen completa del mapa */}
       <div
         className="tile-map-image"
         style={{
           width: `${mapData[0].length * TILE_SIZE}px`,
           height: `${mapData.length * TILE_SIZE}px`,
-          backgroundImage: `url(${mapImage})`,
+          backgroundImage: 'url(/assets/map-house.png)',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
-          imageRendering: 'pixelated'
+          imageRendering: 'pixelated',
         }}
       />
 
-      {/* Grid de debug (solo en development) */}
+      {/* Grid de referencia (opcional, para debug) */}
       {process.env.NODE_ENV === 'development' && (
         <div className="tile-grid">
           {mapData.map((row, y) =>
@@ -33,8 +31,8 @@ export function TileMap({ mapData }) {
                   top: `${y * TILE_SIZE}px`,
                   width: `${TILE_SIZE}px`,
                   height: `${TILE_SIZE}px`,
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  pointerEvents: 'none'
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  pointerEvents: 'none',
                 }}
               />
             ))

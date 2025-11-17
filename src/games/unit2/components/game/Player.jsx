@@ -5,9 +5,7 @@ export function Player({ position, direction, isMoving }) {
 
   return (
     <div
-      className={`player player--${direction} ${
-        isMoving ? 'player--moving' : 'player--idle'
-      }`}
+      className={`player player--${direction} ${isMoving ? 'player--moving' : 'player--idle'}`}
       style={{
         position: 'absolute',
         left: `${position.x * TILE_SIZE}px`,
@@ -15,23 +13,20 @@ export function Player({ position, direction, isMoving }) {
         width: `${TILE_SIZE}px`,
         height: `${TILE_SIZE}px`,
         transition: 'left 0.2s ease, top 0.2s ease',
-        zIndex: 10
+        zIndex: 10,
       }}
     >
-
-      {/* SPRITE DEL PERSONAJE */}
       <div
         className="player-sprite"
         style={{
           width: '100%',
           height: '100%',
-          backgroundImage: 'var(--player-sprite)',   // Se mantiene variable CSS
+          backgroundImage: 'var(--player-sprite)',
           backgroundSize: 'cover',
-          imageRendering: 'pixelated'                // Importante para estilo retro
+          imageRendering: 'pixelated',
         }}
       />
 
-      {/* SOMBRA DEL PERSONAJE */}
       <div className="player-shadow" />
     </div>
   );

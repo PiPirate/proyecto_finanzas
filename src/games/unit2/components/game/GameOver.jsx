@@ -1,16 +1,11 @@
 import React from 'react';
 
 export function GameOver({ won, finalScore, finalBudget, comfortLevel, onRestart, onBackToMenu }) {
-  const grade =
-    finalScore >= 200 ? 'A' :
-    finalScore >= 150 ? 'B' :
-    finalScore >= 100 ? 'C' : 'D';
+  const grade = finalScore >= 200 ? 'A' : finalScore >= 150 ? 'B' : finalScore >= 100 ? 'C' : 'D';
 
   return (
     <div className="game-over">
       <div className="game-over-modal">
-        
-        {/* IMAGEN / ANIMACIÓN DE VICTORIA O DERROTA */}
         <div className="game-over-image">
           {won ? (
             <div className="victory-animation">
@@ -25,9 +20,7 @@ export function GameOver({ won, finalScore, finalBudget, comfortLevel, onRestart
           )}
         </div>
 
-        {/* ESTADÍSTICAS PRINCIPALES */}
         <div className="final-stats">
-
           <div className="stat-card">
             <div className="stat-icon">📊</div>
             <div className="stat-content">
@@ -49,35 +42,27 @@ export function GameOver({ won, finalScore, finalBudget, comfortLevel, onRestart
             <div className="stat-icon">💰</div>
             <div className="stat-content">
               <p className="stat-label">Saldo Final</p>
-              <p
-                className="stat-value"
-                style={{ color: finalBudget.total < 0 ? '#dc2626' : '#16a34a' }}
-              >
+              <p className="stat-value" style={{ color: finalBudget.total < 0 ? '#dc2626' : '#16a34a' }}>
                 ${finalBudget.total.toLocaleString()}
               </p>
             </div>
           </div>
         </div>
 
-        {/* RESUMEN FINAL */}
         <div className="final-summary">
           <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>Resumen Final</h3>
-
+          
           <div className="summary-grid">
             <div className="summary-item">
               <span className="summary-icon">🛒</span>
               <span className="summary-label">Necesidades</span>
-              <span className="summary-value">
-                ${finalBudget.needs.toLocaleString()}
-              </span>
+              <span className="summary-value">${finalBudget.needs.toLocaleString()}</span>
             </div>
 
             <div className="summary-item">
               <span className="summary-icon">🎮</span>
               <span className="summary-label">Gustos</span>
-              <span className="summary-value">
-                ${finalBudget.wants.toLocaleString()}
-              </span>
+              <span className="summary-value">${finalBudget.wants.toLocaleString()}</span>
             </div>
 
             <div className="summary-item summary-item--highlight">
@@ -91,32 +76,29 @@ export function GameOver({ won, finalScore, finalBudget, comfortLevel, onRestart
           </div>
         </div>
 
-        {/* MENSAJE MOTIVACIONAL / RETROALIMENTACIÓN FINAL */}
         <div className="final-message">
           {won ? (
             <>
               <p className="message-title">¡Felicitaciones!</p>
               <p className="message-text">
-                Lograste completar las 5 rondas manteniendo tu meta de ahorro y un saldo positivo.
-                Has demostrado habilidad real para manejar tu presupuesto personal.
+                Lograste completar las 5 rondas manteniendo tu meta de ahorro y un saldo positivo. 
+                Has demostrado habilidad para gestionar tu presupuesto personal.
               </p>
             </>
           ) : (
             <>
               <p className="message-title">¡Buen intento!</p>
               <p className="message-text">
-                Recuerda: prioriza tus necesidades, separa tu ahorro desde el inicio 
-                y ajusta tus gustos según tu situación financiera.  
-                ¡Puedes hacerlo mejor en la próxima ronda!
+                Recuerda: prioriza necesidades, separa tu ahorro desde el inicio, y ajusta tus gustos según tu presupuesto. 
+                ¡Inténtalo nuevamente!
               </p>
             </>
           )}
         </div>
 
-        {/* BOTONES FINALES */}
         <div className="final-actions">
           <button 
-            onClick={onRestart}
+            onClick={onRestart} 
             style={{
               padding: '12px 32px',
               fontSize: '16px',
@@ -130,9 +112,8 @@ export function GameOver({ won, finalScore, finalBudget, comfortLevel, onRestart
           >
             🔄 Jugar de Nuevo
           </button>
-
           <button 
-            onClick={onBackToMenu}
+            onClick={onBackToMenu} 
             style={{
               padding: '12px 32px',
               fontSize: '16px',
@@ -145,7 +126,6 @@ export function GameOver({ won, finalScore, finalBudget, comfortLevel, onRestart
             🏠 Volver al Menú
           </button>
         </div>
-
       </div>
     </div>
   );

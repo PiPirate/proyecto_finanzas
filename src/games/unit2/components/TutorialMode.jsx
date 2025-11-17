@@ -25,9 +25,6 @@ export function TutorialMode({ onComplete, onBackToMenu }) {
     tutorialMap
   );
 
-  // -----------------------------------------------------
-  // Detecta cuando el jugador entra en una zona interactiva
-  // -----------------------------------------------------
   useEffect(() => {
     const zone = tutorialInteractiveZones.find(
       (z) => z.x === position.x && z.y === position.y
@@ -36,11 +33,8 @@ export function TutorialMode({ onComplete, onBackToMenu }) {
     if (zone && !showDialogue) {
       handleZoneInteraction(zone);
     }
-  }, [position, showDialogue]);
+  }, [position]);
 
-  // -----------------------------------------------------
-  // Maneja la interacción según el tipo de zona
-  // -----------------------------------------------------
   const handleZoneInteraction = (zone) => {
     if (zone.type === 'assistant') {
       setCurrentDialogue(tutorialDialogues[tutorialStep]);
@@ -50,61 +44,38 @@ export function TutorialMode({ onComplete, onBackToMenu }) {
     }
   };
 
-  // -----------------------------------------------------
-  // Continuar diálogo (MK-25)
-  // -----------------------------------------------------
   const handleDialogueContinue = () => {
-    // Si quedan diálogos del tutorial
     if (tutorialStep < tutorialDialogues.length - 1) {
       setTutorialStep(tutorialStep + 1);
       setCurrentDialogue(tutorialDialogues[tutorialStep + 1]);
     } else {
-      // Último diálogo → cerrar diálogo
       setShowDialogue(false);
-
-      // Mostrar zonas de presupuesto si aún no se han visto
       if (!showBudgetZones) {
         setShowBudgetZones(true);
       }
     }
   };
 
-  // -----------------------------------------------------
-  // Cuando el usuario completa las zonas del presupuesto
-  // -----------------------------------------------------
   const handleBudgetComplete = (finalBudget) => {
     setBudget(finalBudget);
-
-    // Continuamos con el siguiente paso del tutorial
     if (tutorialStep < tutorialDialogues.length - 1) {
       setTutorialStep(tutorialStep + 1);
       setCurrentDialogue(tutorialDialogues[tutorialStep + 1]);
       setShowDialogue(true);
       setShowBudgetZones(false);
     } else {
-      // No quedan más pasos → tutorial finalizado
       onComplete();
     }
   };
 
-  // -----------------------------------------------------
-  // Render principal
-  // -----------------------------------------------------
   return (
     <div className="tutorial-mode">
-      {/* Encabezado del tutorial */}
       <div className="tutorial-header">
         <div className="tutorial-info">
-          <span className="tutorial-step">
-            Tutorial: Paso {tutorialStep + 1}/{tutorialDialogues.length}
-          </span>
-
-          <span className="tutorial-income">
-            Ingreso Mensual: ${monthlyIncome.toLocaleString()}
-          </span>
+          <span className="tutorial-step">Tutorial: Paso {tutorialStep + 1}/{tutorialDialogues.length}</span>
+          <span className="tutorial-income">Ingreso Mensual: ${monthlyIncome.toLocaleString()}</span>
         </div>
-
-        <button
+        <button 
           onClick={onBackToMenu}
           style={{
             padding: '8px 16px',
@@ -118,19 +89,15 @@ export function TutorialMode({ onComplete, onBackToMenu }) {
         </button>
       </div>
 
-      {/* Viewport del juego */}
       <div className="game-viewport">
-        {/* Mapa completo del tutorial */}
         <TileMap mapData={tutorialMap} />
 
-        {/* Jugador */}
         <Player
           position={position}
           direction={direction}
           isMoving={isMoving}
         />
 
-        {/* Zonas interactivas visuales */}
         {tutorialInteractiveZones.map((zone) => (
           <div
             key={zone.id}
@@ -148,45 +115,36 @@ export function TutorialMode({ onComplete, onBackToMenu }) {
           </div>
         ))}
 
-        {/* Diálogo de MK-25 */}
         {showDialogue && currentDialogue && (() => {
-          const speakerName =
-            currentDialogue.speaker === 'assistant'
-              ? 'MK-25'
-              : currentDialogue.speaker === 'player'
-              ? 'Tú'
-              : 'Sistema';
-
+          const speakerName = currentDialogue.speaker === 'assistant' ? 'MK-25' : currentDialogue.speaker === 'player' ? 'Tú' : 'Sistema';
           const { speakingSprite, idleSprite } = getSpritesByName(speakerName);
-
+          
           return (
             <DialogueBox
               text={currentDialogue.text}
               speakerName={speakerName}
               onNext={handleDialogueContinue}
-              speakingSprite={speakingSprite}
-              idleSprite={idleSprite}
+              speakingSprite={speakingSprite} 
+              idleSprite={idleSprite} 
             />
           );
         })()}
-        {/* Panel de presupuesto (cuando el jugador llega a la mesa) */}
+
         {showBudgetZones && (
           <BudgetZones
             totalIncome={monthlyIncome}
             currentBudget={budget}
-            tutorialMode={true}
             onComplete={handleBudgetComplete}
-            onClose={() => setShowBudgetZones(false)}
+            tutorialMode={true}
           />
         )}
       </div>
 
-      {/* Indicador de controles */}
-      <div className="controls-hint">
-        <p>⬆⬇⬅➡ / WASD para mover | ENTER para interactuar</p>
+      <div className="tutorial-controls">
+        <p style={{ fontSize: '14px', textAlign: 'center', opacity: 0.8 }}>
+          Usa las flechas ⬆️⬇️⬅️➡️ o WASD para moverte
+        </p>
       </div>
     </div>
   );
 }
-
-export default { TutorialMode };

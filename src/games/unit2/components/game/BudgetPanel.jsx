@@ -75,15 +75,9 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
         />
       )}
 
-      <div
-        className="mobile-phone-frame"
-        style={{
-          opacity: showDialogue ? 0.3 : 1,
-          pointerEvents: showDialogue ? 'none' : 'auto'
-        }}
-      >
+      <div className="mobile-phone-frame" style={{ opacity: showDialogue ? 0.3 : 1, pointerEvents: showDialogue ? 'none' : 'auto' }}>
         <div className="phone-notch"></div>
-
+        
         <div className="phone-screen">
           <div className="budget-planning-screen">
             <div className="app-header">
@@ -95,19 +89,9 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
             <div className="planning-content">
               <div className="balance-display">
                 <div className="balance-label">Saldo Disponible</div>
-
-                <div
-                  className={`balance-amount ${
-                    remaining === 0
-                      ? 'balance-complete'
-                      : remaining < 0
-                      ? 'balance-exceeded'
-                      : 'balance-pending'
-                  }`}
-                >
+                <div className={`balance-amount ${remaining === 0 ? 'balance-complete' : remaining < 0 ? 'balance-exceeded' : 'balance-pending'}`}>
                   ${remaining.toLocaleString()}
                 </div>
-
                 <div className="balance-hint">
                   {remaining > 0 && '⚠️ Asigna todo tu presupuesto'}
                   {remaining === 0 && '✓ ¡Perfecto! Todo asignado'}
@@ -116,7 +100,6 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
               </div>
 
               <div className="budget-sliders">
-                {/* NECESIDADES */}
                 <div className="slider-group slider-group--needs">
                   <div className="slider-header">
                     <div className="slider-info">
@@ -131,7 +114,6 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
                       <div className="value-percent">{needsPercent}%</div>
                     </div>
                   </div>
-
                   <input
                     type="range"
                     className="budget-range budget-range--needs"
@@ -140,7 +122,6 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
                     max={totalIncome}
                     step={100}
                   />
-
                   <div className="range-markers">
                     <span>$0</span>
                     <span className="marker-recommended">50% ($5,000)</span>
@@ -148,7 +129,6 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
                   </div>
                 </div>
 
-                {/* GUSTOS */}
                 <div className="slider-group slider-group--wants">
                   <div className="slider-header">
                     <div className="slider-info">
@@ -158,13 +138,11 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
                         <div className="slider-sublabel">Entretenimiento</div>
                       </div>
                     </div>
-
                     <div className="slider-value">
                       <div className="value-amount">${wants.toLocaleString()}</div>
                       <div className="value-percent">{wantsPercent}%</div>
                     </div>
                   </div>
-
                   <input
                     type="range"
                     className="budget-range budget-range--wants"
@@ -173,7 +151,6 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
                     max={totalIncome}
                     step={100}
                   />
-
                   <div className="range-markers">
                     <span>$0</span>
                     <span className="marker-recommended">30% ($3,000)</span>
@@ -181,7 +158,6 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
                   </div>
                 </div>
 
-                {/* AHORRO */}
                 <div className="slider-group slider-group--savings">
                   <div className="slider-header">
                     <div className="slider-info">
@@ -191,13 +167,11 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
                         <div className="slider-sublabel">Para el futuro</div>
                       </div>
                     </div>
-
                     <div className="slider-value">
                       <div className="value-amount">${savings.toLocaleString()}</div>
                       <div className="value-percent">{savingsPercent}%</div>
                     </div>
                   </div>
-
                   <input
                     type="range"
                     className="budget-range budget-range--savings"
@@ -206,7 +180,6 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
                     max={totalIncome}
                     step={100}
                   />
-
                   <div className="range-markers">
                     <span>$0</span>
                     <span className="marker-recommended">20% ($2,000)</span>
@@ -215,10 +188,8 @@ export function BudgetPanel({ totalIncome, currentBudget, onComplete, onClose })
                 </div>
               </div>
 
-              <button
-                className={`confirm-budget-btn ${
-                  remaining !== 0 ? 'confirm-budget-btn--disabled' : ''
-                }`}
+              <button 
+                className={`confirm-budget-btn ${remaining !== 0 ? 'confirm-budget-btn--disabled' : ''}`}
                 onClick={handleConfirm}
                 disabled={remaining !== 0}
               >
