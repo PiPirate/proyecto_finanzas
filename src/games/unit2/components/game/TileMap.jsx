@@ -12,7 +12,6 @@ export function TileMap({ mapData }) {
           width: `${mapData[0].length * TILE_SIZE}px`,
           height: `${mapData.length * TILE_SIZE}px`,
           backgroundImage: `url(${mapHome})`,
-          backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           imageRendering: 'pixelated',
         }}

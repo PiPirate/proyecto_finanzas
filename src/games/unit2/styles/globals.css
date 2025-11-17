@@ -314,16 +314,16 @@ body {
    PANELES DEL JUEGO
    ============================================ */
 .game-panel-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.85);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.30);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 500;
+  padding-bottom: 30px;
   animation: fade-in 0.3s ease-out;
 }
 
