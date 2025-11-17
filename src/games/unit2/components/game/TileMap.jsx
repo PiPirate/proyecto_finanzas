@@ -1,5 +1,5 @@
 import React from 'react';
-import mapImage from 'figma:asset/0abb3410f216dd63f36eb4094c213aea1668432f.png';
+import mapImage from '../../assets/mapHome.png';
 
 export function TileMap({ mapData }) {
   const TILE_SIZE = 64;

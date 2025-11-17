@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 // Assets importados desde Figma
-import mk25Frame1 from 'figma:asset/b843211d6d7a5550964180b30c74bfd53e9cb6fb.png';
-import mk25Frame2 from 'figma:asset/82b1e971c2244e092e54cc3971c0208c3d4cb5f2.png';
-import mk25Frame3 from 'figma:asset/50efae0758df8dfdc1749b119e13e54632e7611c.png';
-import mk25Frame4 from 'figma:asset/2695075866abb138cc494f02257a4601927284e9.png';
-import mk25Frame5 from 'figma:asset/40c634c1ede7f585d72e35336b0059216d69d552.png';
+import mk25Frame1 from '../../assets/asesor1.png';
+import mk25Frame2 from '../../assets/asesor2.png';
+import mk25Frame3 from '../../assets/asesor3.png';
+import mk25Frame4 from '../../assets/asesor4.png';
+import mk25Frame5 from '../../assets/asesor5.png';
 
 export function NPC({
   x,

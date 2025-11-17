@@ -15,7 +15,7 @@ import {
   zoneDialogues
 } from './data/gameMap';
 
-import mk25Sprite from 'figma:asset/b843211d6d7a5550964180b30c74bfd53e9cb6fb.png';
+import mk25Sprite from '../assets/mk25sprite.png';
 
 // Estados del juego
 const GAME_STATES = {

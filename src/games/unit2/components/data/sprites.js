@@ -5,7 +5,7 @@
 // ====================================
 
 // MK-25 (Asesor/Asistente)
-export const MK25_IDLE = 'URL_DE_TU_SPRITE_MK25_IDLE.png';
+export const MK25_IDLE = 'url(../../assets/mapHome.png)';
 export const MK25_TALKING = 'URL_DE_TU_SPRITE_MK25_TALKING.png';
 
 // Jugador/Carmina

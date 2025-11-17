@@ -19,7 +19,7 @@ export default function TutorialStage({ onComplete }) {
   };
 
   return (
-    <div className="tutorial-map-container">
+    <div className="app-container">
       {/* Escena del banco */}
       <GameWorld />
     </div>

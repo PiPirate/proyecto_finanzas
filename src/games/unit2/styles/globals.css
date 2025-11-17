@@ -26,6 +26,7 @@ body {
 .app-container {
   width: 100vw;
   height: 100vh;
+  position: absolute;
   overflow: hidden;
   background: #1a1a2e;
 }
