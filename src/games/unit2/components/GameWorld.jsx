@@ -1,23 +1,23 @@
-
-
 import React, { useState, useEffect, useCallback } from 'react';
-import { TileMap } from './game/TileMap';
-import { Player } from './game/Player';
-import { NPC } from './game/NPC';
-import DialogueBox from './game/DialogueBox';
-import { BudgetPanel } from './game/BudgetPanel';
-import { ExpenseGamePanel } from './game/ExpenseGamePanel';
-import { FreelanceGamePanel } from './game/FreelanceGamePanel';
-import { MemoryGamePanel } from './game/MemoryGamePanel';
-import { gameMap, interactiveObjects, mk25Dialogues, zoneDialogues } from './data/gameMap';
+import { TileMap } from '../components/game/TileMap';
+import { Player } from '../components/game/Player';
+import { NPC } from '../components/game/NPC';
+import DialogueBox from '../components/game/DialogueBox';
+import { BudgetPanel } from '../components/game/BudgetPanel';
+import { ExpenseGamePanel } from '../components/game/ExpenseGamePanel';
+import { FreelanceGamePanel } from '../components/game/FreelanceGamePanel';
+import { MemoryGamePanel } from '../components/game/MemoryGamePanel';
+import { gameMap, interactiveObjects, mk25Dialogues, zoneDialogues } from '../components/data/gameMap';
 import mk25Sprite from '../assets/mk25sprite.png';
 
+
+// Posiciones del tour
 const TOUR_WAYPOINTS = {
-  start: { x: 8, y: 2 },
-  needs: { x: 2, y: 9 },
-  wants: { x: 10, y: 8 },
-  savings: { x: 14, y: 2 },
-  end: { x: 8, y: 2 },
+  start: { x: 8, y: 2 },      // Posición inicial de MK-25
+  needs: { x: 2, y: 9 },       // Refrigerador (ajustado a zona caminable)
+  wants: { x: 10, y: 8 },      // Zona de Ocio (ajustado a entero)
+  savings: { x: 14, y: 2 },    // Alcancía
+  end: { x: 8, y: 2 },         // Regresa a su posición
 };
 
 export function GameWorld({ onComplete } = {}) {
@@ -30,12 +30,13 @@ export function GameWorld({ onComplete } = {}) {
   const [currentObject, setCurrentObject] = useState(null);
   const [currentMemoryZone, setCurrentMemoryZone] = useState(null);
   
+  // Estados del tour
   const [mk25Pos, setMk25Pos] = useState(TOUR_WAYPOINTS.start);
   const [mk25Direction, setMk25Direction] = useState('down');
   const [mk25Moving, setMk25Moving] = useState(false);
-  const [currentTourStep, setCurrentTourStep] = useState(0);
+  const [currentTourStep, setCurrentTourStep] = useState(0); // 0: no iniciado, 1: needs, 2: wants, 3: savings, 4: return
   const [isOnTour, setIsOnTour] = useState(false);
-  const [tourPhase, setTourPhase] = useState('idle');
+  const [tourPhase, setTourPhase] = useState('idle'); // Controlar fases del tour
   
   const [storyProgress, setStoryProgress] = useState({
     intro: false,
@@ -67,6 +68,7 @@ export function GameWorld({ onComplete } = {}) {
 
   const TILE_SIZE = 64;
 
+  // Mostrar intro automáticamente al inicio
   useEffect(() => {
     if (!storyProgress.intro) {
       setTimeout(() => {
@@ -139,6 +141,7 @@ export function GameWorld({ onComplete } = {}) {
         break;
     }
 
+    // Verificar colisión con MK-25
     const wouldCollideWithMK25 = Math.abs(newX - mk25Pos.x) < 0.6 && Math.abs(newY - mk25Pos.y) < 0.6;
 
     if (isWalkable(newX, newY) && !wouldCollideWithMK25) {
@@ -147,9 +150,11 @@ export function GameWorld({ onComplete } = {}) {
       setTimeout(() => setIsMoving(false), 200);
     }
     
+    // Detectar objeto enfrentado después del movimiento
     updateFacingObject(newX, newY, newDir);
   }, [playerPos, gameState, mk25Pos]);
   
+  // Función para actualizar el objeto que estás mirando
   const updateFacingObject = (x, y, dir) => {
     let targetX = x;
     let targetY = y;
@@ -227,6 +232,7 @@ export function GameWorld({ onComplete } = {}) {
         break;
       
       case 'needs_area':
+        // Minijuego opcional después del tour
         if (!storyProgress.tourCompleted) {
           startDialogueSequence([{
             speaker: 'system',
@@ -251,6 +257,7 @@ export function GameWorld({ onComplete } = {}) {
         break;
       
       case 'wants_area':
+        // Minijuego opcional después del tour
         if (!storyProgress.tourCompleted) {
           startDialogueSequence([{
             speaker: 'system',
@@ -275,6 +282,7 @@ export function GameWorld({ onComplete } = {}) {
         break;
       
       case 'savings_area':
+        // Minijuego opcional después del tour
         if (!storyProgress.tourCompleted) {
           startDialogueSequence([{
             speaker: 'system',
@@ -344,8 +352,10 @@ export function GameWorld({ onComplete } = {}) {
         emotion: 'neutral',
       }]);
     } else if (!storyProgress.tourStarted) {
+      // Iniciar el tour automático
       setStoryProgress(prev => ({ ...prev, tourStarted: true }));
       startDialogueSequence(mk25Dialogues.afterBudget);
+      // Después del diálogo, iniciar movimiento automático
       setTimeout(() => {
         startTourMovement();
       }, 500);
@@ -367,11 +377,14 @@ export function GameWorld({ onComplete } = {}) {
     }
   };
 
+  // Sistema de movimiento automático del tour
   const startTourMovement = () => {
     setIsOnTour(true);
     setGameState('tour');
     setCurrentTourStep(1);
+    // Mover a la primera zona (Necesidades)
     moveToWaypoint(TOUR_WAYPOINTS.needs, () => {
+      // Llegamos a la zona de necesidades
       setGameState('dialogue');
       startDialogueSequence([
         {
@@ -395,6 +408,7 @@ export function GameWorld({ onComplete } = {}) {
           emotion: 'happy',
         }
       ]);
+      // El diálogo se continuará automáticamente cuando el jugador presione ENTER
     });
   };
 
@@ -425,6 +439,7 @@ export function GameWorld({ onComplete } = {}) {
           emotion: 'happy',
         }
       ]);
+      // El diálogo se continuará automáticamente cuando el jugador presione ENTER
     });
   };
 
@@ -455,6 +470,7 @@ export function GameWorld({ onComplete } = {}) {
           emotion: 'happy',
         }
       ]);
+      // El diálogo se continuará automáticamente cuando el jugador presione ENTER
     });
   };
 
@@ -482,16 +498,19 @@ export function GameWorld({ onComplete } = {}) {
         }
       ]);
       
+      // Llamar al callback onComplete cuando termine el tour
       if (onComplete) {
         setTimeout(() => {
           onComplete();
-        }, 2000);
+        }, 2000); // 2 segundos después del último diálogo
       }
     });
   };
 
   const moveToWaypoint = (target, onComplete) => {
+    // Algoritmo BFS para encontrar camino evitando paredes
     const findPath = (start, end) => {
+      // Redondear posiciones para trabajar con enteros
       const startX = Math.floor(start.x);
       const startY = Math.floor(start.y);
       const endX = Math.floor(end.x);
@@ -506,17 +525,20 @@ export function GameWorld({ onComplete } = {}) {
       while (queue.length > 0) {
         const { pos, path } = queue.shift();
         
+        // Si llegamos al destino, retornar el camino
         if (pos.x === endX && pos.y === endY) {
+          // Ajustar el último paso al destino exacto (con decimales si los tiene)
           const finalPath = [...path];
           finalPath[finalPath.length - 1] = { x: end.x, y: end.y };
           return finalPath;
         }
         
+        // Explorar vecinos (arriba, abajo, izquierda, derecha)
         const directions = [
-          { x: 0, y: -1 },
-          { x: 0, y: 1 },
-          { x: -1, y: 0 },
-          { x: 1, y: 0 }
+          { x: 0, y: -1 }, // arriba
+          { x: 0, y: 1 },  // abajo
+          { x: -1, y: 0 }, // izquierda
+          { x: 1, y: 0 }   // derecha
         ];
         
         for (const dir of directions) {
@@ -534,12 +556,14 @@ export function GameWorld({ onComplete } = {}) {
         }
       }
       
+      // Si no hay camino, retornar camino vacío
       console.error(`No se encontró camino de (${startX},${startY}) a (${endX},${endY})`);
       return [];
     };
     
     const movementSteps = findPath(mk25Pos, target);
     
+    // Si no hay camino válido, completar inmediatamente
     if (movementSteps.length === 0) {
       console.warn('No se encontró camino válido - saltando al destino');
       setMk25Pos(target);
@@ -547,6 +571,7 @@ export function GameWorld({ onComplete } = {}) {
       return;
     }
     
+    // Ejecutar movimiento paso a paso
     let stepIndex = 0;
     const moveInterval = setInterval(() => {
       if (stepIndex >= movementSteps.length) {
@@ -559,6 +584,7 @@ export function GameWorld({ onComplete } = {}) {
       const nextStep = movementSteps[stepIndex];
       const prevStep = stepIndex > 0 ? movementSteps[stepIndex - 1] : mk25Pos;
       
+      // Determinar dirección
       if (nextStep.x > prevStep.x) setMk25Direction('right');
       else if (nextStep.x < prevStep.x) setMk25Direction('left');
       else if (nextStep.y > prevStep.y) setMk25Direction('down');
@@ -567,10 +593,12 @@ export function GameWorld({ onComplete } = {}) {
       setMk25Moving(true);
       setMk25Pos(nextStep);
       
+      // Mover al jugador para que siga a MK-25 (con un paso de delay)
       if (stepIndex > 0) {
         const playerTarget = movementSteps[stepIndex - 1];
         setPlayerPos(playerTarget);
         
+        // Actualizar dirección del jugador
         if (playerTarget.x > playerPos.x) setDirection('right');
         else if (playerTarget.x < playerPos.x) setDirection('left');
         else if (playerTarget.y > playerPos.y) setDirection('down');
@@ -638,29 +666,36 @@ export function GameWorld({ onComplete } = {}) {
 
   const handleDialogueAdvance = () => {
     if (currentDialogueIndex < currentDialogueQueue.length - 1) {
+      // Avanzar al siguiente diálogo
       setCurrentDialogueIndex(currentDialogueIndex + 1);
     } else {
+      // Terminó la secuencia de diálogos
       const isLastDialogue = currentDialogueIndex === currentDialogueQueue.length - 1;
       
+      // Detectar si estamos en el tour
       if (isOnTour && currentTourStep === 1 && isLastDialogue && !storyProgress.tourWantsVisited) {
+        // Terminó explicación de Necesidades → ir a Gustos
         setGameState('exploring');
         setStoryProgress(prev => ({ ...prev, tourNeedsVisited: true }));
         setTimeout(() => {
           continueTourToWants();
         }, 500);
       } else if (isOnTour && currentTourStep === 2 && isLastDialogue && !storyProgress.tourSavingsVisited) {
+        // Terminó explicación de Gustos → ir a Ahorro
         setGameState('exploring');
         setStoryProgress(prev => ({ ...prev, tourWantsVisited: true }));
         setTimeout(() => {
           continueTourToSavings();
         }, 500);
       } else if (isOnTour && currentTourStep === 3 && isLastDialogue && !storyProgress.tourCompleted) {
+        // Terminó explicación de Ahorro → regresar a base
         setGameState('exploring');
         setStoryProgress(prev => ({ ...prev, tourSavingsVisited: true, tourCompleted: true }));
         setTimeout(() => {
           returnToBase();
         }, 500);
       } else {
+        // Diálogo normal
         setGameState('exploring');
       }
       
@@ -722,13 +757,16 @@ export function GameWorld({ onComplete } = {}) {
 
         {interactiveObjects
           .filter(obj => {
+            // No mostrar MK-25 como objeto interactivo si está en tour
             if (obj.id === 'mk25_assistant' && isOnTour) return false;
+            // No mostrar MK-25 como objeto si ya iniciamos el tour
             if (obj.id === 'mk25_assistant' && storyProgress.tourStarted && !storyProgress.tourCompleted) return false;
             return true;
           })
           .map((obj) => {
           const isNearby = Math.abs(playerPos.x - obj.x) <= 1 && Math.abs(playerPos.y - obj.y) <= 1;
           
+          // Calcular la posición hacia donde mira el jugador
           let targetX = playerPos.x;
           let targetY = playerPos.y;
           
@@ -747,6 +785,7 @@ export function GameWorld({ onComplete } = {}) {
               break;
           }
           
+          // Verificar si el objeto está en la posición objetivo (considerando decimales)
           const facingObject = Math.abs(targetX - obj.x) < 0.6 && Math.abs(targetY - obj.y) < 0.6;
 
           return (
@@ -763,8 +802,10 @@ export function GameWorld({ onComplete } = {}) {
                 zIndex: 5,
               }}
             >
+              {/* Brillo siempre visible */}
               <div className="object-glow"></div>
               
+              {/* Nombre solo cuando estás cerca y mirando */}
               {isNearby && facingObject && (
                 <div className="object-label">{obj.name}</div>
               )}
@@ -793,8 +834,8 @@ export function GameWorld({ onComplete } = {}) {
             text={dialogue.text}
             speakerName={speakerName}
             onNext={handleDialogueAdvance}
-            speakingSprite={undefined}
-            idleSprite={undefined}
+            speakingSprite={undefined} // TODO: Add sprite imports
+            idleSprite={undefined} // TODO: Add sprite imports
           />
         );
       })()}
@@ -830,6 +871,7 @@ export function GameWorld({ onComplete } = {}) {
         <MemoryGamePanel
           zone={currentMemoryZone}
           onComplete={() => {
+            // Marcar juego como completado (opcional, no afecta el tour)
             setStoryProgress(prev => ({
               ...prev,
               [`${currentMemoryZone}GameCompleted`]: true
@@ -845,6 +887,7 @@ export function GameWorld({ onComplete } = {}) {
         />
       )}
       
+      {/* Barra de instrucciones inferior */}
       {gameState === 'exploring' && facingObjectName && (
         <div className="interaction-bar">
           <div className="interaction-bar-content">

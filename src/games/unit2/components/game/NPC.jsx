@@ -1,49 +1,45 @@
+
+import mk25Frame1 from '../../assets/asesor1.png';
+import mk25Frame2 from '../../assets/asesor2.png';
+import mk25Frame3 from '../../assets/asesor3.png';
+import mk25Frame4 from '../../assets/asesor4.png';
+import mk25Frame5 from '../../assets/asesor5.png';
+
 import React, { useState, useEffect } from 'react';
 
 export function NPC({ x, y, icon, sprite, name, isMoving = false, direction = 'down', tileSize = 64 }) {
   const [currentFrame, setCurrentFrame] = useState(0);
   
   // Animación de frames para MK-25 con tiempos variables
-  useEffect(() => {
-    if (name === 'MK-25' && !isMoving) {
-      let timeout;
-      
-      const scheduleNextFrame = (frameIndex) => {
-        const delays = [
-          15000, // Frame 0 → Frame 1: 15 segundos
-          3000,  // Frame 1 → Frame 2: 3 segundos
-          1000,  // Frame 2 → Frame 3: 1 segundo
-          1500,  // Frame 3 → Frame 4: 1.5 segundos
-          1000,  // Frame 4 → Frame 0: 1 segundo
-        ];
-        
-        const delay = delays[frameIndex];
-        
-        timeout = setTimeout(() => {
-          setCurrentFrame((prev) => {
-            const nextFrame = (prev + 1) % 5;
-            scheduleNextFrame(nextFrame);
-            return nextFrame;
-          });
-        }, delay);
-      };
-      
-      scheduleNextFrame(currentFrame);
-      
-      return () => clearTimeout(timeout);
-    }
-  }, [name, isMoving]);
+useEffect(() => {
+  if (name !== 'MK-25' || isMoving) return;
+
+  // Delays por frame
+  const delays = [15000, 3000, 1000, 1500, 1000];
+  let frame = currentFrame;
+
+  // Ejecuta el primer ciclo
+  let timeout = setTimeout(function tick() {
+    frame = (frame + 1) % 5;
+    setCurrentFrame(frame);
+
+    timeout = setTimeout(tick, delays[frame]);
+  }, delays[frame]);
+
+  return () => clearTimeout(timeout);
+}, [name, isMoving]);
+
   
   // Determinar qué sprite usar
   const getSprite = () => {
     if (name === 'MK-25') {
       // Placeholder para sprites de MK-25
       const frames = [
-        '/assets/mk25-frame1.png',
-        '/assets/mk25-frame2.png',
-        '/assets/mk25-frame3.png',
-        '/assets/mk25-frame4.png',
-        '/assets/mk25-frame5.png'
+        mk25Frame1,
+        mk25Frame2,
+        mk25Frame3,
+        mk25Frame4,
+        mk25Frame5,
       ];
       return frames[currentFrame];
     }

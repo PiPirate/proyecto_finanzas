@@ -1,4 +1,5 @@
 import React from 'react';
+import mapHome from '../../assets/mapHome.png';
 
 export function TileMap({ mapData }) {
   const TILE_SIZE = 64;
@@ -10,7 +11,7 @@ export function TileMap({ mapData }) {
         style={{
           width: `${mapData[0].length * TILE_SIZE}px`,
           height: `${mapData.length * TILE_SIZE}px`,
-          backgroundImage: 'url(/assets/map-house.png)',
+          backgroundImage: `url(${mapHome})`,
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           imageRendering: 'pixelated',

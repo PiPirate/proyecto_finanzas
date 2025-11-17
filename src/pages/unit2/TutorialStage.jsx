@@ -1,7 +1,7 @@
 // src/pages/unit1/TutorialStage.jsx
 import React, { useState } from 'react';
 import '../css/TutorialStage.css';
-import GameWorld from '../../games/unit2/components/GameWorld';
+import { GameWorld } from '../../games/unit2/components/GameWorld'
 import '../../games/unit2/styles/globals.css';
 
 export default function TutorialStage({ onComplete }) {

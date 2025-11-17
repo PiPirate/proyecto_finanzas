@@ -1,11 +1,11 @@
 // DialogueBox.jsx
 import React from 'react';
 import useTypewriterText from '../hooks/useTypewriterText';
-
+import mk25dialogue from '../../assets/asesor1.png';
 // Sprites placeholder - reemplaza con tus assets reales
-const protagonistSpeaking = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="%23131b34"/><circle cx="100" cy="100" r="60" fill="%234c6fbf"/><text x="100" y="120" font-size="60" text-anchor="middle">😊</text></svg>';
-const protagonistIdle = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="%23131b34"/><circle cx="100" cy="100" r="60" fill="%234c6fbf"/><text x="100" y="120" font-size="60" text-anchor="middle">😌</text></svg>';
-const mk25Robot = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="%23131b34"/><rect x="50" y="50" width="100" height="100" fill="%239bb6ff" rx="10"/><text x="100" y="120" font-size="60" text-anchor="middle">🤖</text></svg>';
+import protagonistSpeaking from '../../assets/asesorSpeak.png';
+import protagonistIdle from '../../assets/asesorIdle.png';
+import mk25Robot from '../../assets/system.png';
 
 export default function DialogueBox({
   visible = true,
