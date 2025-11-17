@@ -31,7 +31,8 @@ import girlFaceTalking from '../../assets/general/player_face_hablando.png';
 import girlFaceNeutral from '../../assets/general/player_face_neutral.png';
 
 // Componentes de minijuegos (los crearás tú después)
-// import LoanDragGame from './games/LoanDragGame';
+import LoanDragGame from './LoanDragGame';
+import SnakeFinancialGame from './SnakeFinancialGame';
 // import NeedsClassifierGame from './games/NeedsClassifierGame';
 // import InterestSimulatorGame from './games/InterestSimulatorGame';
 // import LoanComparisonGame from './games/LoanComparisonGame';
@@ -47,7 +48,16 @@ import DialogueBox from '../core/dialogue/DialogueBox';
 const introDialogue = [
     "Bienvenida a la Unidad 3. Hoy aprenderemos cómo funcionan los préstamos.",
     "Cada zona del banco tiene una actividad distinta: préstamo, necesidades, interés, comparación y planificación.",
-    "Explora cada sección para desbloquear la comprensión completa de un préstamo real.",
+    "Explora cada sección para desbloquear la comprensión completa de un préstamo real", "ve al cartel de '¿Qué es un préstamo?' para comenzar.",
+];
+
+const loanIntroDialogue = [
+    "Antes de comenzar, déjame explicarte qué es un préstamo.",
+    "Cuando pides un préstamo, recibes un monto inicial llamado capital.",
+    "Pero a cambio, debes devolver ese dinero más un costo adicional llamado interés.",
+    "La suma total que debes pagar se llama deuda.",
+    "Y normalmente esa deuda se paga en cuotas fijas cada mes.",
+    "Ahora sí, vamos a verlo con un minijuego para entenderlo mejor."
 ];
 
 const loanPosterDialogue = [
@@ -118,6 +128,7 @@ function Unit3GameScene({ onGoalReached }) {
     const currentDialogueText = useMemo(() => {
         switch (dialogueMode) {
             case "intro": return introDialogue[dialogueIndex];
+            case "loanIntro": return loanIntroDialogue[dialogueIndex];
             case "loan": return loanPosterDialogue[dialogueIndex];
             case "needs": return needsPosterDialogue[dialogueIndex];
             case "interest": return interestPosterDialogue[dialogueIndex];
@@ -164,7 +175,7 @@ function Unit3GameScene({ onGoalReached }) {
             case "poster":
                 // Determinar cuál poster es
                 if (zone.id.includes("prestamo") && !loanDone) {
-                    setDialogueMode("loan");
+                    setDialogueMode("loanIntro");
                 } else if (zone.id.includes("necesidades") && !needsDone) {
                     setDialogueMode("needs");
                 } else if (zone.id.includes("interes") && !interestDone) {
@@ -177,7 +188,7 @@ function Unit3GameScene({ onGoalReached }) {
                 break;
 
             case "desk":
-                if (!loanDone) setDialogueMode("loan");
+                if (!loanDone) setDialogueMode("loanIntro");;
                 break;
 
             case "computer":
@@ -199,6 +210,7 @@ function Unit3GameScene({ onGoalReached }) {
         const getArray = () => {
             switch (dialogueMode) {
                 case "intro": return introDialogue;
+                case "loanIntro": return loanIntroDialogue;
                 case "loan": return loanPosterDialogue;
                 case "needs": return needsPosterDialogue;
                 case "interest": return interestPosterDialogue;
@@ -227,6 +239,13 @@ function Unit3GameScene({ onGoalReached }) {
                 setDialogueMode(null);
                 setIsLoanGameOpen(true);
                 break;
+
+            case "loanIntro":
+                setDialogueMode(null);
+                setDialogueIndex(0);
+                setIsLoanGameOpen(true);
+                break;
+
 
             case "needs":
                 setDialogueMode(null);
@@ -292,7 +311,7 @@ function Unit3GameScene({ onGoalReached }) {
             />
 
             {/* MINIJUEGO 1 — PRÉSTAMO */}
-            {/* <LoanDragGame
+            <LoanDragGame
                 visible={isLoanGameOpen}
                 onComplete={() => {
                     setIsLoanGameOpen(false);
@@ -300,13 +319,26 @@ function Unit3GameScene({ onGoalReached }) {
                 }}
             />
 
-            <NeedsClassifierGame
-                visible={isNeedsGameOpen}
+            <SnakeFinancialGame
+                visible={isCreditGameOpen}
                 onComplete={() => {
-                    setIsNeedsGameOpen(false);
-                    setNeedsDone(true);
+                    setIsCreditGameOpen(false);
+                    setCreditDone(true);
                 }}
-            /> */}
+            />
+
+
+            {/* MINIJUEGO 2 — NECESIDADES */}
+            {/* Descomentar cuando tengas creado el archivo NeedsClassifierGame.jsx */}
+            {/* 
+<NeedsClassifierGame
+    visible={isNeedsGameOpen}
+    onComplete={() => {
+        setIsNeedsGameOpen(false);
+        setNeedsDone(true);
+    }}
+/>
+*/}
         </div>);
 }
 export default Unit3GameScene;

@@ -1,0 +1,104 @@
+.loan-game-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.loan-game-window {
+    background: white;
+    padding: 30px;
+    width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.loan-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.loan-subtitle {
+    margin-bottom: 20px;
+}
+
+.loan-cards {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.loan-card {
+    background: #eaeaea;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+}
+
+.loan-dropzones {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.dropzone {
+    border: 2px dashed #707070;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.loan-finish-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #4caf50;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+}
+
+.loan-finish-btn.disabled {
+    background: gray;
+    pointer-events: none;
+}
+
+.loan-hint-box {
+    background: #fff9c4;
+    border-left: 4px solid #ffcc00;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.loan-feedback-box {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.loan-summary {
+    background: #f1f8e9;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border-left: 3px solid #4caf50;
+}
+
+.loan-card.locked {
+    background: #4caf50 !important;
+    color: white;
+    border: 2px solid #2e7d32;
+    cursor: default;
+    opacity: 0.9;
+}

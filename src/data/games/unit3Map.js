@@ -8,31 +8,31 @@ export const unit3TileSize = 63;
 
 export const unit3MapMatrix = [
     // y = 0 → borde superior
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 1, 2, 1],
 
-    // y = 1 → pared superior
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    // y = 1 → poster de ineteres y biblioteca
+    [1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 1, 2, 1],
 
-    // y = 2 → posters + biblioteca
-    [1, 0, 2, 2, 0, 0, 2, 2, 2, 0, 2, 0, 1, 2, 1, 1],
+    // y = 2 → poster de necesidades
+    [1, 0, 2, 2, 2, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 1],
 
-    // y = 3 → escritorio madera + segunda fila de posters
-    [1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 1],
+    // y = 3 → escritorio madera (es el cliceable para sabersobre prestamos)
+    [1, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 
-    // y = 4 → alfombra + plantas
-    [1, 1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+    // y = 4 → escritorio de manera la otra parte
+    [1, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 
     // y = 5 → piso
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 
-    // y = 6 → piso
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    // y = 6 → computadora
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 1],
 
-    // y = 7 → piso
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    // y = 7 → la otra parte de la computadora
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 1],
 
-    // y = 8 → escritorio con computadora (3 tiles interactivos)
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 1],
+    // y = 8 → piso
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 
     // y = 9 → pared inferior
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -47,29 +47,67 @@ export const unit3PlayerStart = { x: 8, y: 7 };
 // Definición de zonas interactivas
 // Estas se activan con click y coinciden con todos los tiles '2'
 export const unit3InteractiveZones = [
-    // Posters fila superior
-    { id: 'poster_prestamo', x: 2, y: 2, type: 'poster' },
-    { id: 'poster_prestamo', x: 3, y: 2, type: 'poster' },
+    // -----------------------------------------------------
+    // POSTER PRÉSTAMO + ESCRITORIO (columnas 2–4, filas 0–4)
+    // -----------------------------------------------------
+    { id: "poster_prestamo", x: 2, y: 0, type: "desk" },
+    { id: "poster_prestamo", x: 3, y: 0, type: "desk" },
+    { id: "poster_prestamo", x: 4, y: 0, type: "desk" },
 
-    { id: 'poster_necesidades', x: 6, y: 2, type: 'poster' },
-    { id: 'poster_necesidades', x: 7, y: 2, type: 'poster' },
-    { id: 'poster_necesidades', x: 8, y: 2, type: 'poster' },
+    { id: "poster_prestamo", x: 2, y: 1, type: "desk" },
+    { id: "poster_prestamo", x: 3, y: 1, type: "desk" },
+    { id: "poster_prestamo", x: 4, y: 1, type: "desk" },
 
-    { id: 'poster_interes', x: 10, y: 2, type: 'poster' },
+    { id: "poster_prestamo", x: 2, y: 2, type: "desk" },
+    { id: "poster_prestamo", x: 3, y: 2, type: "desk" },
+    { id: "poster_prestamo", x: 4, y: 2, type: "desk" },
 
-    // Biblioteca
-    { id: 'biblioteca', x: 13, y: 2, type: 'library' },
-    { id: 'biblioteca', x: 13, y: 3, type: 'library' },
+    { id: "poster_prestamo", x: 2, y: 3, type: "desk" },
+    { id: "poster_prestamo", x: 3, y: 3, type: "desk" },
+    { id: "poster_prestamo", x: 4, y: 3, type: "desk" },
 
-    // Escritorio de madera (debajo del póster grande)
-    { id: 'escritorio_madera', x: 2, y: 3, type: 'desk' },
-    { id: 'escritorio_madera', x: 3, y: 3, type: 'desk' },
+    { id: "poster_prestamo", x: 2, y: 4, type: "desk" },
+    { id: "poster_prestamo", x: 3, y: 4, type: "desk" },
+    { id: "poster_prestamo", x: 4, y: 4, type: "desk" },
 
-    // Alfombra roja (opcionalmente interactiva, pero NO la marcaste)
-    // Si la quieres luego, la añadimos.
+    // -----------------------------------------------------
+    // POSTER NECESIDADES (columnas 7–9, filas 0–2)
+    // -----------------------------------------------------
+    { id: "poster_necesidades", x: 7, y: 0, type: "poster" },
+    { id: "poster_necesidades", x: 8, y: 0, type: "poster" },
+    { id: "poster_necesidades", x: 9, y: 0, type: "poster" },
 
-    // Escritorio con computador
-    { id: 'computador', x: 9, y: 8, type: 'computer' },
-    { id: 'computador', x: 10, y: 8, type: 'computer' },
-    { id: 'computador', x: 11, y: 8, type: 'computer' },
+    { id: "poster_necesidades", x: 7, y: 1, type: "poster" },
+    { id: "poster_necesidades", x: 8, y: 1, type: "poster" },
+    { id: "poster_necesidades", x: 9, y: 1, type: "poster" },
+
+    { id: "poster_necesidades", x: 7, y: 2, type: "poster" },
+    { id: "poster_necesidades", x: 8, y: 2, type: "poster" },
+    { id: "poster_necesidades", x: 9, y: 2, type: "poster" },
+
+    // -----------------------------------------------------
+    // POSTER INTERÉS (columnas 11–12, filas 0–1)
+    // -----------------------------------------------------
+    { id: "poster_interes", x: 11, y: 0, type: "poster" },
+    { id: "poster_interes", x: 12, y: 0, type: "poster" },
+
+    { id: "poster_interes", x: 11, y: 1, type: "poster" },
+    { id: "poster_interes", x: 12, y: 1, type: "poster" },
+
+    // -----------------------------------------------------
+    // BIBLIOTECA (columna 14, filas 0–1)
+    // -----------------------------------------------------
+    { id: "biblioteca", x: 14, y: 0, type: "library" },
+    { id: "biblioteca", x: 14, y: 1, type: "library" },
+
+    // -----------------------------------------------------
+    // COMPUTADOR (columnas 11–13, filas 6–7)
+    // -----------------------------------------------------
+    { id: "computador", x: 11, y: 6, type: "computer" },
+    { id: "computador", x: 12, y: 6, type: "computer" },
+    { id: "computador", x: 13, y: 6, type: "computer" },
+
+    { id: "computador", x: 11, y: 7, type: "computer" },
+    { id: "computador", x: 12, y: 7, type: "computer" },
+    { id: "computador", x: 13, y: 7, type: "computer" },
 ];
