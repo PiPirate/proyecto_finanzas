@@ -26,7 +26,7 @@
 
 /* WALK: frames 6–9 → 4 frames */
 .player.player--moving {
-  animation: player-walk 1s steps(3) infinite; /* 4 frames, no 5 */
+  animation: player-walk 0.4s steps(3) infinite; /* 4 frames, no 5 */
 }
 
 /* WALK: frames 6–9 (o 6–8 según tengas el rango).
@@ -34,7 +34,7 @@
    del 62.5% al 100% con 4 frames. */
 @keyframes player-walk {
   from {
-    background-position-y: 62.611221%;  /* justo después del idle */
+    background-position-y: 62.411221%;  /* justo después del idle */
   }
   to {
     background-position-y: 100%;   /* último frame de la tirilla */
