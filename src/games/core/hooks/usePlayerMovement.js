@@ -23,6 +23,9 @@ export default function usePlayerMovement({
   const pixelPosRef = useRef(pixelPosition);
   const movingRef = useRef(false);
 
+  // dirección que se está manteniendo presionada (w/a/s/d)
+  const heldDirectionRef = useRef(null);
+
   useEffect(() => {
     tilePosRef.current = tilePosition;
   }, [tilePosition]);
@@ -32,50 +35,47 @@ export default function usePlayerMovement({
   }, [pixelPosition]);
 
   useEffect(() => {
-    function handleKeyDown(e) {
+    // mapea dirección a desplazamiento en tiles
+    const getDeltaFromDirection = (dir) => {
+      switch (dir) {
+        case 'up':
+          return { dx: 0, dy: -1 };
+        case 'down':
+          return { dx: 0, dy: 1 };
+        case 'left':
+          return { dx: -1, dy: 0 };
+        case 'right':
+          return { dx: 1, dy: 0 };
+        default:
+          return { dx: 0, dy: 0 };
+      }
+    };
+
+    const attemptMove = (dir) => {
       if (!canMove) return;
       if (movingRef.current) return;
 
-      let dx = 0;
-      let dy = 0;
-      let newDirection = direction;
-
-      if (e.key === 'ArrowUp' || e.key === 'w') {
-        dy = -1;
-        newDirection = 'up';
-      } else if (e.key === 'ArrowDown' || e.key === 's') {
-        dy = 1;
-        newDirection = 'down';
-      } else if (e.key === 'ArrowLeft' || e.key === 'a') {
-        dx = -1;
-        newDirection = 'left';
-      } else if (e.key === 'ArrowRight' || e.key === 'd') {
-        dx = 1;
-        newDirection = 'right';
-      } else {
-        return;
-      }
-
-      e.preventDefault();
-
+      const { dx, dy } = getDeltaFromDirection(dir);
       const { x, y } = tilePosRef.current;
       const targetX = x + dx;
       const targetY = y + dy;
 
+      // límites del mapa
       if (
         targetY < 0 ||
         targetY >= mapMatrix.length ||
         targetX < 0 ||
         targetX >= mapMatrix[0].length
       ) {
-        setDirection(newDirection);
+        setDirection(dir);
         return;
       }
 
       const tileValue = mapMatrix[targetY][targetX];
 
+      // colisión
       if (blockingTileTypes.includes(tileValue)) {
-        setDirection(newDirection);
+        setDirection(dir);
         return;
       }
 
@@ -87,11 +87,11 @@ export default function usePlayerMovement({
 
       movingRef.current = true;
       setIsMoving(true);
-      setDirection(newDirection);
+      setDirection(dir);
 
       const startTime = performance.now();
 
-      function step(now) {
+      const step = (now) => {
         const elapsed = now - startTime;
         const t = Math.min(elapsed / moveDuration, 1);
 
@@ -103,9 +103,9 @@ export default function usePlayerMovement({
         if (t < 1) {
           requestAnimationFrame(step);
         } else {
-          setTilePosition({ x: targetX, y: targetY });
           movingRef.current = false;
           setIsMoving(false);
+          setTilePosition({ x: targetX, y: targetY });
 
           if (interactiveTileTypes.includes(tileValue) && onStep) {
             onStep({
@@ -120,14 +120,80 @@ export default function usePlayerMovement({
               isInteractive: false,
             });
           }
+
+          // movimiento continuo: si la tecla sigue presionada,
+          // vuelve a intentar moverse en la misma dirección
+          if (heldDirectionRef.current === dir && canMove) {
+            requestAnimationFrame(() => attemptMove(dir));
+          }
         }
-      }
+      };
 
       requestAnimationFrame(step);
-    }
+    };
+
+    const handleKeyDown = (e) => {
+      if (!canMove) return;
+
+      const key = e.key.toLowerCase();
+
+      // bloqueamos las flechas para que no muevan la página
+      if (
+        e.key === 'ArrowUp' ||
+        e.key === 'ArrowDown' ||
+        e.key === 'ArrowLeft' ||
+        e.key === 'ArrowRight'
+      ) {
+        e.preventDefault();
+        return;
+      }
+
+      let newDirection = null;
+
+      if (key === 'w') {
+        newDirection = 'up';
+      } else if (key === 's') {
+        newDirection = 'down';
+      } else if (key === 'a') {
+        newDirection = 'left';
+      } else if (key === 'd') {
+        newDirection = 'right';
+      } else {
+        return; // cualquier otra tecla se ignora
+      }
+
+      e.preventDefault();
+
+      // guardamos la dirección que está sostenida
+      heldDirectionRef.current = newDirection;
+
+      // si no se está moviendo, iniciamos el movimiento
+      if (!movingRef.current) {
+        attemptMove(newDirection);
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      const key = e.key.toLowerCase();
+      let dirReleased = null;
+
+      if (key === 'w') dirReleased = 'up';
+      else if (key === 's') dirReleased = 'down';
+      else if (key === 'a') dirReleased = 'left';
+      else if (key === 'd') dirReleased = 'right';
+
+      if (dirReleased && heldDirectionRef.current === dirReleased) {
+        heldDirectionRef.current = null;
+      }
+    };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
   }, [
     mapMatrix,
     tileSize,
@@ -135,7 +201,6 @@ export default function usePlayerMovement({
     blockingTileTypes,
     interactiveTileTypes,
     onStep,
-    direction,
     canMove,
   ]);
 
