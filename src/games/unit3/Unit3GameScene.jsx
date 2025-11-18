@@ -34,7 +34,8 @@ import girlFaceNeutral from '../../assets/general/player_face_neutral.png';
 import LoanDragGame from './LoanDragGame';
 import SnakeFinancialGame from './SnakeFinancialGame';
 import NeedsPriorityGame from "./NeedsPriorityGame";
-// import InterestSimulatorGame from './games/InterestSimulatorGame';
+import InterestRunnerGame from "./InterestRunnerGame";
+
 // import LoanComparisonGame from './games/LoanComparisonGame';
 // import PaymentPuzzleGame from './games/PaymentPuzzleGame';
 
@@ -428,6 +429,15 @@ function Unit3GameScene({ onGoalReached }) {
                     setNeedsDone(true);
                 }}
             />
+
+            <InterestRunnerGame
+                visible={isInterestGameOpen}
+                onComplete={() => {
+                    setIsInterestGameOpen(false);
+                    setInterestDone(true);
+                }}
+            />
+
 
         </div>);
 }
