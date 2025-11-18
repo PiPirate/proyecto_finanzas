@@ -220,7 +220,7 @@ export default function LoanDragGame({ visible, onComplete }) {
         return (
             <div className="loan-game-overlay">
                 <div className="loan-game-window intro">
-                    <h2>📘 Aprende sobre préstamos de forma fácil</h2>
+                    <h2>Aprende sobre préstamos de forma fácil</h2>
                     <p>No necesitas saber nada. Aquí aprenderás paso a paso, arrastrando ideas claras y entendibles.</p>
                     <button className="loan-finish-btn" onClick={() => {
                         setShowIntro(false);
@@ -256,7 +256,7 @@ export default function LoanDragGame({ visible, onComplete }) {
         <div className="loan-game-overlay">
             <div className="loan-game-window">
 
-                <h2>{module.title}</h2>
+                <h2 className="module-title">{module.title}</h2>
                 <p className="module-desc">{module.description}</p>
 
                 {hint && <div className="loan-hint-box">💡 {hint}</div>}

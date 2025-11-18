@@ -33,7 +33,7 @@ import girlFaceNeutral from '../../assets/general/player_face_neutral.png';
 // Componentes de minijuegos (los crearás tú después)
 import LoanDragGame from './LoanDragGame';
 import SnakeFinancialGame from './SnakeFinancialGame';
-// import NeedsClassifierGame from './games/NeedsClassifierGame';
+import NeedsPriorityGame from "./NeedsPriorityGame";
 // import InterestSimulatorGame from './games/InterestSimulatorGame';
 // import LoanComparisonGame from './games/LoanComparisonGame';
 // import PaymentPuzzleGame from './games/PaymentPuzzleGame';
@@ -421,18 +421,14 @@ function Unit3GameScene({ onGoalReached }) {
                 }}
             />
 
+            <NeedsPriorityGame
+                visible={isNeedsGameOpen}
+                onComplete={() => {
+                    setIsNeedsGameOpen(false);
+                    setNeedsDone(true);
+                }}
+            />
 
-            {/* MINIJUEGO 2 — NECESIDADES */}
-            {/* Descomentar cuando tengas creado el archivo NeedsClassifierGame.jsx */}
-            {/* 
-<NeedsClassifierGame
-    visible={isNeedsGameOpen}
-    onComplete={() => {
-        setIsNeedsGameOpen(false);
-        setNeedsDone(true);
-    }}
-/>
-*/}
         </div>);
 }
 export default Unit3GameScene;

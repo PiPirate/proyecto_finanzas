@@ -12,7 +12,7 @@
     background-image: url("../../../assets/unit3/objects/table.png");
     background-repeat: repeat;
     /* La imagen se repite sin deformarse */
-    background-size: auto;
+    background-size: 100% 100%;
     /* Mantiene tamaño real */
     background-position: center top;
     /* Desde la esquina superior izquierda */
@@ -23,14 +23,26 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
-
+.module-title{
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+}
 .loan-title {
     font-size: 22px;
     font-weight: bold;
+    color: white;
+}
+
+.intro {
+    text-align: center;
+    color: white;
 }
 
 .loan-subtitle {
     margin-bottom: 20px;
+    color: white;
 }
 
 .module-desc{
