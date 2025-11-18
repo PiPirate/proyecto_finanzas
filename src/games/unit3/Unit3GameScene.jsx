@@ -46,9 +46,9 @@ import DialogueBox from '../core/dialogue/DialogueBox';
 // -------------------------------------------------------------
 
 const introDialogue = [
-    "Bienvenida a la Unidad 3. Hoy aprenderemos cómo funcionan los préstamos.",
+    "Bienvenido a la Unidad 3. Hoy aprenderemos cómo funcionan los préstamos.",
     "Cada zona del banco tiene una actividad distinta: préstamo, necesidades, interés, comparación y planificación.",
-    "Explora cada sección para desbloquear la comprensión completa de un préstamo real", "ve al cartel de '¿Qué es un préstamo?' para comenzar.",
+    "Explora cada sección para desbloquear la comprensión completa de un préstamo real", "ve al cartel de '¿Qué es un préstamo?' y da clic sobre la mesa para comenzar.",
 ];
 
 const loanIntroDialogue = [
@@ -77,8 +77,8 @@ const interestPosterDialogue = [
 ];
 
 const creditDeskDialogue = [
-    "Has llegado a la ventanilla de crédito.",
-    "Aquí compararemos tres préstamos reales para elegir el más conveniente.",
+    "Has encontrado el minujuego oculto de la computadora.",
+    "No es necesario terminarlo para completar el modulo, pero si quieres aceptar el reto, adelante",
 ];
 
 const paymentPuzzleDialogue = [
@@ -90,6 +90,11 @@ const finalDialogue = [
     "¡Excelente! Has completado todas las zonas de la Unidad 3.",
     "Ahora entiendes qué es un préstamo, cuándo usarlo, cómo calcular interés y cómo elegir la mejor oferta.",
     "¡Eres oficialmente una persona financiera nivel PRO!",
+];
+
+const lockedDialogue = [
+    "Aún no puedes acceder a esta zona.",
+    "Primero debes completar la actividad anterior para continuar."
 ];
 
 // -------------------------------------------------------------
@@ -135,6 +140,7 @@ function Unit3GameScene({ onGoalReached }) {
             case "credit": return creditDeskDialogue[dialogueIndex];
             case "payment": return paymentPuzzleDialogue[dialogueIndex];
             case "final": return finalDialogue[dialogueIndex];
+            case "locked": return lockedDialogue[dialogueIndex];
             default: return "";
         }
     }, [dialogueMode, dialogueIndex]);
@@ -156,51 +162,128 @@ function Unit3GameScene({ onGoalReached }) {
     });
 
     // -------------------------------------------------------------
-    // CONTROL DE CLICK EN ZONAS INTERACTIVAS
+    // CONTROL DE CLICK EN ZONAS INTERACTIVAS/ Bloqueo de zonas
     // -------------------------------------------------------------
 
+    // const handleTileClick = ({ x, y, value }) => {
+    //     if (isDialogueVisible) return;
+    //     if (value !== 2) return;
+
+    //     const near =
+    //         Math.abs(x - tilePosition.x) <= 1 &&
+    //         Math.abs(y - tilePosition.y) <= 1;
+    //     if (!near) return;
+
+    //     const zone = unit3InteractiveZones.find((z) => z.x === x && z.y === y);
+    //     if (!zone) return;
+
+    //     // 🔥 ORDEN DE LAS ACTIVIDADES
+    //     switch (zone.id) {
+
+    //         // 1️⃣ PRÉSTAMO (siempre primero)
+    //         case "poster_prestamo":
+    //             if (!loanDone) {
+    //                 setDialogueMode("loanIntro");
+    //             } else {
+    //                 setDialogueMode("locked");
+    //             }
+    //             break;
+
+    //         // 2️⃣ NECESIDADES (requiere préstamo)
+    //         case "poster_necesidades":
+    //         case "biblioteca":
+    //             if (!loanDone) {
+    //                 setDialogueMode("locked");
+    //             } else if (!needsDone) {
+    //                 setDialogueMode("needs");
+    //             } else {
+    //                 setDialogueMode("locked");
+    //             }
+    //             break;
+
+    //         // 3️⃣ INTERÉS (requiere necesidades)
+    //         case "poster_interes":
+    //             if (!needsDone) {
+    //                 setDialogueMode("locked");
+    //             } else if (!interestDone) {
+    //                 setDialogueMode("interest");
+    //             } else {
+    //                 setDialogueMode("locked");
+    //             }
+    //             break;
+
+    //       
+    //          case "computer":
+    //             setDialogueMode("credit");
+    //             break;
+
+    //         default:
+    //             break;
+    //     }
+
+    //     setDialogueIndex(0);
+    // };
+
+    // misma funcion pero sin bloqueo de zonas
+
     const handleTileClick = ({ x, y, value }) => {
+        // Bloquea si ya hay un diálogo o un minijuego abierto
         if (isDialogueVisible) return;
+
+        // Solo interactúa con tiles de tipo 2
         if (value !== 2) return;
 
+        // Debe estar cerca (1 tile de distancia)
         const near =
             Math.abs(x - tilePosition.x) <= 1 &&
             Math.abs(y - tilePosition.y) <= 1;
+
         if (!near) return;
 
+        // Buscar la zona interactiva correspondiente
         const zone = unit3InteractiveZones.find((z) => z.x === x && z.y === y);
         if (!zone) return;
 
+        // --------------------------------------------
+        // CONTROL DE INTERACCIONES (VERSIÓN DEBUG)
+        // --------------------------------------------
         switch (zone.type) {
+
+            // POSTERS
             case "poster":
-                // Determinar cuál poster es
-                if (zone.id.includes("prestamo") && !loanDone) {
+                if (zone.id.includes("prestamo")) {
                     setDialogueMode("loanIntro");
-                } else if (zone.id.includes("necesidades") && !needsDone) {
+                } else if (zone.id.includes("necesidades")) {
                     setDialogueMode("needs");
-                } else if (zone.id.includes("interes") && !interestDone) {
+                } else if (zone.id.includes("interes")) {
                     setDialogueMode("interest");
                 }
                 break;
 
+            // BIBLIOTECA → minijuego de necesidades
             case "library":
-                if (!needsDone) setDialogueMode("needs");
+                setDialogueMode("needs");
                 break;
 
+            // ESCRITORIO → préstamo
             case "desk":
-                if (!loanDone) setDialogueMode("loanIntro");;
+                setDialogueMode("loanIntro");
                 break;
 
+            // COMPUTADOR → crédito / snake
             case "computer":
-                if (!creditDone) setDialogueMode("credit");
+                setDialogueMode("credit");
                 break;
 
             default:
                 break;
         }
 
+        // Reiniciar diálogo siempre al comenzar otro
         setDialogueIndex(0);
     };
+
+
 
     // -------------------------------------------------------------
     // CONTROL DEL BOTÓN "SIGUIENTE" EN LOS DIÁLOGOS
@@ -217,56 +300,66 @@ function Unit3GameScene({ onGoalReached }) {
                 case "credit": return creditDeskDialogue;
                 case "payment": return paymentPuzzleDialogue;
                 case "final": return finalDialogue;
+                case "locked": return lockedDialogue; // ⚠ NUEVO
                 default: return [];
             }
         };
 
         const arr = getArray();
 
-        // Si quedan líneas
+        // Si aún quedan líneas por mostrar
         if (dialogueIndex < arr.length - 1) {
             setDialogueIndex(dialogueIndex + 1);
             return;
         }
 
-        // Si terminó el diálogo
+        // -----------------------------------------
+        // SI SE TERMINÓ EL DIÁLOGO
+        // -----------------------------------------
+
         switch (dialogueMode) {
+
             case "intro":
                 setDialogueMode(null);
                 break;
 
-            case "loan":
+            case "locked":
+                // ❌ Bloqueado → cerrar diálogo y NO abrir minijuego
                 setDialogueMode(null);
-                setIsLoanGameOpen(true);
                 break;
 
+            // 1️⃣ PRÉSTAMO
+            case "loan":
             case "loanIntro":
                 setDialogueMode(null);
-                setDialogueIndex(0);
                 setIsLoanGameOpen(true);
                 break;
 
-
+            // 2️⃣ NECESIDADES
             case "needs":
                 setDialogueMode(null);
                 setIsNeedsGameOpen(true);
                 break;
 
+            // 3️⃣ INTERÉS
             case "interest":
                 setDialogueMode(null);
                 setIsInterestGameOpen(true);
                 break;
 
+            // 4️⃣ CRÉDITO / COMPUTADOR (SNAKE)
             case "credit":
                 setDialogueMode(null);
                 setIsCreditGameOpen(true);
                 break;
 
+            // 5️⃣ PUZZLE FINAL
             case "payment":
                 setDialogueMode(null);
                 setIsPaymentGameOpen(true);
                 break;
 
+            // FINAL GENERAL
             case "final":
                 setDialogueMode(null);
                 if (typeof onGoalReached === "function") onGoalReached();
@@ -278,6 +371,7 @@ function Unit3GameScene({ onGoalReached }) {
 
         setDialogueIndex(0);
     };
+
 
     // -------------------------------------------------------------
     // RENDER

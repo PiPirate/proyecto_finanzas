@@ -9,12 +9,20 @@
 }
 
 .loan-game-window {
-    background: white;
+    background-image: url("../../../assets/unit3/objects/table.png");
+    background-repeat: repeat;
+    /* La imagen se repite sin deformarse */
+    background-size: auto;
+    /* Mantiene tamaño real */
+    background-position: center top;
+    /* Desde la esquina superior izquierda */
+
     padding: 30px;
     width: 600px;
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
+
 
 .loan-title {
     font-size: 22px;
@@ -23,6 +31,10 @@
 
 .loan-subtitle {
     margin-bottom: 20px;
+}
+
+.module-desc{
+    color: #e3f2fd;
 }
 
 .loan-cards {
@@ -47,10 +59,11 @@
 }
 
 .dropzone {
-    border: 2px dashed #707070;
+    border: 2px dashed #c4bfbf;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
+    color: #e3f2fd;
 }
 
 .loan-finish-btn {
