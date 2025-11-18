@@ -19,9 +19,9 @@ const GAME_CONFIG = {
   QUESTIONS_TO_WIN: 7,
   MAX_ENEMIES_PASSED: 6,
   QUESTION_TIME: 20,
-  TOTAL_GAME_TIME: 120,
+  TOTAL_GAME_TIME: 100,
   TIME_PENALTY: 10,
-  MAX_ACTIVE_ENEMIES: 4
+  MAX_ACTIVE_ENEMIES: 5
 };
 
 // Offsets por carril para ajustar visualmente el centro
@@ -312,7 +312,7 @@ const FINANCE_QUESTIONS = [
       'Enviar el código para que te ayuden',
       'Llamar al número para confirmar',
       'No compartir el código y contactar al banco por sus canales oficiales',
-      ' reenviar el código a tus amigos por seguridad'
+      'reenviar el código a tus amigos por seguridad'
     ],
     correct: 2
   },
@@ -402,7 +402,6 @@ const FINANCE_QUESTIONS = [
   }
 ];
 
-
 // ==================== COMPONENTE PRINCIPAL ====================
 export function TowerDefensePanel({ onComplete, onClose }) {
   const [gamePhase, setGamePhase] = useState('intro'); // intro | playing | question | victory | defeat
@@ -423,6 +422,12 @@ export function TowerDefensePanel({ onComplete, onClose }) {
   const questionTimerRef = useRef(null);
   const globalTimerRef = useRef(null);
   const enemyIdCounter = useRef(0);
+
+  // ref para saber la fase dentro del intervalo global
+  const phaseRef = useRef(gamePhase);
+  useEffect(() => {
+    phaseRef.current = gamePhase;
+  }, [gamePhase]);
 
   // ==================== INICIO DEL JUEGO ====================
   const startGame = () => {
@@ -614,14 +619,12 @@ export function TowerDefensePanel({ onComplete, onClose }) {
     }
   }, [enemiesPassedCount, gamePhase]);
 
-  // ==================== TIMER GLOBAL ====================
+  // ==================== TIMER GLOBAL (pausado en preguntas) ====================
   useEffect(() => {
-    if (gamePhase !== 'playing') {
-      clearInterval(globalTimerRef.current);
-      return;
-    }
-
     globalTimerRef.current = setInterval(() => {
+      // solo descuenta tiempo cuando estamos en "playing"
+      if (phaseRef.current !== 'playing') return;
+
       setGameTime((prev) => {
         if (prev <= 1) {
           clearInterval(globalTimerRef.current);
@@ -633,7 +636,7 @@ export function TowerDefensePanel({ onComplete, onClose }) {
     }, 1000);
 
     return () => clearInterval(globalTimerRef.current);
-  }, [gamePhase]);
+  }, []);
 
   const battlefieldHeight = GAME_CONFIG.LANES * GAME_CONFIG.LANE_HEIGHT; // 450
   const livesLeft = Math.max(0, GAME_CONFIG.MAX_ENEMIES_PASSED - enemiesPassedCount);
@@ -647,7 +650,7 @@ export function TowerDefensePanel({ onComplete, onClose }) {
             <h2 className="td-intro-title">Torre de Defensa Financiera</h2>
             <p className="td-intro-description">
               Bloquea a los enemigos colocándote en su carril y responde las preguntas
-              sobre finanzas personales. Tienes varias vidas y{' '}
+              sobre pagos digitales seguros. Tienes varias vidas y{' '}
               {GAME_CONFIG.TOTAL_GAME_TIME} segundos.
             </p>
             <button className="td-start-button" onClick={startGame}>

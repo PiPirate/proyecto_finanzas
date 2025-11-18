@@ -21,7 +21,7 @@ export default function UnitPage({
       title: 'Video Explicativo', 
       description: 'Aprende los conceptos básicos',
       icon: Play,
-      component: EvaluationStage
+      component: VideoStage 
     },
     { 
       id: 1, 
