@@ -1,0 +1,380 @@
+/* ========================= */
+/* CONTENEDOR GENERAL */
+/* ========================= */
+.td-overlay {
+  position: relative;
+  background: transparent;
+  z-index: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ========================= */
+/* PANEL GENERAL */
+/* ========================= */
+.td-panel {
+  width: 100%;
+  max-width: 1100px;
+  background: radial-gradient(circle at top left, #0b1220 0, #020617 45%, #020617 100%);
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    0 20px 60px rgba(15, 23, 42, 0.9),
+    0 0 0 1px rgba(148, 163, 184, 0.35);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+}
+
+/* ========================= */
+/* INTRO */
+/* ========================= */
+.td-intro-content {
+  text-align: center;
+  padding: 40px 32px 48px;
+  color: #e2e8f0;
+}
+
+.td-intro-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #f9fafb;
+  margin-bottom: 10px;
+}
+
+.td-intro-description {
+  font-size: 18px;
+  color: #cbd5f5;
+  margin-bottom: 24px;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.td-start-button {
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  color: #022c22;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    filter 0.15s ease;
+  box-shadow: 0 14px 30px rgba(34, 197, 94, 0.5);
+}
+
+.td-start-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 18px 40px rgba(34, 197, 94, 0.7);
+}
+
+/* ========================= */
+/* HEADER */
+/* ========================= */
+.td-header {
+  height: 64px;
+  background: linear-gradient(90deg, #020617, #020617 40%, #0b1120 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 22px;
+  color: white;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(30, 64, 175, 0.8);
+}
+
+.td-header-left,
+.td-header-right {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.td-stat {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.8);
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.td-stat:first-child {
+  border-color: rgba(56, 189, 248, 0.9);
+}
+
+.td-stat:nth-child(2) {
+  border-color: rgba(52, 211, 153, 0.9);
+}
+
+.td-close-button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 10px 22px rgba(239, 68, 68, 0.55);
+}
+
+.td-close-button:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(239, 68, 68, 0.7);
+}
+
+/* ========================= */
+/* CAMPO DE BATALLA */
+/* ========================= */
+.td-battlefield {
+  width: 900px;
+  height: 400px;
+  margin: 22px auto 18px;
+  border-radius: 18px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 40px rgba(15, 23, 42, 0.8),
+    0 0 0 1px rgba(148, 163, 184, 0.8);
+  border: 2px solid rgba(30, 64, 175, 0.9);
+}
+
+.td-battlefield-blur {
+  filter: blur(1.5px) brightness(0.9);
+}
+
+/* ========================= */
+/* LÍNEAS DE CARRILES */
+/* ========================= */
+.td-lane {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-bottom: 1px dashed rgba(148, 163, 184, 0.4);
+}
+
+/* ========================= */
+/* PLAYER */
+/* ========================= */
+.td-player {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 10px 12px rgba(15, 23, 42, 0.8));
+}
+
+.td-player-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* ========================= */
+/* ENEMIGOS */
+/* ========================= */
+.td-enemy {
+  width: 55px;
+  height: 55px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 10px 12px rgba(15, 23, 42, 0.85));
+}
+
+.td-enemy-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* ========================= */
+/* OVERLAY DE PREGUNTA (MODAL) */
+/* ========================= */
+.td-question-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.td-question-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.9));
+  backdrop-filter: blur(4px);
+}
+
+/* ========================= */
+/* PANEL DE PREGUNTA */
+/* ========================= */
+.td-question-panel {
+  position: relative;
+  width: 80%;
+  max-width: 640px;
+  background: #0b1120;
+  border-radius: 18px;
+  padding: 18px 20px 22px;
+  border: 1px solid rgba(129, 140, 248, 0.9);
+  box-shadow: 0 22px 50px rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  z-index: 1;
+}
+
+.td-question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.td-question-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e5e7eb;
+}
+
+.td-question-timer {
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-weight: 600;
+}
+
+.td-timer-warning {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.td-question-text {
+  font-size: 16px;
+  color: #e5e7eb;
+  margin-bottom: 12px;
+}
+
+/* OPCIONES */
+.td-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.td-option {
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #475569;
+  cursor: pointer;
+  background: #020617;
+  text-align: left;
+  color: #e2e8f0;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.05s ease,
+    box-shadow 0.15s ease;
+}
+
+.td-option:hover {
+  background: #111827;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.8);
+}
+
+.td-option-selected {
+  background: #1e293b;
+  border-color: #60a5fa;
+}
+
+.td-option-correct {
+  background: #22c55e !important;
+  border-color: #16a34a !important;
+  color: white;
+}
+
+.td-option-wrong {
+  background: #ef4444 !important;
+  border-color: #b91c1c !important;
+  color: white;
+}
+
+/* BOTÓN CONFIRMAR */
+.td-submit-button {
+  margin-top: 14px;
+  padding: 10px 18px;
+  font-size: 15px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  float: right;
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.7);
+}
+
+.td-submit-button:hover {
+  background: #1d4ed8;
+}
+
+/* MENSAJE DE RESULTADO */
+.td-result-message {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+/* ========================= */
+/* FIN DEL JUEGO */
+/* ========================= */
+.td-end-screen {
+  text-align: center;
+  padding: 60px 30px;
+  color: #e5e7eb;
+}
+
+.td-end-screen h2 {
+  font-size: 30px;
+  margin-bottom: 10px;
+  color: #f9fafb;
+}
+
+.td-end-screen p {
+  font-size: 18px;
+  margin-bottom: 24px;
+  color: #cbd5f5;
+}
+
+.td-end-button {
+  padding: 10px 20px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  margin: 0 6px;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.7);
+}
+
+.td-end-button:hover {
+  background: #1d4ed8;
+}
