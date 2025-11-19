@@ -230,7 +230,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
             spawnItem();
 
             // Elegimos un nuevo tiempo aleatorio entre 700 y 2000 ms
-            nextSpawnTime.current = now + (700 + Math.random() * 1300);
+            nextSpawnTime.current = now + (900 + Math.random() * 1300);
         }
 
 
@@ -292,7 +292,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
             });
         } else {
             // Incorrecto → monstruo avanza
-            setMonsterX(x => x + 70);
+            setMonsterX(x => x + 90);
 
             setQuestionModal({
                 ...questionModal,
@@ -383,7 +383,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
 
             {showIntro && (
                 <div className="intro-window">
-                    <h2>🏃‍♂️💨 ¡Escapa del monstruo del interés!</h2>
+                    <h2>¡Escapa del monstruo del interés!</h2>
 
                     <p>
                         El interés es un monstruo que siempre te persigue.
@@ -392,7 +392,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
                         <br />
                         🔴 <strong>Errores financieros</strong> → lo hacen más rápido
                         <br /><br />
-                        Corre hasta llegar a la meta.
+                        Corre hasta llegar a <strong>5800</strong>  puntos.
                     </p>
 
                     <button onClick={() => setShowIntro(false)}>Comenzar</button>
@@ -433,12 +433,12 @@ export default function InterestRunnerGame({ visible, onComplete }) {
 
                             {distance >= goalDistance ? (
                                 <>
-                                    <p>🎉 ¡Escapaste del interés!</p>
+                                    <p class="final-text">🎉 ¡Escapaste del interés!</p>
                                     <button onClick={onComplete}>Continuar</button>
                                 </>
                             ) : (
                                 <>
-                                    <p>💀 El interés te alcanzó...</p>
+                                    <p class="final-text">💀 El interés te alcanzó...</p>
                                     <button onClick={resetGame}>Reintentar</button>
                                 </>
                             )}

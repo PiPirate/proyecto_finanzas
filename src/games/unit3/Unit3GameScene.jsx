@@ -98,6 +98,26 @@ const lockedDialogue = [
     "Primero debes completar la actividad anterior para continuar."
 ];
 
+const postLoanGameDialogue = [
+    "¡Lo hiciste muy bien con el préstamo!",
+    "Ahora ya sabes qué es el capital, el interés, la deuda y las cuotas.",
+    "Ve ahora a la zona de necesidades para seguir aprendiendo."
+];
+
+const postNeedsGameDialogue = [
+    "Buen trabajo clasificando las necesidades.",
+    "Recuerda: no todos los préstamos son para gustos, algunos son para cosas realmente importantes.",
+    "Ahora ve a la zona de interés para ver cómo cambia el costo del préstamo.",
+    "o puedes ir a la computadora para jugar el minijuego oculto si quieres.",
+    "pero shhh, es un secreto 😉"
+];
+
+const postInterestGameDialogue = [
+    "¡Excelente! Ya viste cómo la tasa de interés cambia el valor final.",
+    "Una tasa más alta siempre significa pagar más.",
+    "Puedes seguir explorando o ir al siguiente reto."
+];
+
 // -------------------------------------------------------------
 // ESCENA PRINCIPAL
 // -------------------------------------------------------------
@@ -142,6 +162,10 @@ function Unit3GameScene({ onGoalReached }) {
             case "payment": return paymentPuzzleDialogue[dialogueIndex];
             case "final": return finalDialogue[dialogueIndex];
             case "locked": return lockedDialogue[dialogueIndex];
+
+            case "postLoan": return postLoanGameDialogue[dialogueIndex];
+            case "postNeeds": return postNeedsGameDialogue[dialogueIndex];
+            case "postInterest": return postInterestGameDialogue[dialogueIndex];
             default: return "";
         }
     }, [dialogueMode, dialogueIndex]);
@@ -225,7 +249,7 @@ function Unit3GameScene({ onGoalReached }) {
         setDialogueIndex(0);
     };
 
-    // misma funcion pero sin bloqueo de zonas
+    // misma funcion pero sin bloqueo de zonas / para pruebas
 
     // const handleTileClick = ({ x, y, value }) => {
     //     // Bloquea si ya hay un diálogo o un minijuego abierto
@@ -302,6 +326,10 @@ function Unit3GameScene({ onGoalReached }) {
                 case "payment": return paymentPuzzleDialogue;
                 case "final": return finalDialogue;
                 case "locked": return lockedDialogue; // ⚠ NUEVO
+
+                case "postLoan": return postLoanGameDialogue;
+                case "postNeeds": return postNeedsGameDialogue;
+                case "postInterest": return postInterestGameDialogue;
                 default: return [];
             }
         };
@@ -411,6 +439,9 @@ function Unit3GameScene({ onGoalReached }) {
                 onComplete={() => {
                     setIsLoanGameOpen(false);
                     setLoanDone(true);
+
+                    setDialogueMode("postLoan");
+                    setDialogueIndex(0);
                 }}
             />
 
@@ -427,6 +458,9 @@ function Unit3GameScene({ onGoalReached }) {
                 onComplete={() => {
                     setIsNeedsGameOpen(false);
                     setNeedsDone(true);
+
+                    setDialogueMode("postNeeds");
+                    setDialogueIndex(0);
                 }}
             />
 
@@ -435,6 +469,12 @@ function Unit3GameScene({ onGoalReached }) {
                 onComplete={() => {
                     setIsInterestGameOpen(false);
                     setInterestDone(true);
+
+                    setDialogueMode("postInterest");
+                    setDialogueIndex(0);
+
+                    setDialogueMode("final");
+                    setDialogueIndex(0);
                 }}
             />
 

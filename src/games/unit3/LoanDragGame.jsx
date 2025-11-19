@@ -89,6 +89,23 @@ export default function LoanDragGame({ visible, onComplete }) {
         },
 
         {
+            title: "Módulo 5 — Buenas prácticas al usar préstamos",
+            description: "Relaciona cada buena práctica con la acción correcta que deberías tomar.",
+            zones: [
+                { zone: "zone_capital", label: "Antes de decidir cuánto dinero pedir…" },
+                { zone: "zone_interes", label: "Antes de aceptar las condiciones del préstamo…" },
+                { zone: "zone_deuda", label: "Para evitar que mi deuda se salga de control…" },
+                { zone: "zone_pago", label: "Para no tener problemas con las cuotas mensuales…" }
+            ],
+            items: [
+                { id: "capital", label: "Calculo cuánto puedo pagar sin afectar mis gastos básicos", hint: "Así pido solo el monto que realmente puedo asumir." },
+                { id: "interes", label: "Reviso y comparo la tasa de interés en varios bancos", hint: "Comparar me ayuda a elegir el préstamo más barato." },
+                { id: "deuda", label: "Evito usar el préstamo para compras impulsivas o innecesarias", hint: "Así no aumento mi deuda por caprichos." },
+                { id: "pago", label: "Organizo un presupuesto mensual para asegurar cada pago a tiempo", hint: "Un buen control evita atrasos e intereses adicionales." }
+            ]
+        },
+
+        {
             title: "Módulo 6 — Tipos de préstamos y sus riesgos",
             description: "Relaciona cada tipo de préstamo con la consecuencia o característica correcta.",
             zones: [
@@ -123,30 +140,8 @@ export default function LoanDragGame({ visible, onComplete }) {
                 { id: "deuda", label: "La mejor opción es ahorrar y evitar endeudarme", hint: "No vale la pena endeudarse por un gusto." },
                 { id: "pago", label: "Optar por un crédito vehicular con cuotas fijas", hint: "Útil si lo necesitas para generar ingresos." }
             ]
-        },
-
-        // ----------------------------------------------------
-        // MÓDULO 5 — NUEVO Y COHERENTE
-        // ----------------------------------------------------
-        {
-            title: "Módulo 5 — Buenas prácticas al usar préstamos",
-            description: "Relaciona cada buena práctica con la acción correcta que deberías tomar.",
-            zones: [
-                { zone: "zone_capital", label: "Antes de decidir cuánto dinero pedir…" },
-                { zone: "zone_interes", label: "Antes de aceptar las condiciones del préstamo…" },
-                { zone: "zone_deuda", label: "Para evitar que mi deuda se salga de control…" },
-                { zone: "zone_pago", label: "Para no tener problemas con las cuotas mensuales…" }
-            ],
-            items: [
-                { id: "capital", label: "Calculo cuánto puedo pagar sin afectar mis gastos básicos", hint: "Así pido solo el monto que realmente puedo asumir." },
-                { id: "interes", label: "Reviso y comparo la tasa de interés en varios bancos", hint: "Comparar me ayuda a elegir el préstamo más barato." },
-                { id: "deuda", label: "Evito usar el préstamo para compras impulsivas o innecesarias", hint: "Así no aumento mi deuda por caprichos." },
-                { id: "pago", label: "Organizo un presupuesto mensual para asegurar cada pago a tiempo", hint: "Un buen control evita atrasos e intereses adicionales." }
-            ]
         }
-
     ];
-
 
 
     // Correct match (global)
@@ -237,8 +232,8 @@ export default function LoanDragGame({ visible, onComplete }) {
     if (showEnding) {
         return (
             <div className="loan-game-overlay">
-                <div className="loan-game-window ending">
-                    <h2>🎉 ¡Muy bien!</h2>
+                <div className="loan-game-window intro">
+                    <h2> ¡Muy bien!</h2>
                     <p>Ahora tienes una comprensión completa y práctica sobre cómo funcionan los préstamos.</p>
                     <button className="loan-finish-btn" onClick={onComplete}>Finalizar</button>
                 </div>
