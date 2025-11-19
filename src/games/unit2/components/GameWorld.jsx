@@ -4,7 +4,6 @@ import { Player } from '../components/game/Player';
 import { NPC } from '../components/game/NPC';
 import DialogueBox from '../components/game/DialogueBox';
 import { BudgetPanel } from '../components/game/BudgetPanel';
-import { FreelanceGamePanel } from '../components/game/FreelanceGamePanel';
 import { MemoryGamePanel } from '../components/game/MemoryGamePanel';
 import { PuzzleGamePanel } from './game/PuzzleGamePanel';
 import { gameMap, interactiveObjects, mk25Dialogues, zoneDialogues } from '../components/data/gameMap';

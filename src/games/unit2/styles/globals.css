@@ -325,6 +325,7 @@ body {
   justify-content: center;
   padding-bottom: 30px;
   animation: fade-in 0.3s ease-out;
+  z-index: 1000;
 }
 
 @keyframes fade-in {
