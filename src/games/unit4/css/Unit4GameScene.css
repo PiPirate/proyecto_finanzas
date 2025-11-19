@@ -1,0 +1,49 @@
+/* Contenedor general del juego */
+.unit4-game-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px 0 32px;
+  overflow: hidden;
+}
+
+/* Wrapper que se escala (solo Unit4) */
+.unit4-game-inner {
+  transform: scale(0.75);          /* ⇐ aquí ajustas el "zoom": 0.7, 0.8, etc. */
+  transform-origin: top center;
+}
+
+/* Mantener el pixel art nitido al escalar */
+.unit4-game-inner .tile-map {
+  image-rendering: pixelated;
+}
+
+/* Opcional: en pantallas más pequeñas podemos reducir un poco más */
+@media (max-width: 1280px) {
+  .unit4-game-inner {
+    transform: scale(0.7);
+  }
+}
+
+@media (max-width: 1024px) {
+  .unit4-game-inner {
+    transform: scale(0.6);
+  }
+}
+
+/* NUEVO: wrapper que escala solo el mapa de la cafetería */
+.unit4-game-inner {
+  transform: scale(0.8);           /* 0.8 = como verlo al 80% */
+  transform-origin: top center;    /* se encoge hacia abajo manteniendo el top */
+}
+
+/* NUEVO: subir el cuadro de diálogo para que quede pegado al mapa escalado */
+.unit4-game-container .dialogue-overlay {
+  bottom: 160px;   /* ajusta este valor si ves todavía mucho espacio */
+}
+
+.dialogue-root {
+  
+  bottom: 250px; /* ajustar si es necesario */
+}

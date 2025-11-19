@@ -106,3 +106,99 @@ export default function DialogueBox({
     </div>
   );
 }
+
+// --- Caja de diálogo específica para la Unidad 4 ---
+// Muestra el nombre "Barista", pero lo trata internamente como "Asesor"
+// para reutilizar animaciones y lógica de expresión.
+
+export function DialogueBoxUnit4({
+  visible,
+  text,
+  speakingSprite,
+  idleSprite,
+  speakerName,
+  onNext,
+}) {
+  const { displayedText, isDone, showAll } = useTypewriterText(text, 28);
+
+  if (!visible) return null;
+
+  const handleClick = () => {
+    if (!isDone) {
+      showAll();
+    } else if (onNext) {
+      onNext();
+    }
+  };
+
+  // Internamente lo tratamos como "Asesor" para animaciones
+  const internalSpeaker =
+    speakerName === 'Barista' ? 'Asesor' : speakerName;
+
+  const isAdvisor = internalSpeaker === 'Asesor';
+  const isCarmina = internalSpeaker === 'Carmina';
+  const isPig =
+    internalSpeaker === 'Alcancía' || internalSpeaker === 'Cerdito';
+
+  const isSpeaking = !isDone;
+
+  const spriteToUse = isSpeaking
+    ? (speakingSprite || idleSprite)
+    : (idleSprite || speakingSprite);
+
+  let animationClass = '';
+
+  if (isPig) {
+    animationClass = 'dialogue-face--pig';
+  } else if (isSpeaking) {
+    if (isAdvisor) {
+      animationClass = 'dialogue-face--talking-advisor';
+    } else {
+      animationClass = 'dialogue-face--talking-carmina';
+    }
+  } else {
+    if (isAdvisor) {
+      animationClass = 'dialogue-face--idle-advisor';
+    } else {
+      animationClass = 'dialogue-face--idle-carmina';
+    }
+  }
+
+  const faceClassName = `dialogue-face ${animationClass}`;
+
+  const wrapperClassName =
+    'dialogue-face-wrapper' +
+    (isPig ? ' dialogue-face-wrapper--pig' : '');
+
+  return (
+    <div className="dialogue-root" onClick={handleClick}>
+      <div className={wrapperClassName}>
+        <div
+          className={faceClassName}
+          style={{ backgroundImage: `url(${spriteToUse})` }}
+        />
+      </div>
+
+      <div className="dialogue-panel">
+        {speakerName && (
+          <div className="dialogue-speaker-name">
+            {/* Aquí se muestra "Barista" en pantalla */}
+            {speakerName}
+          </div>
+        )}
+
+        <p className="dialogue-text">
+          {displayedText}
+        </p>
+
+        <span
+          className={`dialogue-next ${
+            isDone ? 'dialogue-next--visible' : ''
+          }`}
+        >
+          ▼
+        </span>
+      </div>
+    </div>
+  );
+}
