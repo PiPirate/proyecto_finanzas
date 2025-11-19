@@ -33,3 +33,35 @@
     border-radius: 8px;
     cursor: pointer;
 }
+
+.question-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-box {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 450px;
+    text-align: center;
+}
+
+.modal-box button {
+    margin: 10px;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.explanation {
+    margin-top: 10px;
+    font-weight: bold;
+}

@@ -103,11 +103,11 @@ export const unit3InteractiveZones = [
     // -----------------------------------------------------
     // COMPUTADOR (columnas 11–13, filas 6–7)
     // -----------------------------------------------------
-    { id: "computador", x: 11, y: 6, type: "computer" },
-    { id: "computador", x: 12, y: 6, type: "computer" },
-    { id: "computador", x: 13, y: 6, type: "computer" },
+    { id: "computer", x: 11, y: 6, type: "computer" },
+    { id: "computer", x: 12, y: 6, type: "computer" },
+    { id: "computer", x: 13, y: 6, type: "computer" },
 
-    { id: "computador", x: 11, y: 7, type: "computer" },
-    { id: "computador", x: 12, y: 7, type: "computer" },
-    { id: "computador", x: 13, y: 7, type: "computer" },
+    { id: "computer", x: 11, y: 7, type: "computer" },
+    { id: "computer", x: 12, y: 7, type: "computer" },
+    { id: "computer", x: 13, y: 7, type: "computer" },
 ];

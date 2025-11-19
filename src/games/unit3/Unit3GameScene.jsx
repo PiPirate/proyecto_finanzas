@@ -166,112 +166,54 @@ function Unit3GameScene({ onGoalReached }) {
     // CONTROL DE CLICK EN ZONAS INTERACTIVAS/ Bloqueo de zonas
     // -------------------------------------------------------------
 
-    // const handleTileClick = ({ x, y, value }) => {
-    //     if (isDialogueVisible) return;
-    //     if (value !== 2) return;
-
-    //     const near =
-    //         Math.abs(x - tilePosition.x) <= 1 &&
-    //         Math.abs(y - tilePosition.y) <= 1;
-    //     if (!near) return;
-
-    //     const zone = unit3InteractiveZones.find((z) => z.x === x && z.y === y);
-    //     if (!zone) return;
-
-    //     // 🔥 ORDEN DE LAS ACTIVIDADES
-    //     switch (zone.id) {
-
-    //         // 1️⃣ PRÉSTAMO (siempre primero)
-    //         case "poster_prestamo":
-    //             if (!loanDone) {
-    //                 setDialogueMode("loanIntro");
-    //             } else {
-    //                 setDialogueMode("locked");
-    //             }
-    //             break;
-
-    //         // 2️⃣ NECESIDADES (requiere préstamo)
-    //         case "poster_necesidades":
-    //         case "biblioteca":
-    //             if (!loanDone) {
-    //                 setDialogueMode("locked");
-    //             } else if (!needsDone) {
-    //                 setDialogueMode("needs");
-    //             } else {
-    //                 setDialogueMode("locked");
-    //             }
-    //             break;
-
-    //         // 3️⃣ INTERÉS (requiere necesidades)
-    //         case "poster_interes":
-    //             if (!needsDone) {
-    //                 setDialogueMode("locked");
-    //             } else if (!interestDone) {
-    //                 setDialogueMode("interest");
-    //             } else {
-    //                 setDialogueMode("locked");
-    //             }
-    //             break;
-
-    //       
-    //          case "computer":
-    //             setDialogueMode("credit");
-    //             break;
-
-    //         default:
-    //             break;
-    //     }
-
-    //     setDialogueIndex(0);
-    // };
-
-    // misma funcion pero sin bloqueo de zonas
-
     const handleTileClick = ({ x, y, value }) => {
-        // Bloquea si ya hay un diálogo o un minijuego abierto
         if (isDialogueVisible) return;
-
-        // Solo interactúa con tiles de tipo 2
         if (value !== 2) return;
 
-        // Debe estar cerca (1 tile de distancia)
         const near =
             Math.abs(x - tilePosition.x) <= 1 &&
             Math.abs(y - tilePosition.y) <= 1;
-
         if (!near) return;
 
-        // Buscar la zona interactiva correspondiente
         const zone = unit3InteractiveZones.find((z) => z.x === x && z.y === y);
         if (!zone) return;
 
-        // --------------------------------------------
-        // CONTROL DE INTERACCIONES (VERSIÓN DEBUG)
-        // --------------------------------------------
-        switch (zone.type) {
+        // 🔥 ORDEN DE LAS ACTIVIDADES
+        switch (zone.id) {
 
-            // POSTERS
-            case "poster":
-                if (zone.id.includes("prestamo")) {
+            // 1️⃣ PRÉSTAMO (siempre primero)
+            case "poster_prestamo":
+                if (!loanDone) {
                     setDialogueMode("loanIntro");
-                } else if (zone.id.includes("necesidades")) {
-                    setDialogueMode("needs");
-                } else if (zone.id.includes("interes")) {
-                    setDialogueMode("interest");
+                } else {
+                    setDialogueMode("locked");
                 }
                 break;
 
-            // BIBLIOTECA → minijuego de necesidades
-            case "library":
-                setDialogueMode("needs");
+            // 2️⃣ NECESIDADES (requiere préstamo)
+            case "poster_necesidades":
+            case "biblioteca":
+                if (!loanDone) {
+                    setDialogueMode("locked");
+                } else if (!needsDone) {
+                    setDialogueMode("needs");
+                } else {
+                    setDialogueMode("locked");
+                }
                 break;
 
-            // ESCRITORIO → préstamo
-            case "desk":
-                setDialogueMode("loanIntro");
+            // 3️⃣ INTERÉS (requiere necesidades)
+            case "poster_interes":
+                if (!needsDone) {
+                    setDialogueMode("locked");
+                } else if (!interestDone) {
+                    setDialogueMode("interest");
+                } else {
+                    setDialogueMode("locked");
+                }
                 break;
 
-            // COMPUTADOR → crédito / snake
+
             case "computer":
                 setDialogueMode("credit");
                 break;
@@ -280,9 +222,67 @@ function Unit3GameScene({ onGoalReached }) {
                 break;
         }
 
-        // Reiniciar diálogo siempre al comenzar otro
         setDialogueIndex(0);
     };
+
+    // misma funcion pero sin bloqueo de zonas
+
+    // const handleTileClick = ({ x, y, value }) => {
+    //     // Bloquea si ya hay un diálogo o un minijuego abierto
+    //     if (isDialogueVisible) return;
+
+    //     // Solo interactúa con tiles de tipo 2
+    //     if (value !== 2) return;
+
+    //     // Debe estar cerca (1 tile de distancia)
+    //     const near =
+    //         Math.abs(x - tilePosition.x) <= 1 &&
+    //         Math.abs(y - tilePosition.y) <= 1;
+
+    //     if (!near) return;
+
+    //     // Buscar la zona interactiva correspondiente
+    //     const zone = unit3InteractiveZones.find((z) => z.x === x && z.y === y);
+    //     if (!zone) return;
+
+    //     // --------------------------------------------
+    //     // CONTROL DE INTERACCIONES (VERSIÓN DEBUG)
+    //     // --------------------------------------------
+    //     switch (zone.type) {
+
+    //         // POSTERS
+    //         case "poster":
+    //             if (zone.id.includes("prestamo")) {
+    //                 setDialogueMode("loanIntro");
+    //             } else if (zone.id.includes("necesidades")) {
+    //                 setDialogueMode("needs");
+    //             } else if (zone.id.includes("interes")) {
+    //                 setDialogueMode("interest");
+    //             }
+    //             break;
+
+    //         // BIBLIOTECA → minijuego de necesidades
+    //         case "library":
+    //             setDialogueMode("needs");
+    //             break;
+
+    //         // ESCRITORIO → préstamo
+    //         case "desk":
+    //             setDialogueMode("loanIntro");
+    //             break;
+
+    //         // COMPUTADOR → crédito / snake
+    //         case "computer":
+    //             setDialogueMode("credit");
+    //             break;
+
+    //         default:
+    //             break;
+    //     }
+
+    //     // Reiniciar diálogo siempre al comenzar otro
+    //     setDialogueIndex(0);
+    // };
 
 
 

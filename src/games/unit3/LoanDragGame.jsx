@@ -9,145 +9,145 @@ export default function LoanDragGame({ visible, onComplete }) {
     // ----------------------------------------------------------
     const modules = [
         // ----------------------------------------------------
-        // MÓDULO 1
+        // MÓDULO 1 — NUEVO Y COHERENTE
         // ----------------------------------------------------
         {
-            title: "Módulo 1 — Las partes fundamentales de un préstamo",
-            description: "Arrastra cada frase hacia la pregunta correspondiente. Todo está explicado de forma sencilla.",
+            title: "Módulo 1 — Conceptos esenciales de un préstamo",
+            description: "Relaciona cada concepto con su definición correcta.",
             zones: [
-                { zone: "zone_capital", label: "¿Qué recibo del banco?" },
-                { zone: "zone_interes", label: "¿Qué pago por usar el dinero prestado?" },
-                { zone: "zone_deuda", label: "¿Qué debo devolver en total?" },
-                { zone: "zone_pago", label: "¿Cómo devuelvo el préstamo?" }
+                { zone: "zone_capital", label: "¿Qué es el capital de un préstamo?" },
+                { zone: "zone_interes", label: "¿Qué son los intereses?" },
+                { zone: "zone_deuda", label: "¿Qué es la deuda total?" },
+                { zone: "zone_pago", label: "¿Qué son las cuotas del préstamo?" }
             ],
             items: [
-                { id: "capital", label: "Es el dinero que el banco me entrega al inicio", hint: "Ese dinero inicial se llama capital." },
-                { id: "interes", label: "Es el costo extra por pedir dinero prestado", hint: "El interés es lo que el banco cobra por prestarme dinero." },
-                { id: "deuda", label: "Es la suma del dinero prestado más los intereses", hint: "La deuda total incluye capital + intereses." },
-                { id: "pago", label: "Son los pagos mensuales que hago poco a poco", hint: "Las cuotas mensuales sirven para devolver el préstamo gradualmente." }
+                { id: "capital", label: "El dinero inicial que el banco me presta", hint: "Es el monto que recibo al inicio." },
+                { id: "interes", label: "El costo que pago por usar el dinero prestado", hint: "Funciona como la ganancia del banco." },
+                { id: "deuda", label: "La suma del capital más los intereses generados", hint: "Es todo lo que debo al final." },
+                { id: "pago", label: "Los pagos periódicos que hago para devolver el préstamo", hint: "Son las cuotas mensuales." }
             ]
         },
 
         // ----------------------------------------------------
-        // MÓDULO 2
+        // MÓDULO 2 — NUEVO Y COHERENTE
         // ----------------------------------------------------
         {
-            title: "Módulo 2 — ¿Cómo funciona un préstamo en la vida real?",
-            description: "Con estas frases te será más fácil entender cómo funciona realmente un préstamo.",
+            title: "Módulo 2 — ¿Cómo funciona un préstamo?",
+            description: "Conecta cada parte del préstamo con su función.",
             zones: [
-                { zone: "zone_capital", label: "¿Qué recibo cuando aprueban mi solicitud?" },
-                { zone: "zone_interes", label: "¿Qué gana el banco con esto?" },
-                { zone: "zone_deuda", label: "¿Qué representa mi obligación total?" },
-                { zone: "zone_pago", label: "¿Qué realizo todos los meses?" }
+                { zone: "zone_capital", label: "¿Qué parte del préstamo puedo usar directamente?" },
+                { zone: "zone_interes", label: "¿Qué representa el costo del préstamo?" },
+                { zone: "zone_deuda", label: "¿Qué refleja el total que debo pagar?" },
+                { zone: "zone_pago", label: "¿Qué hago para reducir lo que debo?" }
             ],
             items: [
-                { id: "capital", label: "El monto del préstamo que puedo usar", hint: "Ese es el capital: lo que recibo." },
-                { id: "interes", label: "El banco cobra una parte adicional como ganancia", hint: "Ese es el interés." },
-                { id: "deuda", label: "Mi obligación total con el banco", hint: "La deuda incluye el dinero prestado + los intereses." },
-                { id: "pago", label: "Cada mes pago una cuota fija", hint: "Así devuelvo el préstamo poco a poco." }
+                { id: "capital", label: "El monto que recibo para gastar o invertir", hint: "Es el dinero que puedo usar." },
+                { id: "interes", label: "El porcentaje adicional que cobra el banco", hint: "Ese porcentaje es el interés." },
+                { id: "deuda", label: "El capital más los intereses acumulados", hint: "Es mi obligación completa." },
+                { id: "pago", label: "Cada cuota que realizo durante el plazo del préstamo", hint: "Cada pago reduce la deuda." }
             ]
         },
 
         // ----------------------------------------------------
-        // MÓDULO 3
+        // MÓDULO 3 — NUEVO Y COHERENTE
         // ----------------------------------------------------
         {
-            title: "Módulo 3 — ¿Qué pasa si tomo ciertas decisiones?",
-            description: "Cada acción tiene un efecto. Aprende cómo influyen en tu préstamo.",
+            title: "Módulo 3 — Consecuencias de mis decisiones",
+            description: "Cada acción afecta el préstamo. Relaciónala con su efecto correcto.",
             zones: [
-                { zone: "zone_capital", label: "Si pido menos dinero…" },
-                { zone: "zone_interes", label: "Si sube la tasa de interés…" },
-                { zone: "zone_deuda", label: "Si aumento el plazo del préstamo…" },
-                { zone: "zone_pago", label: "Si adelanto un pago…" }
+                { zone: "zone_capital", label: "¿Qué pasa si solicito un monto mayor?" },
+                { zone: "zone_interes", label: "¿Qué ocurre si la tasa de interés es más alta?" },
+                { zone: "zone_deuda", label: "¿Qué pasa si me atraso en los pagos?" },
+                { zone: "zone_pago", label: "¿Qué logro si hago pagos anticipados?" }
             ],
             items: [
-                { id: "capital", label: "Mi deuda será más baja", hint: "Pedir menos reduce tu obligación total." },
-                { id: "interes", label: "El préstamo será más costoso", hint: "Una tasa alta = pagar más intereses." },
-                { id: "deuda", label: "La deuda total subirá por intereses acumulados", hint: "Más tiempo = más intereses." },
-                { id: "pago", label: "Reduciré los intereses futuros", hint: "Pagar antes siempre ayuda." }
+                { id: "capital", label: "Termino con una deuda más grande", hint: "Más dinero prestado = mayor obligación." },
+                { id: "interes", label: "Pago un costo total mucho más alto", hint: "La tasa influye en el valor final." },
+                { id: "deuda", label: "La deuda aumenta por los intereses moratorios", hint: "Los retrasos generan cargos extra." },
+                { id: "pago", label: "Reduzco el capital más rápido y pago menos intereses", hint: "Pagar antes siempre ayuda." }
             ]
         },
 
         // ----------------------------------------------------
-        // MÓDULO 4 — ERRORES COMUNES
+        // MÓDULO 4 — NUEVO Y COHERENTE
         // ----------------------------------------------------
         {
-            title: "Módulo 4 — Errores comunes al pedir un préstamo",
-            description: "Identifica prácticas comunes que pueden afectarte negativamente.",
+            title: "Módulo 4 — Errores frecuentes con préstamos",
+            description: "Identifica qué error corresponde a cada tipo de descuido.",
             zones: [
-                { zone: "zone_capital", label: "¿Qué error tiene que ver con pedir demasiado dinero?" },
-                { zone: "zone_interes", label: "¿Qué error tiene que ver con no revisar costos?" },
-                { zone: "zone_deuda", label: "¿Qué error aumenta mi obligación sin notarlo?" },
-                { zone: "zone_pago", label: "¿Qué error afecta mis pagos mensuales?" }
+                { zone: "zone_capital", label: "Error al decidir cuánto pedir" },
+                { zone: "zone_interes", label: "Error al revisar los costos" },
+                { zone: "zone_deuda", label: "Error que incrementa mi obligación final" },
+                { zone: "zone_pago", label: "Error relacionado con la puntualidad" }
             ],
             items: [
-                { id: "capital", label: "Pedir más dinero del que realmente necesito", hint: "Esto aumenta tu deuda innecesariamente." },
-                { id: "interes", label: "No revisar la tasa de interés antes de aceptar", hint: "Una tasa alta puede duplicar el costo del préstamo." },
-                { id: "deuda", label: "Aceptar plazos muy largos sin entender las consecuencias", hint: "Los plazos largos aumentan la deuda total." },
-                { id: "pago", label: "Pagar tarde y generar cobros adicionales", hint: "Retrasos = intereses moratorios + mal historial." }
+                { id: "capital", label: "Pedir un monto mayor al necesario", hint: "Esto hace el préstamo más difícil de pagar." },
+                { id: "interes", label: "Aceptar una tasa sin compararla con otros bancos", hint: "Podrías pagar mucho más de lo debido." },
+                { id: "deuda", label: "Ignorar comisiones y costos adicionales", hint: "Se acumulan y elevan la deuda total." },
+                { id: "pago", label: "Realizar los pagos tarde", hint: "Genera multas e intereses moratorios." }
+            ]
+        },
+
+        {
+            title: "Módulo 6 — Tipos de préstamos y sus riesgos",
+            description: "Relaciona cada tipo de préstamo con la consecuencia o característica correcta.",
+            zones: [
+                { zone: "zone_capital", label: "¿Qué préstamo puede ayudarme a mejorar mis ingresos?" },
+                { zone: "zone_interes", label: "¿Qué préstamo suele tener un costo muy alto?" },
+                { zone: "zone_deuda", label: "¿Qué tipo de préstamo puede generar deudas innecesarias?" },
+                { zone: "zone_pago", label: "¿Qué préstamo suele ofrecer pagos estables y predecibles?" }
+            ],
+            items: [
+                { id: "capital", label: "Un préstamo educativo o para herramientas de trabajo", hint: "Puede aumentar mis oportunidades laborales." },
+                { id: "interes", label: "Los créditos rápidos con aprobación inmediata", hint: "Suelen tener tasas extremadamente altas." },
+                { id: "deuda", label: "Usar crédito para compras impulsivas o poco necesarias", hint: "Terminas endeudándote sin beneficio real." },
+                { id: "pago", label: "Un préstamo con tasa fija y cuotas mensuales fijas", hint: "Permite planificar mejor los pagos." }
             ]
         },
 
         // ----------------------------------------------------
-        // MÓDULO 5 — BUENAS PRÁCTICAS
+        // MÓDULO 7 — NUEVO Y COHERENTE
         // ----------------------------------------------------
         {
-            title: "Módulo 5 — Buenas prácticas para manejar préstamos",
-            description: "Aprende cómo mejorar tu salud financiera.",
+            title: "Módulo 7 — Escenarios reales y decisiones inteligentes",
+            description: "Arrastra cada situación hacia la opción más conveniente según tu objetivo.",
             zones: [
-                { zone: "zone_capital", label: "¿Qué debo hacer antes de pedir un préstamo?" },
-                { zone: "zone_interes", label: "¿Cómo puedo reducir el costo del préstamo?" },
-                { zone: "zone_deuda", label: "¿Cómo evitar que mi deuda crezca?" },
-                { zone: "zone_pago", label: "¿Qué hábito mejora mis pagos mensuales?" }
+                { zone: "zone_capital", label: "Necesito financiar mi formación o capacitación" },
+                { zone: "zone_interes", label: "Tengo una emergencia y necesito dinero rápido" },
+                { zone: "zone_deuda", label: "Quiero comprar algo que no es indispensable" },
+                { zone: "zone_pago", label: "Necesito un vehículo para trabajar diariamente" }
             ],
             items: [
-                { id: "capital", label: "Pedir solo lo necesario", hint: "Menos capital = préstamo más fácil de pagar." },
-                { id: "interes", label: "Comparar tasas en varios bancos", hint: "Así encuentro el préstamo más barato." },
-                { id: "deuda", label: "Mantener un fondo de emergencia", hint: "Evita que recurras a préstamos caros." },
-                { id: "pago", label: "Pagar antes de la fecha límite", hint: "Te evita intereses extra y mejora tu historial." }
+                { id: "capital", label: "Elegir un préstamo educativo con tasa baja", hint: "Es ideal para estudios y formación profesional." },
+                { id: "interes", label: "Solicitar un crédito de consumo con tasa moderada", hint: "Es más seguro que un crédito rápido." },
+                { id: "deuda", label: "La mejor opción es ahorrar y evitar endeudarme", hint: "No vale la pena endeudarse por un gusto." },
+                { id: "pago", label: "Optar por un crédito vehicular con cuotas fijas", hint: "Útil si lo necesitas para generar ingresos." }
             ]
         },
 
         // ----------------------------------------------------
-        // MÓDULO 6 — PRÉSTAMOS BUENOS VS MALOS
+        // MÓDULO 5 — NUEVO Y COHERENTE
         // ----------------------------------------------------
         {
-            title: "Módulo 6 — ¿Cuándo un préstamo es bueno o malo?",
-            description: "No todos los préstamos son malos. Aprende a diferenciarlos.",
+            title: "Módulo 5 — Buenas prácticas al usar préstamos",
+            description: "Relaciona cada buena práctica con la acción correcta que deberías tomar.",
             zones: [
-                { zone: "zone_capital", label: "¿Qué préstamo puede ser útil?" },
-                { zone: "zone_interes", label: "¿Qué préstamo suele salir caro?" },
-                { zone: "zone_deuda", label: "¿Qué puede llevarme a endeudarme de más?" },
-                { zone: "zone_pago", label: "¿Qué préstamo suele ser fácil de pagar?" }
+                { zone: "zone_capital", label: "Antes de decidir cuánto dinero pedir…" },
+                { zone: "zone_interes", label: "Antes de aceptar las condiciones del préstamo…" },
+                { zone: "zone_deuda", label: "Para evitar que mi deuda se salga de control…" },
+                { zone: "zone_pago", label: "Para no tener problemas con las cuotas mensuales…" }
             ],
             items: [
-                { id: "capital", label: "Un préstamo para estudiar o mejorar mi trabajo", hint: "Puede mejorar mis ingresos futuros." },
-                { id: "interes", label: "Préstamos rápidos con tasas muy altas", hint: "Suelen ser extremadamente costosos." },
-                { id: "deuda", label: "Comprar cosas innecesarias con crédito", hint: "La deuda crece por razones poco útiles." },
-                { id: "pago", label: "Un préstamo con cuotas bajas y tasa razonable", hint: "Esto es más manejable mes a mes." }
-            ]
-        },
-
-        // ----------------------------------------------------
-        // MÓDULO 7 — ¿QUÉ PRÉSTAMO ME CONVIENE?
-        // ----------------------------------------------------
-        {
-            title: "Módulo 7 — Escenarios reales",
-            description: "Arrastra cada situación hacia la opción más conveniente.",
-            zones: [
-                { zone: "zone_capital", label: "Necesito estudiar" },
-                { zone: "zone_interes", label: "Tengo una emergencia" },
-                { zone: "zone_deuda", label: "Quiero cambiar mi celular" },
-                { zone: "zone_pago", label: "Quiero comprar una moto" }
-            ],
-            items: [
-                { id: "capital", label: "Me conviene un préstamo educativo con tasa baja", hint: "Los préstamos educativos son más baratos." },
-                { id: "interes", label: "Me conviene un crédito de libre inversión o emergencia", hint: "Para emergencias se usa libre inversión." },
-                { id: "deuda", label: "Sería mejor ahorrar y no endeudarme", hint: "Un celular no justifica una deuda." },
-                { id: "pago", label: "Necesito un préstamo de vehículo con cuotas fijas", hint: "Son ideales para motos o carros." }
+                { id: "capital", label: "Calculo cuánto puedo pagar sin afectar mis gastos básicos", hint: "Así pido solo el monto que realmente puedo asumir." },
+                { id: "interes", label: "Reviso y comparo la tasa de interés en varios bancos", hint: "Comparar me ayuda a elegir el préstamo más barato." },
+                { id: "deuda", label: "Evito usar el préstamo para compras impulsivas o innecesarias", hint: "Así no aumento mi deuda por caprichos." },
+                { id: "pago", label: "Organizo un presupuesto mensual para asegurar cada pago a tiempo", hint: "Un buen control evita atrasos e intereses adicionales." }
             ]
         }
+
     ];
+
+
 
     // Correct match (global)
     const correctMap = {
