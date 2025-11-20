@@ -1,43 +1,266 @@
+/* ----------------------------------------------
+   CONTENEDOR PRINCIPAL DEL JUEGO
+---------------------------------------------- */
 .final-loan-overlay {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
+    inset: 0;
+    background: radial-gradient(circle at center, #1c1c254f, #0d0d1233);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 99999;
+    padding: 40px;
+    z-index: 200;
+    font-family: "Poppins", sans-serif;
+    color: white;
 }
 
+/* ----------------------------------------------
+   TARJETA PRINCIPAL (POKER CARD)
+---------------------------------------------- */
 .loan-card {
+    background: #fafafa;
+    color: #333;
     width: 420px;
-    background: white;
-    padding: 25px;
+    min-height: 520px;
+    padding: 30px;
     border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    border: 3px solid #d6d6d6;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
     cursor: grab;
-    user-select: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.loan-card:active {
+    cursor: grabbing;
+    transform: scale(1.03);
+}
+
+.loan-card h2 {
+    font-size: 26px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.loan-card h3 {
+    margin-top: 18px;
+    font-size: 19px;
+    font-weight: 600;
+    color: #222;
+}
+
+.loan-card p {
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.loan-card ul {
+    margin-top: 10px;
+    padding-left: 18px;
 }
 
 .swipe-hint {
-    margin-top: 15px;
     text-align: center;
-    font-weight: bold;
+    font-size: 14px;
+    margin-top: 16px;
     color: #444;
 }
 
+/* ----------------------------------------------
+   TARJETAS LATERALES (OPCIONES)
+---------------------------------------------- */
+.side-card {
+    position: absolute;
+    width: 260px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.795);
+    border: 2px solid rgb(255, 255, 255);
+    backdrop-filter: blur(6px);
+    color: #110000;
+    border-radius: 16px;
+    font-size: 15px;
+    text-align: center;
+    transition: 0.2s ease;
+    pointer-events: none;
+}
+
+.side-card:hover {
+    transform: scale(1.05);
+}
+
+/* Lateral izquierdo */
+.side-left {
+    left: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Lateral derecho */
+.side-right {
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Superior */
+.side-up {
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Inferior */
+.side-down {
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* ----------------------------------------------
+   FEEDBACK EFECTO BURBUJA
+---------------------------------------------- */
 .feedback-box {
     position: absolute;
     bottom: 40px;
-    background: white;
-    padding: 15px 20px;
-    border-radius: 10px;
-    font-size: 20px;
+    background: #ffffff;
+    color: #222;
+    padding: 14px 22px;
+    border-radius: 14px;
     font-weight: 600;
-    animation: fade 0.3s ease-out;
+    border: 2px solid #ddd;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    animation: fadeInScale 0.4s ease forwards;
 }
 
-@keyframes fade {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ----------------------------------------------
+   PANTALLA FINAL
+---------------------------------------------- */
+.final-screen {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 300;
+}
+
+/* Caja final */
+.final-box {
+    width: 500px;
+    padding: 30px;
+    border-radius: 22px;
+    text-align: center;
+    animation: dropIn 0.45s ease-out forwards;
+    color: white;
+}
+
+@keyframes dropIn {
+    from {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.final-box.success {
+    background: linear-gradient(135deg, #22c55e, #15803d);
+}
+
+.final-box.medium {
+    background: linear-gradient(135deg, #facc15, #d97706);
+}
+
+.final-box.fail {
+    background: linear-gradient(135deg, #ef4444, #991b1b);
+}
+
+.score {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* ----------------------------------------------
+   BOTONES FINALES
+---------------------------------------------- */
+.final-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+}
+
+.retry-btn,
+.finish-btn {
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.retry-btn {
+    background: #ffffff;
+    color: #d32f2f;
+}
+
+.retry-btn:hover {
+    background: #ffe7e7;
+}
+
+.finish-btn {
+    background: #ffffff;
+    color: #1e3a8a;
+}
+
+.finish-btn:hover {
+    background: #e0ebff;
+}
+
+/* Colores para highlight dinámico */
+.side-card.highlight {
+    transform: scale(1.12);
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.25);
+    border: 3px solid #fff;
+}
+
+/* Colores individuales por dirección */
+.side-right.highlight {
+    box-shadow: 0 0 20px 6px rgba(0, 255, 0, 0.7);
+}
+
+.side-left.highlight {
+    box-shadow: 0 0 20px 6px rgba(255, 0, 0, 0.7);
+}
+
+.side-up.highlight {
+    box-shadow: 0 0 20px 6px rgba(0, 150, 255, 0.7);
+}
+
+.side-down.highlight {
+    box-shadow: 0 0 20px 6px rgba(255, 200, 0, 0.7);
+}
+
+/* Transición suave */
+.side-card {
+    transition: 0.25s ease;
 }
