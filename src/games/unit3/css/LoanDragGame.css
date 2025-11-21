@@ -56,12 +56,15 @@
 }
 
 .loan-card {
-    background: #eaeaea;
-    padding: 10px 15px;
-    border-radius: 8px;
+    background: #ffffff !important;
+    padding: 10px 15px !important;
+    border-radius: 8px !important;
     cursor: grab;
     user-select: none;
+    min-height: auto !important;
+    color: black !important;
 }
+
 
 .loan-dropzones {
     display: grid;
@@ -122,7 +125,7 @@
 
 .loan-card.locked {
     background: #4caf50 !important;
-    color: white;
+    color: white !important;
     border: 2px solid #2e7d32;
     cursor: default;
     opacity: 0.9;

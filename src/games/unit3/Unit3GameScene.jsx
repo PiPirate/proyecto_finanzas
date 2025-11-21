@@ -68,13 +68,15 @@ const loanPosterDialogue = [
 ];
 
 const needsPosterDialogue = [
-    "En esta zona aprenderás por qué algunas razones para pedir un préstamo son válidas y otras no tanto.",
-    "Clasifica los gastos entre necesarios y no necesarios.",
+    "En esta zona aprenderás sobre la clasificacion de gastos según tus necesidades.",
+    "Clasificalas segun su importancia, es un buen habito para llevar una vida tranquila.",
 ];
 
 const interestPosterDialogue = [
     "Aquí aprenderás cómo la tasa de interés cambia el valor final de tu préstamo.",
-    "Usa los sliders para ver cómo sube o baja la cuota.",
+    "ten cuidado de que el moustro del interés no se coma todo tu dinero!",
+    "cada que pases por un obstáculo rojo el moustro del interés te hará una pregunta sobre interés.",
+    "Buena suerte :)",
 ];
 
 const creditDeskDialogue = [
