@@ -29,6 +29,7 @@ export default function DialogueBox({
       onNext();
     }
   };
+  
 
   // quién está hablando
   const isAdvisor = speakerName === 'Asesor';
