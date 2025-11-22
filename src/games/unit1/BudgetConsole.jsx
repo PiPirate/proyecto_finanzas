@@ -12,11 +12,11 @@ import minigame3Icon from '../../assets/unit1/icons/minigame3_icon.png';
 const mkConsoleScript = [
   {
     speaker: 'MK25',
-    text: 'Bienvenidos, mi nombre es MK25. Mi función es ayudarlos a dejar atrás frases como “quiero ahorrar más” y transformarlas en metas específicas que realmente puedas cumplir.',
+    text: 'Bienvenidos, mi nombre es MK25. Mi función es ayudarlos a entender mejor su dinero: qué entra, qué sale y qué pueden guardar.',
   },
   {
     speaker: 'MK25',
-    text: 'Para lograrlo vamos a jugar tres mini-juegos cortos. Cada uno les ayudará a entender una parte del proceso.',
+    text: 'Para lograrlo vamos a jugar tres mini-juegos cortos. Cada uno les ayudará a practicar ingresos, gastos, ahorro y presupuesto.',
   },
   {
     speaker: 'MK25',
@@ -28,44 +28,44 @@ const mkConsoleScript = [
 
 const minigame1PhrasesPool = [
   {
-    text: 'Quiero ahorrar más dinero.',
-    type: 'vaga',
-    hint: 'Es vaga porque no dice cuánto quieres ahorrar ni para cuándo.',
+    text: 'Me pagaron 50.000 pesos por ayudar en un trabajo.',
+    type: 'ingreso',
+    hint: 'Es ingreso porque es dinero que entra a tu bolsillo.',
   },
   {
-    text: 'Ahorrar 200.000 pesos en 2 meses para comprar ropa.',
-    type: 'clara',
-    hint: 'Es clara: tiene cantidad (200.000), plazo (2 meses) y propósito (ropa).',
+    text: 'Pagué 30.000 pesos en transporte esta semana.',
+    type: 'gasto',
+    hint: 'Es gasto porque es dinero que sale de tu bolsillo.',
   },
   {
-    text: 'Gastar menos.',
-    type: 'vaga',
-    hint: '“Gastar menos” es muy general. Falta cuánto, durante cuánto tiempo y para qué.',
+    text: 'Me dieron una mesada de 100.000 pesos.',
+    type: 'ingreso',
+    hint: 'Es ingreso porque es dinero que recibes de otra persona.',
   },
   {
-    text: 'Ahorrar 20.000 cada semana durante un mes.',
-    type: 'clara',
-    hint: 'Tiene cantidad (20.000), frecuencia (cada semana) y plazo (un mes).',
+    text: 'Compré comida rápida con mis amigos por 25.000 pesos.',
+    type: 'gasto',
+    hint: 'Es gasto porque estás usando dinero para pagar algo.',
   },
   {
-    text: 'Ser más responsable con mi dinero.',
-    type: 'vaga',
-    hint: 'Suena bien, pero no es medible: no hay números ni fechas.',
+    text: 'Vendí unos cuadernos y recibí 15.000 pesos.',
+    type: 'ingreso',
+    hint: 'Es ingreso porque entra dinero por una venta.',
   },
   {
-    text: 'Juntar 300.000 para reparar mi celular antes de mayo.',
-    type: 'clara',
-    hint: 'Meta específica: 300.000, propósito (reparar celular) y plazo (antes de mayo).',
+    text: 'Pagué la recarga de datos del celular.',
+    type: 'gasto',
+    hint: 'Es gasto porque pagas un servicio con tu dinero.',
   },
   {
-    text: 'Ahorrar lo que sobre cada mes.',
-    type: 'vaga',
-    hint: 'No define cuánto debe sobrar ni para qué, así que es difícil de medir.',
+    text: 'Me devolvieron 5.000 pesos de una vuelta que había prestado.',
+    type: 'ingreso',
+    hint: 'Es ingreso porque vuelve a ti dinero que antes no tenías en el bolsillo.',
   },
   {
-    text: 'Ahorrar 50.000 pesos al mes durante 6 meses para un viaje.',
-    type: 'clara',
-    hint: 'Cantidad, plazo y propósito: cumple las tres claves de una meta clara.',
+    text: 'Compré un regalo para un amigo.',
+    type: 'gasto',
+    hint: 'Es gasto porque usas tu dinero para comprar algo.',
   },
 ];
 
@@ -74,15 +74,15 @@ const minigame1PhrasesPool = [
 const minigame1SummaryScript = [
   {
     speaker: 'Carmina',
-    text: 'Creo que lo veo: si no tiene números ni fechas… es vaga.',
+    text: 'Creo que ya lo entiendo: ingreso es lo que entra y gasto es lo que sale.',
   },
   {
     speaker: 'MK25',
-    text: 'Exacto. Las metas claras contienen tres claves: \n• Cantidad\n• Plazo\n• Propósito',
+    text: 'Exacto. Es el primer paso para armar cualquier presupuesto: saber de dónde viene tu dinero y en qué se va.',
   },
   {
     speaker: 'MK25',
-    text: 'Muy bien. Ya puedes reconocer metas claras y metas vagas, que es el primer paso para tomar decisiones financieras con dirección.',
+    text: 'Muy bien. Ya puedes reconocer ingresos y gastos, lo que te ayudará a organizar mejor tu dinero en la siguiente parte.',
   },
   {
     speaker: 'MK25',
@@ -98,79 +98,79 @@ const minigame1SummaryScript = [
 
 const minigame2Questions = [
   {
-    phrase: '“Quiero ahorrar para un celular.”',
+    phrase: 'Quieres comprar un celular y decides hacer un plan de ahorro.',
     options: [
       {
         id: 'a',
-        label: 'Ahorrar 50.000 pesos cuando pueda, sin fecha límite.',
+        label: 'Ahorrar 50.000 pesos cuando puedas, sin fecha ni orden.',
         isCorrect: false,
         correctExplanation:
-          'Esta opción no tiene fecha ni un compromiso claro. Decir “cuando pueda” hace que la meta siga siendo vaga.',
+          'Esta opción no tiene un tiempo ni un compromiso claro. Es difícil controlar tus gastos y tu ahorro así.',
       },
       {
         id: 'b',
         label: 'Ahorrar 800.000 pesos en 4 meses para comprar un celular.',
         isCorrect: true,
         correctExplanation:
-          'Esta meta es clara: tiene cantidad (800.000), plazo (4 meses) y propósito (comprar un celular).',
+          'Esta opción define cuánto ahorrarás en total y en cuánto tiempo, lo que te permite ajustar tus gastos para lograrlo.',
         wrongExplanation:
-          'Fíjate que esta opción sí tiene cantidad, plazo y propósito. Eso la hace una meta clara.',
+          'Fíjate que esta opción tiene una cantidad y un tiempo definidos; eso hace más claro tu presupuesto y tu ahorro.',
       },
       {
         id: 'c',
         label: 'Guardar lo que me sobre a fin de mes, si es que sobra algo.',
         isCorrect: false,
         correctExplanation:
-          'Depender solo de “lo que sobre” no es una cantidad fija ni un compromiso real.',
+          'Depender solo de “lo que sobre” no es un plan claro; muchas veces no queda nada para guardar.',
       },
     ],
   },
   {
-    phrase: '“Quiero dejar de gastar tanto en dulces.”',
+    phrase: 'Sientes que gastas demasiado en dulces y quieres ordenarte.',
     options: [
       {
         id: 'a',
         label: 'Gastar menos en dulces algún día.',
         isCorrect: false,
         correctExplanation:
-          '“Algún día” no es un plazo concreto y “menos” no indica cuánto. Sigue siendo vaga.',
+          '“Algún día” no es un tiempo concreto y “menos” no indica cuánto. Es difícil saber si realmente cambiaste tus gastos.',
       },
       {
         id: 'b',
         label: 'No volver a comprar dulces nunca más en la vida.',
         isCorrect: false,
         correctExplanation:
-          'Es muy extrema y poco realista. Una meta clara también debe ser alcanzable.',
+          'Es muy extrema y poco realista. Un buen plan también debe poder cumplirse en la vida real.',
       },
       {
         id: 'c',
         label: 'Gastar máximo 10.000 pesos a la semana en dulces.',
         isCorrect: true,
         correctExplanation:
-          'Aquí hay un límite concreto (10.000) y un plazo (por semana). Eso te permite medir si cumples o no.',
+          'Aquí hay un límite concreto (10.000) y un tiempo (por semana). Eso te permite medir si estás controlando ese gasto.',
         wrongExplanation:
-          'Esta opción pone un máximo numérico y un periodo. Eso la hace una meta medible.',
+          'Esta opción pone un máximo numérico y un periodo. Así puedes revisar si estás cumpliendo tu decisión.',
       },
     ],
   },
   {
-    phrase: '“Quiero empezar a guardar dinero.”',
+    phrase: 'Quieres empezar a guardar dinero todos los meses.',
     options: [
       {
         id: 'a',
         label: 'Ahorrar 20.000 pesos cada semana durante 6 meses.',
         isCorrect: true,
         correctExplanation:
-          'Cantidad (20.000), frecuencia (cada semana) y plazo (6 meses): es una meta clara y medible.',
+          'Tiene cantidad (20.000), frecuencia (cada semana) y tiempo (6 meses): es un plan claro para tu ahorro.',
         wrongExplanation:
-          'Esta opción tiene números y tiempo definido. Eso la convierte en un objetivo real, no solo un deseo.',
+          'Esta opción tiene números y tiempo definido. Eso la convierte en un plan real, no solo en una idea general.',
       },
       {
         id: 'b',
         label: 'Ahorrar un poco cada mes, si me acuerdo.',
         isCorrect: false,
         correctExplanation:
-          '“Un poco” y “si me acuerdo” no permiten saber si cumpliste tu meta o no.',
+          '“Un poco” y “si me acuerdo” no te dicen cuánto ahorrarás ni si lo estás logrando.',
       },
       {
         id: 'c',
@@ -188,15 +188,15 @@ const minigame2Questions = [
 const minigame2SummaryScript = [
   {
     speaker: 'Carmina',
-    text: 'Ok, entonces sí tengo que decidir números reales.',
+    text: 'Ok, entonces sí tengo que poner números reales a lo que quiero ahorrar o gastar.',
   },
   {
     speaker: 'MK25',
-    text: 'Sí. No existe meta clara sin compromiso numérico.',
+    text: 'Sí. Un buen presupuesto siempre se apoya en cantidades y tiempos concretos.',
   },
   {
     speaker: 'MK25',
-    text: 'Perfecto. Ahora ya sabes cómo transformar cualquier deseo financiero en un objetivo medible.',
+    text: 'Perfecto. Ahora ya sabes cómo convertir ideas generales en planes con números que puedes seguir en tu día a día.',
   },
 ];
 
@@ -220,7 +220,7 @@ const minigame3Scenarios = [
     recommendedExplanation:
       'Elegir el material para un proyecto importante suele ayudarte a largo plazo: impacta tus estudios o trabajo y puede abrir más oportunidades.',
     otherExplanation:
-      'Qué opción tiene más impacto en tus metas a largo plazo, no solo en el momento.',
+      'Piensa en qué opción tiene más impacto en tu vida a largo plazo, no solo en el momento.',
   },
   {
     id: 's2',
@@ -287,7 +287,7 @@ const minigame3SummaryScript = [
   },
   {
     speaker: 'MK25',
-    text: 'Bien. Elegir prioridades te permite avanzar de verdad en tus metas.',
+    text: 'Bien. Elegir prioridades te permite usar mejor tu dinero y evitar que se vaya en todo a la vez.',
   },
   {
     speaker: 'MK25',
@@ -300,15 +300,15 @@ const minigame3SummaryScript = [
 const postTrainingScript = [
   {
     speaker: 'MK25',
-    text: 'Excelente trabajo. Ya sabes:\n• Identificar metas vagas\n• Convertirlas en claras\n• Y priorizar cuál atacar primero.',
+    text: 'Excelente trabajo. Ya sabes:\n• Diferenciar ingresos y gastos\n• Armar planes sencillos con números reales\n• Y elegir qué gastos y ahorros van primero cuando el dinero no alcanza para todo.',
   },
   {
     speaker: 'MK25',
-    text: 'Con esto ya están listos para el siguiente paso: estructurar tu presupuesto.',
+    text: 'Con esto ya están listos para el siguiente paso: organizar su presupuesto completo.',
   },
   {
     speaker: 'MK25',
-    text: 'Habla nuevamente con el asesor, él te indicará cómo proseguir.',
+    text: 'Habla nuevamente con el asesor; él te indicará cómo seguir aplicando lo que aprendiste.',
   },
   {
     speaker: 'Carmina',
@@ -368,7 +368,7 @@ function MiniGame1({ onFinished }) {
 
     const prefix = isCorrect ? '¡Correcto! ' : 'Casi... ';
     setFeedbackText(
-      `${prefix}${current.hint} Recuerda: cantidad, plazo y propósito.`
+      `${prefix}${current.hint} Recuerda: ingreso es dinero que entra, gasto es dinero que sale.`
     );
 
     setPhase('feedback');
@@ -406,12 +406,12 @@ function MiniGame1({ onFinished }) {
   // Fase de pregunta
   return (
     <div className="mg1-container">
-      <h2 className="mg1-title">Meta vaga vs meta clara</h2>
+      <h2 className="mg1-title">Ingreso o gasto</h2>
 
       <p className="mg1-instructions">
         Selecciona cada frase y dime si es:
         <br />
-        [Meta vaga] o [Meta clara]
+        [Ingreso] o [Gasto]
       </p>
 
       <div className="mg1-phrase-box">
@@ -422,16 +422,16 @@ function MiniGame1({ onFinished }) {
         <button
           type="button"
           className="mg1-button mg1-button--vaga"
-          onClick={() => handleAnswer('vaga')}
+          onClick={() => handleAnswer('ingreso')}
         >
-          Meta vaga
+          Ingreso
         </button>
         <button
           type="button"
           className="mg1-button mg1-button--clara"
-          onClick={() => handleAnswer('clara')}
+          onClick={() => handleAnswer('gasto')}
         >
-          Meta clara
+          Gasto
         </button>
       </div>
 
@@ -545,7 +545,7 @@ function MiniGame2({ onFinished }) {
         setIndex(nextIndex);
       }
     } else {
-      // Si estaba mal, vuelve a mostrar la misma meta
+      // Si estaba mal, vuelve a mostrar la misma situación
       setPhase('question');
       setSelectedId(null);
       setFeedbackText('');
@@ -570,12 +570,12 @@ function MiniGame2({ onFinished }) {
   // Fase de pregunta
   return (
     <div className="mg2-container">
-      <h2 className="mg2-title">Completa la meta</h2>
+      <h2 className="mg2-title">Elige el mejor plan</h2>
 
       <p className="mg2-instructions">
-        Ahora vamos a convertir metas vagas en metas claras.
+        Ahora vamos a comparar distintos planes para manejar tu dinero.
         <br />
-        Elige la opción que tenga números y plazos claros.
+        Elige la opción que tenga números y tiempos más claros.
       </p>
 
       <div className="mg2-phrase-box">{currentQuestion.phrase}</div>
@@ -598,7 +598,7 @@ function MiniGame2({ onFinished }) {
 
       <div className="mg2-bottom-row">
         <span className="mg2-progress">
-          Meta {index + 1} de {minigame2Questions.length}
+          Caso {index + 1} de {minigame2Questions.length}
         </span>
       </div>
     </div>
@@ -689,7 +689,7 @@ function MiniGame3({ onFinished }) {
 
     const prefix = isRecommended
       ? 'Buena elección. '
-      : 'No es una mala meta, pero piensa: ';
+      : 'No es una mala opción, pero piensa: ';
 
     setFeedbackText(prefix + explanation);
     setPhase('feedback');
@@ -732,7 +732,7 @@ function MiniGame3({ onFinished }) {
   // Fase de pregunta
   return (
     <div className="mg3-container">
-      <h2 className="mg3-title">Prioriza tu objetivo</h2>
+      <h2 className="mg3-title">Prioriza tus gastos</h2>
 
       <p className="mg3-instructions">
         {scenario.description}
@@ -744,7 +744,7 @@ function MiniGame3({ onFinished }) {
         </span>
         .
         <br />
-        Elige la meta que consideres más importante sabiendo que no te alcanza para todas.
+        Elige la opción que consideres más importante sabiendo que no te alcanza para todas.
       </p>
 
       <div className="mg3-goals">

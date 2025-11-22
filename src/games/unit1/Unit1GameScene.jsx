@@ -34,10 +34,10 @@ import './css/Unit1GameScene.css';
 // Diálogo inicial (habla Carmina)
 const introDialogue = [
   'Bueno… aquí estamos. Primera unidad del módulo de finanzas...',
-  'La verdad, al igual que tú, siempre he querido aprender a organizar mejor mi dinero...',
-  'Pero nunca supe muy bien por dónde empezar.',
-  'Aquí vamos a aprender a convertir nuestras ideas sueltas en metas claras y alcanzables.',
-  'Para empezar, vamos a hablar con el asesor financiero de aquella mesa. Él nos guiará por todo este proceso.',
+  'La verdad, al igual que tú, siempre he querido entender mejor qué pasa con mi dinero: qué entra, qué sale y en qué se va.',
+  'Porque muchas veces solo sentimos que “no alcanza”, pero no sabemos exactamente por qué.',
+  'En esta unidad vamos a empezar por lo básico: ingresos, gastos y cómo ordenarlos en un presupuesto sencillo.',
+  'Para eso vamos a hablar con el asesor financiero de aquella mesa. Él nos ayudará a leer mejor nuestro dinero del día a día.',
   'Acércate a él y haz click en su escritorio para comenzar.',
 ];
 
@@ -45,47 +45,47 @@ const introDialogue = [
 const advisorMainDialogue = [
   {
     speaker: 'Asesor',
-    text: 'Bienvenidos. Me alegra que hayan decidido empezar a organizar su dinero.',
+    text: 'Bienvenidos. Me alegra que hayan decidido dedicar un rato a entender su dinero.',
   },
   {
     speaker: 'Asesor',
-    text: 'Antes de comenzar, quiero que piensen en algo: todos tenemos deseos, sueños o planes...',
+    text: 'Antes de empezar, pensemos en algo sencillo: el dinero siempre está entrando y saliendo.',
   },
   {
     speaker: 'Asesor',
-    text: 'Pero si no los convertimos en metas concretas, se vuelven difíciles de alcanzar.',
+    text: 'Cuando sabes cuánto entra, cuánto sale y en qué lo gastas, es más fácil tomar decisiones tranquilas.',
   },
   {
     speaker: 'Asesor',
-    text: 'Así que en esta unidad aprenderán a darle forma a esas ideas..',
+    text: 'En esta unidad vamos a revisar lo básico: ingresos, gastos, ahorro y un presupuesto sencillo.',
   },
   {
     speaker: 'Asesor',
-    text: 'convertir lo que “quieres algún día” en objetivos medibles, con números, fechas y pasos realistas.',
+    text: 'Llamamos ingresos a todo el dinero que recibes: mesada, trabajo, ayudas, ventas u otros pagos.',
   },
   {
     speaker: 'Asesor',
-    text: 'Luego aprenderán a crear un presupuesto simple para que sepan cómo distribuir su dinero.',
+    text: 'Llamamos gastos a todo lo que pagas: transporte, comida, datos del celular, salidas y también los pequeños antojos.',
   },
   {
     speaker: 'Asesor',
-    text: 'Y por último verán cómo una buena estrategia de ahorro hace que ese objetivo deje de ser un sueño y empiece a ser algo totalmente posible.',
+    text: 'El ahorro es la parte del dinero que decides guardar para más adelante, en lugar de gastarla de inmediato.',
   },
   {
     speaker: 'Carmina',
-    text: 'Suena genial. ¿Cuál es el siguiente paso?',
+    text: 'Suena útil. A veces siento que el dinero simplemente desaparece.',
   },
   {
     speaker: 'Asesor',
-    text: 'Primero vamos a transformar una meta vaga en una meta clara.',
+    text: 'Por eso primero vamos a usar una herramienta para separar ejemplos de ingresos y gastos y verlos juntos en un presupuesto.',
   },
   {
     speaker: 'Asesor',
-    text: 'Para eso deben ir a la mesa de presupuesto inicial de al lado y darle click.',
+    text: 'Debes ir a la mesa del presupuesto inicial de al lado y hacer click en el computador.',
   },
   {
     speaker: 'Asesor',
-    text: 'Allí podrán experimentar de forma visual cómo se estructura un objetivo.',
+    text: 'Allí verás, de forma visual, cómo se organiza lo que entra, lo que sale y lo que puedes guardar.',
   },
 ];
 
@@ -94,7 +94,7 @@ const advisorMainDialogue = [
 const advisorRepeatDialogue = [
   {
     speaker: 'Asesor',
-    text: 'Espero que ya hayan pasado por la mesa de presupuesto.',
+    text: 'Espero que ya hayan pasado por la mesa de presupuesto para revisar sus ingresos y gastos.',
   },
 ];
 
@@ -102,27 +102,27 @@ const advisorRepeatDialogue = [
 const advisorPostMkDialogue = [
   {
     speaker: 'Carmina',
-    text: 'Asesor, hemos terminado.',
+    text: 'Asesor, ya organizamos los ejemplos en el presupuesto del computador.',
   },
   {
     speaker: 'Asesor',
-    text: '¡Perfecto! Ya completaste la parte más importante: aprender a definir metas de forma clara y realista.',
+    text: '¡Perfecto! Ya viste cómo se ven juntos tus ingresos, tus gastos y cuánto podrías guardar.',
   },
   {
     speaker: 'Asesor',
-    text: 'Pero una meta, incluso bien definida, no sirve de nada si no tienes un plan para avanzar hacia ella. Por eso ahora veremos cómo se alimenta el ahorro.',
+    text: 'Pero entender los números en pantalla no basta si en el día a día tomas decisiones que vacían tu bolsillo. Ahora veremos cómo se alimenta el ahorro.',
   },
   {
     speaker: 'Carmina',
-    text: 'O sea, cómo pasar del papel… a la acción real.',
+    text: 'O sea, cómo pasar de solo mirar el presupuesto… a usarlo en la vida real.',
   },
   {
     speaker: 'Asesor',
-    text: 'Exacto. Para eso está la alcancía. Allí vas a practicar cómo tus decisiones pequeñas y constantes hacen crecer tu progreso.',
+    text: 'Exacto. Para eso está la alcancía. Allí vas a practicar cómo tus decisiones pequeñas y constantes hacen crecer lo que ahorras.',
   },
   {
     speaker: 'Asesor',
-    text: 'Ve hacia la alcancía con forma de cerdito y prepárate para un ejercicio práctico.',
+    text: 'Ve hacia la alcancía con forma de cerdito y prepárate para un ejercicio práctico sobre decisiones de gasto y ahorro.',
   },
 ];
 
@@ -130,7 +130,7 @@ const advisorPostMkDialogue = [
 const advisorWaitPigDialogue = [
   {
     speaker: 'Asesor',
-    text: 'Qué bueno saber que aprendieron.',
+    text: 'Ve primero a la alcancía y pon en práctica lo que aprendiste sobre presupuesto y ahorro.',
   },
 ];
 
@@ -141,27 +141,27 @@ const reconnectingDialogue = ['Reconectando...'];
 const pigIntroDialogue = [
   {
     speaker: 'Alcancía',
-    text: 'Hola, soy la Alcancía. Hasta ahora ya sabes algo muy poderoso: tener metas claras, con un monto y un plazo. Pero esas metas no se cumplen solas.',
+    text: 'Hola, soy la Alcancía. Hasta ahora ya sabes algo muy importante: de dónde viene tu dinero y en qué se está yendo.',
   },
   {
     speaker: 'Alcancía',
-    text: 'Para que de verdad se puedan alcanzar, necesitas algo más que buenas intenciones: decisiones pequeñas y constantes. ',
+    text: 'Pero que el dinero alcance no depende solo de hacer una lista. Depende de muchas decisiones pequeñas y constantes.',
   },
   {
     speaker: 'Alcancía',
-    text: 'Eso es el ahorro. Cada vez que eliges guardar un poquito en lugar de gastarlo sin pensar, estás moviendo tu meta del “algún día” al “sí va a pasar”.',
+    text: 'El ahorro aparece cuando eliges guardar una parte de tu dinero en lugar de gastarlo sin pensar.',
   },
   {
     speaker: 'Alcancía',
-    text: 'Por eso este paso es tan importante: aquí vas a ver cómo cada decisión suma o resta a tu objetivo.',
+    text: 'En este ejercicio vas a ver cómo cada decisión hace que tu ahorro crezca, se estanque o incluso retroceda.',
   },
   {
     speaker: 'Alcancía',
-    text: 'No se trata de prohibirte todo, sino de entender qué tanto te acerca o te aleja de lo que quieres lograr.',
+    text: 'No se trata de prohibirte todo, sino de entender qué tanto cada gasto cuida o descuida tu bolsillo.',
   },
   {
     speaker: 'Carmina',
-    text: 'O sea que aquí voy a probar si mis decisiones están ayudando o saboteando mi meta.',
+    text: 'O sea que aquí voy a probar si mis decisiones están ayudando a mi ahorro o lo están vaciando.',
   },
   {
     speaker: 'Alcancía',
@@ -177,15 +177,15 @@ const pigOutroDialogue = [
   },
   {
     speaker: 'Alcancía',
-    text: 'Ya sabes: Tener metas específicas, organizarlas en un presupuesto, y alimentarlas con decisiones pequeñas pero consistentes.',
+    text: 'Ya sabes leer mejor tu dinero: reconocer ingresos, identificar gastos, armar un presupuesto sencillo y hacer que el ahorro crezca con decisiones pequeñas pero constantes.',
   },
   {
     speaker: 'Carmina',
-    text: 'Gracias, en serio. Creo que ahora sí entendemos cómo funciona todo.',
+    text: 'Gracias, en serio. Creo que ahora sí entendemos mejor qué pasa con nuestro dinero.',
   },
   {
     speaker: 'Alcancía',
-    text: '¡Estás lista para el desafío final! El lugar donde pondrás en práctica todo lo que aprendiste.',
+    text: 'Ahora sí estás lista para el siguiente desafío, donde pondrás en práctica todo lo que aprendiste.',
   },
 ];
 
