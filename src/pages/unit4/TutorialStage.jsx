@@ -18,7 +18,7 @@ export default function TutorialStage({ onComplete }) {
 
   return (
     <div className="tutorial-map-container">
-      {/* Escena de la cafetería + links sospechosos + QR */}
+      {/* Escena de la cafetería + decisiones con el dinero + metas financieras */}
       <Unit4GameScene onGoalReached={handleGoalReached} />
 
       {/* Modal final cuando termina TODO el recorrido */}
@@ -33,12 +33,16 @@ export default function TutorialStage({ onComplete }) {
             </h2>
 
             <p className="tutorial-success-text">
-              Revisaste mensajes con enlaces sospechosos, aprendiste a
-              diferenciar links confiables de los peligrosos y conociste buenas
-              prácticas para pagar con QR sin ser víctima de fraude.
+              Practicaste cómo tomar decisiones más conscientes con tu dinero,
+              identificando cuáles te acercan o te alejan de tus metas
+              financieras.
               <br />
-              Ahora pasarás a la prueba evaluativa para poner a prueba lo que
-              aprendiste en esta unidad.
+              También aprendiste a diferenciar metas de corto plazo (logros
+              que puedes alcanzar pronto) y metas de largo plazo (objetivos que
+              requieren más tiempo y planificación).
+              <br />
+              Ahora pasarás a la prueba evaluativa para poner en práctica lo que
+              aprendiste sobre organizar tu dinero y tus metas.
             </p>
 
             <button

@@ -43,364 +43,365 @@ const FINANCE_QUESTIONS = [
   // 1
   {
     question:
-      'Antes de pagar con un código QR en una cafetería, ¿qué es lo MÁS importante revisar en la app antes de confirmar?',
+      '¿Qué es una meta financiera?',
     options: [
-      'Que el QR tenga un diseño bonito',
-      'Que el nombre del comercio y el valor del consumo sean correctos',
-      'Que el QR esté en blanco y negro',
-      'Que el QR tenga emojis o mensajes de promoción'
+      'Un deseo general sin fecha',
+      'Un objetivo claro de dinero con propósito y tiempo estimado',
+      'Cualquier compra que haces en el mes',
+      'El dinero que te sobra después de gastar'
     ],
     correct: 1
   },
   // 2
   {
     question:
-      'Ves un QR pegado ENCIMA de otro, con un papel torcido. El mesero no sabe quién lo pegó. ¿Qué deberías hacer?',
+      '¿Cuál de estos ejemplos es una meta financiera BIEN planteada?',
     options: [
-      'Escanearlo rápido para terminar',
-      'Tomar una foto y pagar más tarde',
-      'No escanearlo y avisar al personal del local',
-      'Escanearlo solo si nadie está mirando'
+      '“Algún día quiero tener plata”',
+      '“Quiero ahorrar 150.000 pesos en 3 meses para unos tenis”',
+      '“Quiero ser millonario pronto”',
+      '“Quiero gastar menos en comida”'
     ],
-    correct: 2
+    correct: 1
   },
   // 3
   {
     question:
-      'Te envían por WhatsApp un QR diciendo: “Paga aquí tu consumo, 10% de descuento si lo haces YA”. No es el chat oficial del negocio. ¿Qué tan confiable es?',
+      'Una meta de CORTO PLAZO normalmente se cumple en:',
     options: [
-      'Seguro, porque ofrece descuento',
-      'Seguro, si el QR tiene el logo del banco',
-      'Sospechoso, puede ser un intento de fraude',
-      'Confiable solo si está en alta resolución'
+      'Unos días o pocos meses',
+      'Entre 5 y 10 años',
+      'Toda la vida',
+      'Solo cuando te jubiles'
     ],
-    correct: 2
+    correct: 0
   },
   // 4
   {
     question:
-      'En la barra del local hay un QR dentro de un acrílico con el logo oficial, y la app muestra el nombre correcto de la cafetería y el valor de tu consumo. Esto indica que:',
+      'Una meta de LARGO PLAZO suele ser:',
     options: [
-      'Siempre tendrás cashback extra',
-      'Probablemente sea un pago seguro',
-      'Es obligatorio pagar con tarjeta física',
-      'El QR está caducado y no sirve'
+      'Comprar un snack hoy después de clase',
+      'Ahorrar para un fondo de emergencia o una casa en varios años',
+      'Pagar un pasaje de bus mañana',
+      'Comprar un helado el fin de semana'
     ],
     correct: 1
   },
   // 5
   {
     question:
-      'Si vas a escanear un QR para pagar, ¿qué acción es la MÁS segura?',
+      'Carmina dice: “Quiero ahorrar 50.000 cada mes para tener 300.000 en 6 meses y pagar un curso”. Esta meta es:',
     options: [
-      'Pedir al mesero que te reenvíe el QR por su WhatsApp personal',
-      'Escanear cualquier QR visible en la mesa',
-      'Pedir que te muestren el QR oficial del local y verificar en la app',
-      'Hacer captura de pantalla del QR y compartirla con amigos'
+      'Corto plazo, bien definida',
+      'Largo plazo, sin sentido',
+      'Una meta sin propósito',
+      'Solo un deseo vago'
     ],
-    correct: 2
+    correct: 0
   },
   // 6
   {
     question:
-      'Al escanear un QR, tu app muestra un nombre de comercio totalmente distinto al local donde estás. ¿Qué haces?',
+      '¿Cuál de estas metas es MÁS parecida a “algún día” y necesita mejor definición?',
     options: [
-      'Pagas igual, seguro es una empresa asociada',
-      'Pagas solo si el monto es pequeño',
-      'Cancelas el pago y consultas al personal del local',
-      'Intentas pagar varias veces hasta que cambie el nombre'
+      '“Quiero ahorrar 500.000 en un año para un viaje corto”',
+      '“Quiero hacer un fondo de emergencia de 3 meses de gastos en 3 años”',
+      '“Quiero comprar una casa algún día cuando tenga plata”',
+      '“Quiero ahorrar 100.000 este mes para un libro”'
     ],
     correct: 2
   },
   // 7
   {
     question:
-      '¿Cuál es una señal CLARA de que un QR puede ser trampa?',
+      '¿Qué elemento NO puede faltar en una buena meta financiera?',
     options: [
-      'Está impreso en papel normal',
-      'Está dentro de un acrílico limpio',
-      'Está pegado encima de otro QR o sobre un aviso viejo',
-      'Está cerca de la caja registradora'
+      'Monto aproximado',
+      'Plazo o tiempo para lograrla',
+      'Propósito o para qué la quieres',
+      'Que sea secreta y nadie la sepa'
     ],
-    correct: 2
+    correct: 3
   },
   // 8
   {
     question:
-      'En un cartel ves: “Escanea este QR para pagar más rápido, no hace falta revisar en la app”. ¿Qué deberías recordar?',
+      'Una decisión financiera RESPONSABLE se reconoce porque:',
     options: [
-      'Siempre debes revisar los datos en la app ANTES de confirmar',
-      'Si el cartel es grande, no hay problema',
-      'Mientras haya fila, es mejor confiar',
-      'Si hay cámaras, no pueden estafarte'
+      'Solo busca placer inmediato',
+      'Tiene en cuenta cómo afecta tus metas y tu presupuesto',
+      'Ignora completamente tus metas',
+      'Se basa en copiar lo que hacen los demás'
     ],
-    correct: 0
+    correct: 1
   },
   // 9
   {
     question:
-      '¿Cuál de los siguientes es un BUEN hábito al usar QRs para pagar?',
+      'A Carmina le pagan un trabajo extra. ¿Cuál de estas decisiones la acerca más a una meta?',
     options: [
-      'Guardar cualquier QR en tu galería para usarlo después',
-      'Escanear solo QRs que envíen por grupos de redes sociales',
-      'Verificar el nombre del comercio y el valor en la app bancaria',
-      'Confiar en QRs que prometen regalos instantáneos'
+      'Gastarlo todo el mismo día en domicilios',
+      'Separar una parte para su meta y luego decidir qué gastar',
+      'Comprar algo grande a crédito sin revisar cuotas',
+      'Prestar todo el dinero sin saber cuándo se lo devuelven'
     ],
-    correct: 2
+    correct: 1
   },
   // 10
   {
     question:
-      'Te llega un SMS: “Detectamos un ingreso sospechoso en tu cuenta. Entra YA a: http://bit.ly/seguro-banco-2024”. ¿Qué es lo más probable?',
+      '¿Cuál de estas acciones es una decisión financiera RIESGOSA?',
     options: [
-      'Es una actualización oficial del banco',
-      'Es un intento de phishing usando un enlace acortado',
-      'Es una encuesta de satisfacción segura',
-      'Es solo publicidad, siempre es inofensiva'
+      'Revisar cuánto puedes ahorrar antes de gastar',
+      'Endeudarte sin saber la tasa de interés ni el tiempo de pago',
+      'Separar una parte fija de ahorro cada mes',
+      'Comparar precios antes de comprar'
     ],
     correct: 1
   },
   // 11
   {
     question:
-      '¿Qué característica suele tener un enlace FRAUDULENTO?',
+      '“Gastar primero y ahorrar solo si sobra algo” es un hábito que normalmente:',
     options: [
-      'Dominio muy corto y simple como “banco.com”',
-      'Usar solo letras minúsculas sin números',
-      'Mezclar letras y números raros para imitar un banco (ej. banc0-seguro.com)',
-      'Tener un candado en el navegador'
+      'Te ayuda a cumplir metas muy rápido',
+      'Te aleja de tus metas porque casi nunca sobra',
+      'Es la mejor forma de organizar el dinero',
+      'Solo sirve si ganas mucho dinero'
     ],
-    correct: 2
+    correct: 1
   },
   // 12
   {
     question:
-      'Un mensaje dice: “Actualiza tu app bancaria desde este link especial para clientes VIP”. ¿Cuál es la opción segura?',
+      '¿Qué suele pasar cuando tomas muchas decisiones impulsivas con tu dinero?',
     options: [
-      'Actualizar siempre desde la tienda oficial (Play Store / App Store)',
-      'Actualizar desde cualquier link si viene por correo',
-      'Actualizar solo si el link tiene muchas mayúsculas',
-      'Nunca actualizar la app bancaria'
+      'Te sobran recursos para metas grandes',
+      'Es más difícil saber en qué se fue tu plata y cumplir metas',
+      'Siempre llegas con más saldo a fin de mes',
+      'Pagas menos en intereses'
     ],
-    correct: 0
+    correct: 1
   },
   // 13
   {
     question:
-      '¿Por qué los delincuentes usan mensajes de URGENCIA como “en 10 minutos se bloquea tu cuenta”?',
+      'Carmina recibe 300.000 pesos. Quiere ahorrar para unos audífonos y también comer fuera. ¿Qué opción es más responsable?',
     options: [
-      'Para ayudarte a actuar más rápido y ahorrar tiempo',
-      'Para que pienses con calma antes de hacer clic',
-      'Para meter presión y que tomes decisiones sin verificar',
-      'Porque así funcionan todos los bancos'
+      'Gastar todo en salidas y dejar los audífonos para “después”',
+      'Comprar los audífonos a crédito sin revisar cuotas',
+      'Primero separar lo que necesita para su meta y luego destinar una parte a gustos',
+      'Prestar todo el dinero a un amigo'
     ],
     correct: 2
   },
   // 14
   {
     question:
-      'Si recibes un correo diciendo “tu cuenta será cerrada hoy, entra al siguiente link para evitarlo”, lo más prudente es:',
+      '¿Cuál de estas frases muestra mejor que una decisión afecta tus metas?',
     options: [
-      'Hacer clic de inmediato para no perder la cuenta',
-      'Responder al correo con tus datos personales',
-      'Ignorar el mensaje y entrar tú mismo desde la app o web oficial del banco',
-      'Reenviar el correo a todos tus contactos para advertirles'
+      '“Da igual, solo es plata”',
+      '“Si compro esto ahora, tardaré más en llegar a mi meta”',
+      '“Lo pago y luego veo qué hago”',
+      '“Gasto sin pensar para no estresarme”'
     ],
-    correct: 2
+    correct: 1
   },
   // 15
   {
     question:
-      '¿Cuál de estos enlaces se ve MÁS confiable a simple vista?',
+      'Tener un pequeño fondo de emergencia sirve para:',
     options: [
-      'https://app-banc0-premios-rapidos.club',
-      'http://bit.ly/ganar-dinero-banco',
-      'https://www.bancoandino.com/usuarios',
-      'https://bancoand1no-seguro.net'
+      'Gastar más en gustos',
+      'Cubrir imprevistos sin destruir tus metas principales',
+      'Endeudarte más rápido',
+      'Evitar que ahorres para otras cosas'
     ],
-    correct: 2
+    correct: 1
   },
   // 16
   {
     question:
-      'Cuando recibes un enlace “sospechoso” en un chat, ¿qué deberías evitar?',
+      '¿Cuál de estos ejemplos corresponde mejor a una meta de CORTO PLAZO?',
     options: [
-      'Eliminar el mensaje',
-      'Revisar primero con el banco por sus canales oficiales',
-      'Compartirlo en grupos para preguntar si alguien ya entró',
-      'Ignorarlo si viene de un número desconocido'
+      'Ahorrar 100.000 este mes para un libro',
+      'Tener casa propia en 20 años',
+      'Juntar dinero para la jubilación',
+      'Vivir sin trabajar nunca más'
     ],
-    correct: 2
+    correct: 0
   },
   // 17
   {
     question:
-      '¿Qué información NUNCA debes ingresar en una página que te llegó por un link dudoso?',
+      '¿Cuál de estos ejemplos es claramente una meta de LARGO PLAZO?',
     options: [
-      'Tu apodo o nickname',
-      'Tu color favorito',
-      'Tus datos de tarjeta, claves o tokens de seguridad',
-      'El nombre de tu banco'
+      'Ahorrar para pagar un servicio de este mes',
+      'Ahorrar 1.000.000 en 4 semanas',
+      'Crear un fondo de emergencia de 3 meses de gastos en 3 años',
+      'Comprar un snack después de clase'
     ],
     correct: 2
   },
   // 18
   {
     question:
-      'Estás en una computadora pública y quieres revisar tu banca en línea. ¿Qué es lo más recomendable?',
+      'Si tu meta es pagar la inscripción a un curso en 2 meses, lo más adecuado es:',
     options: [
-      'Guardar tu clave en el navegador para no olvidarla',
-      'Usar solo el modo incógnito y luego cerrar sesión',
-      'Dejar la sesión abierta para consultar rápido luego',
-      'Tomar foto a la pantalla con tus datos por si los pierdes'
+      'Esperar al último día y ver si tienes dinero',
+      'Hacer un plan para ahorrar una parte cada mes',
+      'Pedir un préstamo sin revisar intereses',
+      'Gastar todo y confiar en que “algo aparecerá”'
     ],
     correct: 1
   },
   // 19
   {
     question:
-      'Si un mensaje te pide “enviar captura de tu app bancaria para verificar un pago”, lo más probable es que:',
+      '¿Qué ventaja tiene escribir tus metas financieras?',
     options: [
-      'Sea un requisito normal del banco',
-      'Quieran ayudarte a actualizar la app',
-      'Estén intentando ver datos sensibles de tus movimientos',
-      'Solo necesiten tu foto de perfil'
+      'No sirve de nada, solo ocupa espacio',
+      'Te ayuda a recordarlas, organizarlas y medir tu progreso',
+      'Te obliga a gastar más',
+      'Solo funciona si ganas mucho dinero'
     ],
-    correct: 2
+    correct: 1
   },
   // 20
   {
     question:
-      '¿Cuál es una buena práctica al usar pagos con QR y links?',
+      'Carmina dice: “Quiero ahorrar para un viaje, pero no sé cuánto cuesta ni cuándo quiero ir”. El problema principal es:',
     options: [
-      'Conectarse a cualquier WiFi abierto sin clave',
-      'Revisar que la red WiFi sea conocida y, si se puede, usar datos móviles',
-      'Compartir tu clave bancaria por si falla el internet',
-      'Aceptar todas las notificaciones de páginas desconocidas'
+      'Que es muy caro viajar',
+      'Que la meta no tiene monto ni plazo definidos',
+      'Que ahorrar está mal',
+      'Que el viaje no es importante'
     ],
     correct: 1
   },
   // 21
   {
     question:
-      'La app de tu banco te pide actualizar y ves el aviso dentro de la misma app, que te lleva a la tienda oficial. Esto suele ser:',
+      '¿Cuál es una buena práctica al recibir dinero (salario, mesada o pago de trabajo)?',
     options: [
-      'Una estafa segura',
-      'Un procedimiento normal y seguro',
-      'Solo publicidad sin importancia',
-      'Una invitación a un sorteo'
+      'Gastar todo primero y luego ver si ahorras',
+      'Separar de entrada una parte para tus metas y otra para gastos',
+      'No pensar en tus metas hasta fin de mes',
+      'Usar todo para pagar deudas ajenas'
     ],
     correct: 1
   },
   // 22
   {
     question:
-      '¿Qué significa el ícono de candado junto a la dirección web (https)?',
+      'Si siempre pagas solo la cuota mínima de una deuda sin revisar intereses ni tiempo de pago, normalmente:',
     options: [
-      'Que la página es 100% legítima',
-      'Que la conexión está cifrada, pero igual debes revisar si el sitio es el oficial',
-      'Que puedes escribir tus claves sin pensar',
-      'Que la página pertenece a un banco'
+      'Sales de la deuda muy rápido',
+      'Terminas pagando más dinero y tardas mucho en salir',
+      'Te bajan los intereses a cero',
+      'No afecta en nada tus metas'
     ],
     correct: 1
   },
   // 23
   {
     question:
-      'Te llega un mensaje de “soporte bancario” desde un número de celular informal. Te piden que envíes tu código SMS para “verificar tu cuenta”. ¿Qué haces?',
+      '¿Qué hábito te ayuda a entender mejor a dónde se va tu dinero?',
     options: [
-      'Enviar el código para que te ayuden',
-      'Llamar al número para confirmar',
-      'No compartir el código y contactar al banco por sus canales oficiales',
-      'reenviar el código a tus amigos por seguridad'
+      'Nunca revisar tu estado de cuenta',
+      'Llevar un registro simple de ingresos y gastos',
+      'Guardar todos los recibos en una caja sin mirarlos',
+      'Evitar pensar en dinero para no estresarte'
     ],
-    correct: 2
+    correct: 1
   },
   // 24
   {
     question:
-      '¿Cuál de estas acciones ayuda a mantener seguros tus pagos digitales?',
+      'La frase “cada peso que entra tiene una tarea” significa que:',
     options: [
-      'Instalar apps bancarias desde páginas de terceros',
-      'Mantener la app bancaria actualizada desde la tienda oficial',
-      'Desactivar las notificaciones del banco',
-      'Prestar tu celular desbloqueado a cualquiera'
+      'Todo el dinero debe gastarse de inmediato',
+      'Debes asignar tu dinero a categorías: metas, gastos necesarios y gustos',
+      'No puedes disfrutar nunca tu dinero',
+      'Solo debes pensar en metas grandes'
     ],
     correct: 1
   },
   // 25
   {
     question:
-      'Si al abrir un enlace el navegador te muestra muchas ventanas emergentes raras y te pide descargar archivos desconocidos, lo más prudente es:',
+      'Si tu meta de corto plazo ya está por cumplirse, una buena idea es:',
     options: [
-      'Descargar todo rápido y luego revisar',
-      'Cerrar la página y no descargar nada',
-      'Compartir el archivo con tus contactos',
-      'Permitir todas las notificaciones que pida'
+      'Olvidarte de todas las demás metas',
+      'Usar la misma disciplina para empezar otra meta',
+      'Gastar todo de inmediato en algo distinto',
+      'Dejar de revisar tu presupuesto'
     ],
     correct: 1
   },
   // 26
   {
     question:
-      '¿Qué es mejor al recibir un mensaje sobre un pago o premio “del banco” que no esperabas?',
+      '¿Cuál de estas acciones te aleja de tus metas financieras?',
     options: [
-      'Confiar si el mensaje tiene tu nombre completo',
-      'Hacer clic al link y revisar luego con calma',
-      'Desconfiar y verificar tú mismo entrando a la app o web oficial',
-      'Responder con tus datos para que te ubiquen'
+      'Revisar tus metas una vez al mes',
+      'Hacer pequeños ajustes a tus gastos para seguir ahorrando',
+      'Tomar de tu ahorro para compras impulsivas que no planeaste',
+      'Separar una parte fija de ahorro apenas te pagan'
     ],
     correct: 2
   },
   // 27
   {
     question:
-      'Escaneas un QR en el local y el valor que aparece en la app es mucho MAYOR que tu consumo. ¿Qué debes hacer?',
+      'Carmina quiere tener un fondo de emergencia y una meta para estudiar. ¿Qué sería un buen enfoque?',
     options: [
-      'Pagar igual, quizá incluye propina automática',
-      'Cancelar el pago y avisar inmediatamente al local',
-      'Dividir el monto con tus amigos',
-      'Hacer captura y pagar más tarde'
+      'Ignorar el fondo de emergencia y solo pensar en estudiar',
+      'Organizar sus metas por prioridad y tiempo, y avanzar poco a poco en ambas',
+      'Esperar a ganar mucho dinero para recién empezar',
+      'Cambiar de meta cada semana'
     ],
     correct: 1
   },
   // 28
   {
     question:
-      '¿Cuál de estos ejemplos describe mejor un “link confiable”?',
+      '¿Qué ayuda a que una meta financiera NO se quede solo en un sueño?',
     options: [
-      'Te llega por mensaje de un número desconocido con muchas faltas de ortografía',
-      'Proviene de un anuncio que promete dinero fácil si haces clic',
-      'Es el enlace que encuentras al buscar el nombre oficial del banco en la tienda de apps',
-      'Es un link acortado que no sabes a dónde lleva'
+      'Repetirla muchas veces sin hacer nada',
+      'Convertirla en un plan con monto, tiempo y pasos concretos',
+      'Esperar a que alguien más la cumpla por ti',
+      'Confiar solo en la suerte'
     ],
-    correct: 2
+    correct: 1
   },
   // 29
   {
     question:
-      'Cuando uses pagos con QR en un lugar nuevo, una buena idea adicional es:',
+      'Si te cuesta mucho ahorrar, una estrategia sencilla puede ser:',
     options: [
-      'Preguntar si aceptan solo efectivo para evitar problemas',
-      'Pedir al personal que confirme cuál es el QR correcto del local',
-      'Escanear cualquier QR visible en la pared',
-      'Pedir que te envíen el QR por mensaje de un número personal'
+      'Guardar solo lo que sobre a fin de mes',
+      'Empezar con montos pequeños pero constantes',
+      'Esperar a ganar el doble para recién empezar',
+      'Endeudarte más para obligarte a ahorrar'
     ],
     correct: 1
   },
   // 30
   {
     question:
-      'Si tienes dudas sobre un mensaje, QR o link relacionado con tu dinero, la MEJOR regla general es:',
+      'La idea principal de este módulo sobre finanzas y metas es que:',
     options: [
-      'Actuar rápido antes de perder la oferta',
-      'Confiar si lleva logos de bancos o emojis',
-      'No hacer clic ni pagar hasta verificar por un canal oficial',
-      'Probar primero con un pago pequeño para “testear”'
+      'El dinero solo sirve para gastar rápido',
+      'Tus decisiones diarias con el dinero pueden acercarte o alejarte de tus metas',
+      'Ahorrar es imposible para la mayoría de personas',
+      'Las metas financieras deben ser secretas'
     ],
-    correct: 2
+    correct: 1
   }
 ];
+
 
 // ==================== COMPONENTE PRINCIPAL ====================
 export function TowerDefensePanel({ onComplete, onClose }) {

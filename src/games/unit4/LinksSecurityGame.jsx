@@ -8,33 +8,36 @@ import useTypewriterText from '../core/hooks/useTypewriterText';
 const questions = [
   {
     id: 1,
-    title: 'Mensaje 1',
+    title: 'Situación 1',
     message:
-      '“Has ganado un premio del Banco Andino. Reclámalo aquí antes de 10 minutos 👇”',
-    link: 'https://bancoand1no-seguro.com/premios',
-    correct: 'sospechoso',
+      'Te pagan 200.000 pesos por un trabajo extra y además recibes tu mesada normal.',
+    decision:
+      'Decides gastarte todo en domicilios y ropa en los próximos 3 días, sin guardar nada.',
+    correct: 'riesgosa',
     explanation:
-      'El nombre del dominio está mal escrito (and1no) y mezcla letras con números. Además, te mete presión con poco tiempo: típico de phishing.',
+      'Si gastas todo de una vez, te quedas sin dinero para el resto del mes y no avanzas en ninguna meta financiera. Antes de gastar, es mejor separar algo para tus metas y tus gastos básicos.',
   },
   {
     id: 2,
-    title: 'Mensaje 2',
+    title: 'Situación 2',
     message:
-      '“Tu app de pedidos tiene una actualización de seguridad. Descárgala desde la tienda oficial.”',
-    link: 'https://play.google.com/store/apps/details?id=com.app.oficial',
-    correct: 'seguro',
+      'Quieres ahorrar para comprar unos audífonos que cuestan 240.000 pesos en 3 meses.',
+    decision:
+      'Decides guardar 80.000 pesos cada mes apenas recibes tu dinero, y dejar lo demás para gastos normales y pequeños gustos.',
+    correct: 'responsable',
     explanation:
-      'Las actualizaciones legítimas suelen llevarte a la tienda oficial (Play Store o App Store), no a páginas raras con nombres extraños.',
+      'Estás conectando tu decisión diaria con tu meta: sabes cuánto cuestan los audífonos, en cuánto tiempo los quieres y cuánto guardar cada mes. Eso es una decisión financiera responsable.',
   },
   {
     id: 3,
-    title: 'Mensaje 3',
+    title: 'Situación 3',
     message:
-      '“Hicimos un cargo desconocido a tu cuenta. Revisa en: http://bit.ly/seguridad-banco-rapida”',
-    link: 'http://bit.ly/seguridad-banco-rapida',
-    correct: 'sospechoso',
+      'Tienes una tarjeta de crédito casi llena y recibes la oferta de hacer una compra grande “a muchas cuotas con una cuota muy bajita este mes”.',
+    decision:
+      'Aceptas de inmediato sin revisar cuánto vas a pagar en total ni cuántos meses durarás pagando.',
+    correct: 'riesgosa',
     explanation:
-      'Los acortadores (bit.ly, tinyurl, etc.) ocultan a dónde vas a llegar. Mezclados con miedo (“cargo desconocido”) son una señal fuerte de estafa.',
+      'Aceptar una deuda sin revisar tiempo ni monto total puede alejarte de tus metas financieras. Las cuotas parecen pequeñas, pero sumadas pueden ser un problema a largo plazo.',
   },
 ];
 
@@ -98,16 +101,19 @@ export default function LinksSecurityGame({ visible, onFinished }) {
           >
             <div className="links-game-phone-header">
               <span>▲▲▲</span>
-              <span>Mensajes</span>
+              <span>Decisiones con tu dinero</span>
               <span>▮▮▮</span>
             </div>
 
-            <h2 className="links-game-title">Detecta enlaces sospechosos</h2>
+            <h2 className="links-game-title">
+              ¿Decisión responsable o riesgosa?
+            </h2>
 
             {phase === 'question' && (
               <div className="links-game-body">
                 <p className="links-game-subtitle">
-                  Lee el mensaje como si te llegara al celular y decide si el enlace es confiable o sospechoso.
+                  Lee la situación y la decisión que se toma con el dinero.
+                  Elige si es una decisión financiera responsable o riesgosa para las metas de Carmina.
                 </p>
 
                 <div className="links-game-message">
@@ -118,9 +124,9 @@ export default function LinksSecurityGame({ visible, onFinished }) {
                     <p className="links-game-message-text">
                       {current.message}
                     </p>
-                    <code className="links-game-link">
-                      {current.link}
-                    </code>
+                    <p className="links-game-message-text">
+                      <strong>Decisión:</strong> {current.decision}
+                    </p>
                   </div>
                 </div>
 
@@ -130,16 +136,16 @@ export default function LinksSecurityGame({ visible, onFinished }) {
                     <button
                       type="button"
                       className="links-game-btn links-game-btn--safe"
-                      onClick={() => handleAnswer('seguro')}
+                      onClick={() => handleAnswer('responsable')}
                     >
-                      Link confiable
+                      Decisión responsable
                     </button>
                     <button
                       type="button"
                       className="links-game-btn links-game-btn--danger"
-                      onClick={() => handleAnswer('sospechoso')}
+                      onClick={() => handleAnswer('riesgosa')}
                     >
-                      Link sospechoso
+                      Decisión riesgosa
                     </button>
                   </div>
 
