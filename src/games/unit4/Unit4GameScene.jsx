@@ -26,14 +26,14 @@ import advisorFaceNeutral from '../../assets/unit1/asesor_player_neutral.png';
 
 import './css/Unit4GameScene.css';
 
-/* ======= DIÁLOGOS ======= */
+/* ======= DIÁLOGOS (versión finanzas y metas) ======= */
 
 // Intro: Carmina entrando a la cafetería
 const introDialogue = [
-  'Hoy quise darme un respiro y vine a esta cafetería a trabajar un rato.',
-  'También es una buena excusa para practicar cómo usar el celular y los pagos digitales sin caer en trampas.',
-  'Primero voy a pedir algo en la barra.',
-  'Acércate al mostrador y haz click para hablar con el barista.',
+  'Hoy vine a esta cafetería a trabajar un rato… y a ponerle orden a mi dinero.',
+  'Siempre digo que voy a ahorrar, pero al final del mes no sé en qué se fue todo.',
+  'Quiero empezar por lo básico: tomar mejores decisiones con mi plata y definir metas claras.',
+  'Primero me acerco al mostrador, pido algo y hablo con el barista.',
 ];
 
 // Diálogo con el barista antes de sentarse
@@ -44,111 +44,115 @@ const vendorIntroDialogue = [
   },
   {
     speaker: 'Carmina',
-    text: 'Hola, me gustaría un café y algo para picar mientras estudio.',
+    text: 'Hola, me gustaría un café y algo para picar mientras reviso mis metas financieras.',
   },
   {
     speaker: 'Barista',
-    text: 'Perfecto, ya mismo lo preparo. Puedes sentarte en cualquiera de las mesas mientras tanto.',
+    text: 'Buenísimo, muchas personas quieren manejar mejor su plata, pero no saben por dónde empezar.',
   },
   {
     speaker: 'Barista',
-    text: 'Si revisas tu celular, hazlo con cuidado: muchos fraudes empiezan con un mensaje con un enlace raro.',
+    text: 'Si quieres, hacemos un entrenamiento rápido: primero vemos decisiones con tu dinero y luego hablamos de metas de corto y largo plazo.',
   },
   {
     speaker: 'Barista',
-    text: 'Si quieres, te enseño a detectarlos. Siéntate en una mesa y haz click para revisar tu teléfono.',
+    text: 'Siéntate en una mesa y revisa “tu celular”: ahí empezarás con las decisiones financieras.',
   },
 ];
 
-// Si vuelve a la barra sin haber hecho el minijuego de links
+// Si vuelve a la barra sin haber hecho el minijuego de decisiones
 const vendorReminderDialogue = [
   {
     speaker: 'Barista',
-    text: 'Primero revisa el mensaje sospechoso en tu celular sentado en una de las mesas.',
+    text: 'Primero practica las decisiones con tu dinero sentado en una de las mesas.',
   },
   {
     speaker: 'Barista',
-    text: 'Cuando termines, vuelves por acá para hacer el pago con QR.',
+    text: 'Cuando termines, vuelves por acá y seguimos con las metas financieras.',
   },
 ];
 
-// Diálogo al sentarse en la mesa de celular (antes del minijuego)
+// Diálogo al sentarse en la mesa de celular (antes del minijuego 1)
 const phoneIntroDialogue = [
   {
     speaker: 'Carmina',
-    text: 'Listo, ya estoy sentada. Justo me llegó un mensaje…',
+    text: 'Listo, ya estoy sentada. Voy a revisar algunas situaciones típicas con dinero.',
   },
   {
     speaker: 'Carmina',
-    text: '“Has ganado un premio exclusivo. Haz clic aquí para reclamarlo antes de 10 minutos.” Suena sospechoso.',
+    text: 'A veces me pagan y me dan ganas de gastarlo todo de una, y luego me acuerdo de mis metas.',
   },
   {
     speaker: 'Carmina',
-    text: 'Muchas estafas empiezan así: mensajes urgentes, premios que nunca pediste y enlaces raros.',
+    text: 'En este mini-juego veré varias decisiones posibles y tendré que decir si son responsables o riesgosas.',
   },
   {
     speaker: 'Carmina',
-    text: 'Voy a practicar a reconocer enlaces confiables y enlaces peligrosos.',
+    text: 'Es una forma sencilla de empezar a entender cómo las decisiones del día a día acercan o alejan mis metas financieras.',
   },
   {
     speaker: 'Carmina',
-    text: 'Vamos a jugar un minijuego rápido: debo decidir qué links parecen seguros y cuáles no.',
+    text: 'Vamos a jugar un momento: decide si la acción con el dinero es una buena decisión financiera o una que puede traer problemas.',
   },
 ];
 
-// Diálogo después del minijuego de links
+// Diálogo después del minijuego de decisiones
 const phoneOutroDialogue = [
   {
     speaker: 'Carmina',
-    text: 'Ok, ahora tengo mucho más claro qué señales revisar antes de tocar un enlace.',
+    text: 'Ok, ahora veo más claro qué tipo de decisiones me ayudan a avanzar con mis metas y cuáles me frenan.',
   },
   {
     speaker: 'Carmina',
-    text: 'Nada de premios mágicos, nada de urgencias exageradas y siempre revisar el dominio real.',
+    text: 'Si separo algo para ahorro y pienso antes de endeudarme, es más fácil que mis metas no se queden solo en deseos.',
   },
   {
     speaker: 'Carmina',
-    text: 'Ya terminé mi café, es hora de acercarme de nuevo a la barra para pagar.',
+    text: 'Voy a regresar a la barra para seguir con el entrenamiento.',
   },
 ];
 
-// Diálogo sobre pago con QR (antes del mini-juego de QR)
+// Diálogo sobre metas financieras (antes del mini-juego 2)
 const vendorQrIntroDialogue = [
   {
     speaker: 'Barista',
-    text: '¿Todo bien con tu pedido? Genial, ahora vamos a pagar con un código QR.',
+    text: '¿Cómo te fue con las decisiones? ¡Bien! Ahora vamos con algo clave: las metas financieras.',
   },
   {
     speaker: 'Barista',
-    text: 'Antes de confirmar el pago, quiero que veamos cómo se ven los QR falsos o peligrosos.',
+    text: 'Una meta financiera es un objetivo claro al que quieres llegar con tu dinero: qué quieres lograr, en cuánto tiempo y con cuánto.',
   },
   {
     speaker: 'Barista',
-    text: 'En el mini-juego verás un QR retro en pantalla y varias escenas. Toca el QR y decide si la situación es confiable o sospechosa.',
+    text: 'Algunas metas son de corto plazo, como ahorrar para un curso o un viaje pequeño. Otras son de largo plazo, como un fondo de emergencia o comprar vivienda.',
   },
   {
     speaker: 'Barista',
-    text: 'Cuando termines el tutorial, volvemos aquí y simulamos el pago real de tu consumo.',
+    text: 'En el mini-juego verás distintas metas. Toca la pantalla y decide si son de corto o de largo plazo.',
+  },
+  {
+    speaker: 'Barista',
+    text: 'Cuando termines, volvemos aquí y cerramos tu plan financiero del día.',
   },
 ];
 
-// Diálogo final tras el mini-juego de QR
+// Diálogo final tras el mini-juego de metas
 const vendorQrOutroDialogue = [
   {
     speaker: 'Barista',
-    text: 'Listo, ahora ya tienes ojo entrenado para detectar QR peligrosos.',
+    text: 'Listo, ahora ya sabes distinguir metas de corto y de largo plazo.',
   },
   {
     speaker: 'Barista',
-    text: 'Usamos el QR oficial de la cafetería: el nombre del comercio y el valor coinciden exacto con tu cuenta.',
+    text: 'Cuando defines tus metas con monto, tiempo y propósito, es mucho más fácil saber cuánto necesitas ahorrar y qué decisiones tomar.',
   },
   {
     speaker: 'Carmina',
-    text: 'Gracias, de verdad. Ahora me siento mucho más segura usando mi celular para pagar y recibir mensajes.',
+    text: 'Gracias, de verdad. Ahora siento que mis metas ya no son solo ideas sueltas, sino cosas que puedo planear paso a paso.',
   },
   {
     speaker: 'Barista',
-    text: 'Pago aprobado. ¡Disfruta el resto del día y navega siempre con ojo crítico!',
+    text: 'Me alegra. Empieza por una meta pequeña y ve avanzando. Lo importante es tener dirección con tu dinero.',
   },
 ];
 

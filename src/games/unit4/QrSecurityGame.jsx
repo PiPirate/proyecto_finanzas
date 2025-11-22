@@ -2,40 +2,42 @@
 import React, { useState } from 'react';
 import '../core/dialogue/DialogueBox.css';
 import '../unit1/css/BudgetConsole.css';
-import './css/LinksSecurityGame.css'; // reutilizamos el mismo estilo de “celular retro”
+import './css/LinksSecurityGame.css'; // reutilizamos el mismo estilo
 import useTypewriterText from '../core/hooks/useTypewriterText';
 
 const qrQuestions = [
   {
     id: 1,
-    title: 'Escena 1',
+    title: 'Meta 1',
     message:
-      'En la mesa ves un código QR pegado encima de otro, con un papel un poco torcido.',
-    detail: 'El mesero no sabe quién lo pegó y el letrero original está debajo.',
-    correct: 'sospechoso',
+      'Quiero ahorrar 200.000 pesos en 2 meses para pagar la inscripción a un curso que empieza pronto.',
+    detail:
+      'Piensas guardar 100.000 cada mes y ya revisaste el valor exacto del curso.',
+    correct: 'corto',
     explanation:
-      'Un QR pegado encima de otro puede redirigir tu pago a otra cuenta. Si ves algo encima del QR original, no lo escanees y avisa al local.',
+      'Es una meta de corto plazo: tiene un monto claro, un plazo cercano (2 meses) y un propósito específico (inscripción del curso).',
   },
   {
     id: 2,
-    title: 'Escena 2',
+    title: 'Meta 2',
     message:
-      'Por chat te llega una foto de un QR diciendo: “Paga aquí tu consumo, te damos 10% de descuento si lo haces ya”.',
-    detail: 'No es el canal oficial del comercio y no estás en el local.',
-    correct: 'sospechoso',
+      'Quiero comprarme una casa “algún día” cuando tenga plata.',
+    detail:
+      'No sabes cuánto cuesta, ni en cuánto tiempo quisieras lograrlo, solo que te gustaría.',
+    correct: 'largo',
     explanation:
-      'Los comercios serios no te piden escanear QRs enviados por chats desconocidos. Es fácil que te manden un QR de un extraño para robarte el pago.',
+      'Comprar vivienda suele ser una meta de largo plazo, pero aquí está muy difusa. Falta definir un plazo aproximado y un monto objetivo para que sea realmente útil.',
   },
   {
     id: 3,
-    title: 'Escena 3',
+    title: 'Meta 3',
     message:
-      'En la barra del local hay un QR impreso dentro de un acrílico con el logo oficial de la cafetería.',
+      'Quiero crear un fondo de emergencia de 3 meses de gastos en los próximos 3 años.',
     detail:
-      'La app muestra el nombre de la cafetería y el valor exacto de tu consumo antes de confirmar.',
-    correct: 'seguro',
+      'Ya calculaste que tus gastos mensuales son 800.000, así que tu meta total es de 2.400.000.',
+    correct: 'largo',
     explanation:
-      'Un QR físico bien presentado, verificado por el personal y con nombre y valor correctos en la app es una señal de pago seguro.',
+      'Es una meta de largo plazo pero bien planteada: tiene monto concreto, plazo y un propósito muy claro (emergencias). Así puedes ir avanzando poco a poco.',
   },
 ];
 
@@ -95,20 +97,20 @@ export default function QrSecurityGame({ visible, onFinished }) {
             <div className="links-game-phone-header">
               <span className="links-game-phone-signal">▲▲▲</span>
               <span className="links-game-phone-title">
-                Escanear QR
+                Metas financieras
               </span>
               <span className="links-game-phone-battery">█ ▓ ▒</span>
             </div>
 
             <h2 className="links-game-title">
-              ¿QR confiable o trampa?
+              ¿Meta de corto o largo plazo?
             </h2>
 
             {phase === 'question' && (
               <>
                 <p className="links-game-subtitle">
-                  Imagina que vas a tocar este código QR retro y decide
-                  si la escena es segura o sospechosa.
+                  Lee la meta financiera de Carmina y decide si es de corto plazo
+                  (se logra pronto) o de largo plazo (requiere más tiempo y planificación).
                 </p>
 
                 <div className="links-game-message">
@@ -123,9 +125,9 @@ export default function QrSecurityGame({ visible, onFinished }) {
                       <em>{current.detail}</em>
                     </p>
 
-                    {/* “QR” retro fake */}
+                    {/* Caja retro para representar la meta */}
                     <div className="qr-fake-box">
-                      <span className="qr-fake-label">QR</span>
+                      <span className="qr-fake-label">META</span>
                     </div>
                   </div>
                 </div>
@@ -134,21 +136,21 @@ export default function QrSecurityGame({ visible, onFinished }) {
                   <button
                     type="button"
                     className="links-game-btn links-game-btn--safe"
-                    onClick={() => handleAnswer('seguro')}
+                    onClick={() => handleAnswer('corto')}
                   >
-                    QR confiable
+                    Meta de corto plazo
                   </button>
                   <button
                     type="button"
                     className="links-game-btn links-game-btn--danger"
-                    onClick={() => handleAnswer('sospechoso')}
+                    onClick={() => handleAnswer('largo')}
                   >
-                    QR sospechoso
+                    Meta de largo plazo
                   </button>
                 </div>
 
                 <p className="links-game-progress">
-                  Situación {index + 1} de {qrQuestions.length}
+                  Meta {index + 1} de {qrQuestions.length}
                 </p>
               </>
             )}

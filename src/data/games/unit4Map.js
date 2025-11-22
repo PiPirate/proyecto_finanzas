@@ -15,7 +15,7 @@ export const unit4MapMatrix = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 
   // y = 2: zona alta (estanterías, letrero “COFFEE”) → inaccesible
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
 
   // y = 3: parte trasera de la barra (máquina, panes, taza, QR)
   // TODA la barra es interactiva y bloquea paso
