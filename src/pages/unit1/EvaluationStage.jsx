@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/EvaluationStage.css';
+import useTypewriterText from '../../games/core/hooks/useTypewriterText';
 
 // Ajusta estos nombres/rutas a tus archivos reales
 import pigFighter from '../../assets/unit1/pig.png';
@@ -14,86 +15,168 @@ import enemyFighter from '../../assets/unit1/cat.png';
 import fightBg from '../../assets/unit1/fondo.png';
 
 const MAX_HEALTH = 100;
-const QUESTION_TIME = 12; // segundos por pregunta
+const QUESTION_TIME = 25; // segundos por pregunta
 
-// Preguntas de evaluación tipo “decisión”
+/* ---------- TUTORIAL PREVIO A LA EVALUACIÓN ---------- */
+
+const evaluationTutorialScript = [
+  {
+    text: 'Llegaste al juego final. Aquí vas a poner a prueba lo que aprendiste sobre cómo se mueve tu dinero en la vida diaria.',
+  },
+  {
+    text: 'Verás situaciones donde hay dinero entrando (ingresos) y saliendo (gastos). Tendrás que decidir si cuidas tu presupuesto o si dejas que el gasto impulsivo gane.',
+  },
+  {
+    text: 'Recuerda: los ingresos son todo lo que recibes; los gastos, todo lo que pagas; el ahorro es la parte que decides guardar; y el presupuesto es la herramienta donde organizas todo eso.',
+  },
+  {
+    text: 'En cada ronda el Cerdito Ahorro y el Gasto Impulsivo se enfrentarán según tu elección: aceptar, dudar o rechazar la propuesta que aparece.',
+  },
+  {
+    text: 'Piensa antes de hacer click. Tus respuestas mostrarán qué tanto estás cuidando tus gastos y tu ahorro en el día a día.',
+  },
+];
+
+function EvaluationTutorial({ visible, onFinished }) {
+  const [index, setIndex] = useState(0);
+
+  // Siempre calculamos la línea y usamos el hook,
+  // aunque luego no rendericemos nada si visible === false
+  const line =
+    evaluationTutorialScript[index] || evaluationTutorialScript[0];
+  const text = line?.text || '';
+
+  const { displayedText, isDone, showAll } = useTypewriterText(
+    text,
+    28
+  );
+
+  const handleClick = (e) => {
+    e.stopPropagation();
+
+    if (!isDone) {
+      showAll();
+      return;
+    }
+
+    if (index < evaluationTutorialScript.length - 1) {
+      setIndex((prev) => prev + 1);
+    } else if (onFinished) {
+      onFinished();
+    }
+  };
+
+  if (!visible) return null;
+
+  return (
+    <div className="evaluation-tutorial-overlay" onClick={handleClick}>
+      <div className="evaluation-tutorial-dialog">
+        <div className="evaluation-tutorial-header">
+          <span className="evaluation-tutorial-speaker">
+            Asesor
+          </span>
+        </div>
+
+        <p className="evaluation-tutorial-text">
+          {displayedText}
+        </p>
+
+        <span
+          className={
+            'evaluation-tutorial-next' +
+            (isDone ? ' evaluation-tutorial-next--visible' : '')
+          }
+        >
+          ▼
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- PREGUNTAS DE EVALUACIÓN ---------- */
+
 const evaluationQuestions = [
   {
     id: 'q1',
     context:
-      'Tienes una meta de ahorrar 300.000 en 3 meses para un curso que te interesa mucho.',
+      'Hiciste tu presupuesto del mes y, después de sumar tus ingresos y restar tus gastos básicos, te das cuenta de que te quedan 100.000 pesos disponibles.',
     question:
-      'La propuesta es: “Guardarás 100.000 cada mes y lo anotarás en tu presupuesto para hacerle seguimiento”.',
-    correctDecision: 'accept', // Aceptar la propuesta es la decisión correcta
+      'La propuesta es: “Separarás esos 100.000 pesos apenas recibas el dinero, los destinarás a ahorro y los anotarás en tu presupuesto como un valor fijo cada mes”.',
+    correctDecision: 'accept',
     feedback: {
       accept:
-        'Exacto. Una meta clara tiene monto, plazo y un plan en el presupuesto. Así sabes si vas bien o te estás quedando atrás.',
+        'Exacto. Cuando decides de antemano cuánto guardar y lo escribes en tu presupuesto, es más fácil respetar ese ahorro y no gastarlo sin darte cuenta.',
       doubt:
-        'Dudar puede hacer que la dejes para “después” y pierdas claridad sobre cuánto debes guardar cada mes.',
+        'Dudar hace que esos 100.000 queden “sueltos”. Si no los separas ni los anotas, es muy probable que se vayan en gastos pequeños que ni notas.',
       reject:
-        'Si rechazas esta propuesta, tu meta se vuelve vaga otra vez y es más difícil organizar tu ahorro.',
+        'Si rechazas esta idea, tu ahorro dependerá solo de “lo que sobre”, y casi siempre termina sobrando muy poco o nada.',
     },
     feedbackTimeout:
-      'Al dejar pasar el tiempo sin decidir, tu meta sigue sin un plan concreto y se hace más difícil de alcanzar.',
+      'Al dejar pasar el tiempo sin decidir, esos 100.000 quedan sin plan y se mezclan con tus gastos diarios.',
   },
   {
     id: 'q2',
     context:
-      'Ya tienes tu presupuesto hecho y aparece una salida muy cara de último minuto que no estaba planeada.',
+      'Ya tienes tu presupuesto hecho y aparece una salida muy cara de último minuto que no estaba incluida en tus gastos.',
     question:
-      'La propuesta es: “Dices que sí de una vez, sin revisar tu presupuesto ni tu meta de ahorro”.',
-    correctDecision: 'reject', // Lo sano es rechazar esa forma impulsiva
+      'La propuesta es: “Dices que sí de una vez, sin revisar tu presupuesto, tus gastos del mes ni lo que pensabas ahorrar”.',
+    correctDecision: 'reject',
     feedback: {
       accept:
-        'Si aceptas sin revisar tu presupuesto, es fácil que termines desordenando tu meta sin darte cuenta.',
+        'Si aceptas sin revisar, es fácil que te pases del presupuesto y luego no entiendas por qué tu dinero no alcanzó.',
       doubt:
-        'Dudar está bien, pero lo ideal es rechazar esa forma impulsiva y revisar primero tu presupuesto.',
+        'Dudar está bien; te da tiempo para mirar tu presupuesto. Pero lo más sano es frenar esa decisión impulsiva y revisar números primero.',
       reject:
-        'Bien. Rechazas la idea de decir que sí sin pensar. Primero va tu meta y tu presupuesto, luego decides si el gasto vale la pena.',
+        'Bien. Rechazas la idea de decir que sí sin pensar. Primero miras tus ingresos, gastos y ahorro, y luego decides si esa salida realmente cabe en tu presupuesto.',
     },
     feedbackTimeout:
-      'Al no decidir, es posible que termines diciendo que sí por presión del momento, afectando tu presupuesto sin plan.',
+      'Al no decidir nada, puedes terminar diciendo que sí por presión del momento y dañar tu presupuesto sin haberlo revisado.',
   },
   {
     id: 'q3',
     context:
-      'Encuentras 20.000 pesos en un bolsillo que no recordabas, y tus gastos básicos ya están cubiertos.',
+      'Encuentras 20.000 pesos en un bolsillo que no recordabas, y ya pagaste tus gastos importantes del mes.',
     question:
-      'La propuesta es: “Guardar esos 20.000 de una vez en tu alcancía o cuenta de ahorro de la meta”.',
+      'La propuesta es: “Guardar esos 20.000 de una vez en tu alcancía o en la parte de ahorro de tu presupuesto”.',
     correctDecision: 'accept',
     feedback: {
       accept:
-        'Buen movimiento. Es dinero que no esperabas y que puede acercarte a tu meta sin sacrificar nada.',
+        'Buen movimiento. Es dinero que no esperabas y que aumenta tu ahorro sin afectar tus gastos básicos.',
       doubt:
-        'Dudar mucho hace que el dinero quede flotando sin plan, y es fácil que termine gastándose en cualquier cosa.',
+        'Dudar mucho hace que el dinero quede flotando sin plan, y es fácil que termine gastándose en antojos que ni recuerdas después.',
       reject:
-        'Si rechazas la idea de guardarlos, probablemente se irán en pequeños gastos que ni recordarás.',
+        'Si rechazas la idea de guardarlo, lo más probable es que se vaya en pequeños gastos que no estaban en tu presupuesto.',
     },
     feedbackTimeout:
-      'Al no decidir, el dinero se queda sin plan. Es muy probable que acabe gastándose sin aportar a tu meta.',
+      'Al no decidir, esos 20.000 se quedan sin destino claro y es muy probable que terminen en gastos impulsivos.',
   },
   {
     id: 'q4',
     context:
-      'Te faltan pocas semanas para la fecha de tu meta y aún no has llegado al monto que querías.',
+      'Se acerca fin de mes y al revisar tu presupuesto ves que has gastado más de lo que pensabas en antojitos y salidas.',
     question:
-      'La propuesta es: “Durante estos días reducirás algunos antojitos y pequeños gastos para aumentar tu ahorro”.',
+      'La propuesta es: “Durante estos días reducirás algunos antojos y pequeños gastos para equilibrar tu presupuesto y poder ahorrar un poco más”.',
     correctDecision: 'accept',
     feedback: {
       accept:
-        'Justo. Pequeños ajustes constantes en el tramo final pueden marcar la diferencia para alcanzar tu meta.',
+        'Justo. Ajustar algunos gastos al final del mes te ayuda a que tu presupuesto vuelva a cuadrar y a no olvidar el ahorro.',
       doubt:
-        'Dudar hace que sigas igual, y si no cambias nada, el resultado tampoco cambia.',
+        'Dudar hace que sigas gastando igual, y si no cambias nada, tus números seguirán desordenados y tu ahorro se queda atrás.',
       reject:
-        'Si rechazas esa idea, probablemente seguirás gastando igual y será más difícil acercarte a tu meta a tiempo.',
+        'Si rechazas esta idea, probablemente seguirás gastando como si nada y te costará terminar el mes sin quedarte corto de dinero.',
     },
     feedbackTimeout:
-      'Al dejar pasar el tiempo sin decidir, pierdes la oportunidad de aprovechar estas semanas finales para ajustar y avanzar.',
+      'Al dejar pasar el tiempo sin decidir, pierdes la oportunidad de corregir tus gastos de estos días y mejorar tu ahorro.',
   },
 ];
 
+/* ---------- COMPONENTE PRINCIPAL ---------- */
+
 export default function EvaluationStage({ onComplete, unitColor }) {
   const navigate = useNavigate();
+
+  const [showTutorial, setShowTutorial] = useState(true);
 
   const [playerHealth, setPlayerHealth] = useState(MAX_HEALTH);
   const [enemyHealth, setEnemyHealth] = useState(MAX_HEALTH);
@@ -121,31 +204,19 @@ export default function EvaluationStage({ onComplete, unitColor }) {
   const passThreshold = Math.ceil(totalQuestions * 0.6);
   const passed = correctCount >= passThreshold;
 
-  // Reset de estado básico cada vez que cambia de pregunta
   useEffect(() => {
-    if (!showResult) {
+    if (!showResult && !showTutorial) {
       setTimer(QUESTION_TIME);
       setSelectedDecision(null);
       setHasAnswered(false);
       setIsCorrect(null);
       setFeedback('');
     }
-  }, [currentIndex, showResult]);
+  }, [currentIndex, showResult, showTutorial]);
 
-  // Manejo de avance automático a la siguiente pregunta o resultado final
-  const goToNextOrFinish = useCallback(() => {
-    if (currentIndex >= totalQuestions - 1) {
-      setShowResult(true);
-    } else {
-      setRound((prev) => prev + 1);
-      setCurrentIndex((prev) => prev + 1);
-    }
-  }, [currentIndex, totalQuestions]);
-
-  // Resolución genérica de decisión (correcta / incorrecta / timeout)
   const resolveDecision = useCallback(
     (decisionKey, opts = { isTimeout: false }) => {
-      if (!question || showResult) return;
+      if (!question || showResult || showTutorial) return;
       if (hasAnswered) return;
 
       const { isTimeout } = opts;
@@ -156,7 +227,6 @@ export default function EvaluationStage({ onComplete, unitColor }) {
       setHasAnswered(true);
       setIsCorrect(isDecisionCorrect);
 
-      // Feedback
       if (isTimeout) {
         setFeedback(
           question.feedbackTimeout ||
@@ -167,7 +237,6 @@ export default function EvaluationStage({ onComplete, unitColor }) {
         setFeedback(fb);
       }
 
-      // Golpe / daño
       if (isDecisionCorrect) {
         setCorrectCount((prev) => prev + 1);
         setEnemyHealth((prev) => Math.max(0, prev - 30));
@@ -179,7 +248,6 @@ export default function EvaluationStage({ onComplete, unitColor }) {
         setTimeout(() => setPigHit(false), 220);
       }
 
-      // Avanza automáticamente tras un pequeño delay
       setTimeout(() => {
         setSelectedDecision(null);
         setHasAnswered(false);
@@ -194,28 +262,26 @@ export default function EvaluationStage({ onComplete, unitColor }) {
         }
       }, 900);
     },
-    [question, showResult, hasAnswered, currentIndex, totalQuestions]
+    [question, showResult, hasAnswered, currentIndex, totalQuestions, showTutorial]
   );
 
-  // Click en botón de decisión (Aceptar / Dudar / Rechazar)
   const handleDecisionClick = (decisionKey) => {
-    if (!question || showResult) return;
+    if (!question || showResult || showTutorial) return;
     if (hasAnswered) return;
     resolveDecision(decisionKey, { isTimeout: false });
   };
 
-  // Manejo de timeout (cuando el contador llega a 0)
   const handleTimeout = useCallback(() => {
-    if (!question || showResult) return;
+    if (!question || showResult || showTutorial) return;
     if (hasAnswered) return;
     resolveDecision('timeout', { isTimeout: true });
-  }, [question, showResult, hasAnswered, resolveDecision]);
+  }, [question, showResult, hasAnswered, resolveDecision, showTutorial]);
 
-  // Efecto para el contador de tiempo (ahora sí cuenta de verdad)
   useEffect(() => {
     if (showResult) return;
     if (!question) return;
     if (hasAnswered) return;
+    if (showTutorial) return;
 
     if (timer <= 0) {
       handleTimeout();
@@ -227,7 +293,7 @@ export default function EvaluationStage({ onComplete, unitColor }) {
     }, 1000);
 
     return () => clearInterval(id);
-  }, [timer, showResult, question, hasAnswered, handleTimeout]);
+  }, [timer, showResult, question, hasAnswered, handleTimeout, showTutorial]);
 
   const handleFinishEvaluation = () => {
     if (onComplete) {
@@ -245,10 +311,14 @@ export default function EvaluationStage({ onComplete, unitColor }) {
 
   return (
     <div className="stage-container evaluation-stage">
+      <EvaluationTutorial
+        visible={showTutorial}
+        onFinished={() => setShowTutorial(false)}
+      />
+
       <div className="fighting-game-container">
-        {/* HUD superior tipo arcade */}
+        {/* HUD superior */}
         <div className="hud-top">
-          {/* HUD Cerdito (Jugador) */}
           <div className="hud-section player1-hud">
             <div className="player-info">
               <div className="player-name">CERDITO AHORRO</div>
@@ -268,7 +338,6 @@ export default function EvaluationStage({ onComplete, unitColor }) {
             </div>
           </div>
 
-          {/* Timer y round central */}
           <div className="hud-center">
             <div className="timer-container">
               <div className="timer-display">
@@ -282,7 +351,6 @@ export default function EvaluationStage({ onComplete, unitColor }) {
             </div>
           </div>
 
-          {/* HUD Enemigo */}
           <div className="hud-section player2-hud">
             <div className="player-info">
               <div className="player-portrait player-portrait--enemy" />
@@ -305,7 +373,7 @@ export default function EvaluationStage({ onComplete, unitColor }) {
           </div>
         </div>
 
-        {/* Arena de pelea */}
+        {/* Arena */}
         <div className="fighting-arena">
           <div className="background-image">
             <img
@@ -316,7 +384,6 @@ export default function EvaluationStage({ onComplete, unitColor }) {
             <div className="arena-overlay" />
           </div>
 
-          {/* Personajes */}
           <div className="characters-container">
             <div
               className={
@@ -345,7 +412,6 @@ export default function EvaluationStage({ onComplete, unitColor }) {
             </div>
           </div>
 
-          {/* Mensaje central FIGHT / feedback dinámico corto */}
           {!showResult && (
             <div className="fight-messages">
               <div className="combo-display">
@@ -358,7 +424,6 @@ export default function EvaluationStage({ onComplete, unitColor }) {
             </div>
           )}
 
-          {/* Panel de enunciado / resultado */}
           <div className="evaluation-question-panel">
             {!showResult && question && (
               <>
@@ -387,14 +452,15 @@ export default function EvaluationStage({ onComplete, unitColor }) {
                   Respondiste correctamente {correctCount} de{' '}
                   {totalQuestions} rondas.
                   {passed
-                    ? ' Tus decisiones muestran que entendiste cómo definir metas, usar el presupuesto y alimentar tu ahorro con pequeñas acciones.'
+                    ? ' Tus decisiones muestran que entendiste cómo leer tus ingresos, cuidar tus gastos, usar el presupuesto y hacer crecer tu ahorro con pequeñas acciones.'
                     : ' Aun así, este combate te muestra en qué decisiones puedes mejorar para que tu ahorro sea más fuerte.'}
                 </p>
 
                 <p className="evaluation-result-text evaluation-result-text--secondary">
-                  Recuerda: metas claras + presupuesto + decisiones
-                  constantes son el combo que hace crecer tu cerdito,
-                  no al gasto impulsivo.
+                  Recuerda: conocer tus ingresos, ordenar tus gastos,
+                  tener un presupuesto y tomar decisiones constantes es
+                  el combo que hace crecer tu cerdito, no al gasto
+                  impulsivo.
                 </p>
 
                 <div className="evaluation-bottom-row">
@@ -410,7 +476,6 @@ export default function EvaluationStage({ onComplete, unitColor }) {
             )}
           </div>
 
-          {/* Barra inferior de botones arcade */}
           <div className="controls-bar">
             {!showResult && question && (
               <div className="evaluation-options">

@@ -10,11 +10,11 @@ const piggyEvents = [
     text: 'Encontraste 10.000 pesos en el bolsillo de un pantalón viejo.',
     feedback: {
       guardar:
-        'Decides guardar los 10.000 en la alcancía. Dinero que no esperabas y ahora se acerca a tu meta.',
+        'Decides guardar los 10.000 en la alcancía. Es dinero que no esperabas y ahora aumenta tu ahorro.',
       gastar:
-        'Lo gastas en algo rápido. No es “malo”, pero perdiste la oportunidad de acercarte a tu objetivo sin esfuerzo.',
+        'Lo gastas en algo rápido. No es “malo”, pero perdiste la oportunidad de fortalecer tu ahorro sin esfuerzo.',
       postergar:
-        'Lo dejas en el bolsillo para “ver después”. Si no decides a tiempo, es más fácil que se termine yendo en cualquier cosa.',
+        'Lo dejas en el bolsillo para “ver después”. Si no decides a tiempo, es más fácil que ese dinero termine gastándose en cualquier cosa.',
     },
     deltas: {
       guardar: +2,
@@ -27,11 +27,11 @@ const piggyEvents = [
     text: 'Te antojaste de un café caro aunque ya tomaste uno hoy.',
     feedback: {
       guardar:
-        'Respiras hondo y decides no comprarlo. Lo que ibas a gastar va directo a tu alcancía. Buen autocontrol.',
+        'Respiras hondo y decides no comprarlo. Lo que ibas a gastar va directo a tu alcancía. Buen control de tus gastos.',
       gastar:
-        'Compras el café. Disfrutable, sí, pero si se vuelve costumbre, tu meta se aleja un poco cada día.',
+        'Compras el café. Lo disfrutas, sí, pero si se vuelve costumbre, cada día queda menos dinero para otras cosas importantes.',
       postergar:
-        'Dices “tal vez más tarde”. A veces solo posponer también ayuda a evitar compras por impulso.',
+        'Dices “tal vez más tarde”. A veces solo posponer también ayuda a evitar compras por impulso y cuidar tu bolsillo.',
     },
     deltas: {
       guardar: +2,
@@ -44,11 +44,11 @@ const piggyEvents = [
     text: 'Te ofrecieron una promo 2x1, pero no lo necesitabas.',
     feedback: {
       guardar:
-        'Recuerdas que “barato” no es lo mismo que “necesario”. No compras nada y mantienes tu meta intacta.',
+        'Recuerdas que “barato” no es lo mismo que “necesario”. No compras nada y proteges tu dinero para otros gastos.',
       gastar:
-        'La promo te convence y compras. Pagas menos por unidad, pero más de lo que realmente ibas a gastar.',
+        'La promo te convence y compras. Pagas menos por unidad, pero más de lo que realmente ibas a usar.',
       postergar:
-        'Decides pensarlo y no compras todavía. A veces dejar pasar la promoción también es cuidarte.',
+        'Decides pensarlo y no compras todavía. A veces dejar pasar la promoción también es una forma de cuidar tu dinero.',
     },
     deltas: {
       guardar: +2,
@@ -61,11 +61,11 @@ const piggyEvents = [
     text: 'Recibiste un pequeño pago inesperado por ayudar a alguien.',
     feedback: {
       guardar:
-        'Lo guardas completo en la alcancía. Los ingresos extra son perfectos para empujar tu meta.',
+        'Lo guardas completo en la alcancía. Los ingresos extra son perfectos para aumentar tu ahorro.',
       gastar:
-        'Lo gastas celebrando. Está bien disfrutar, pero piensa qué parte podrías destinar a tus objetivos.',
+        'Lo gastas celebrando. Está bien disfrutar, pero piensa qué parte podrías reservar para tu ahorro.',
       postergar:
-        'Lo dejas “por ahí” sin decidir. Cuando el dinero no tiene plan, suele desaparecer.',
+        'Lo dejas “por ahí” sin decidir. Cuando el dinero no tiene un plan, suele desaparecer en pequeños gastos.',
     },
     deltas: {
       guardar: +3,
@@ -78,11 +78,11 @@ const piggyEvents = [
     text: 'Viste algo lindo en una tienda, pero no lo necesitas.',
     feedback: {
       guardar:
-        'Te acuerdas de tu meta y decides no comprarlo. Estás eligiendo tu objetivo por encima del impulso.',
+        'Te acuerdas de tu presupuesto y decides no comprarlo. Estás eligiendo cuidar tu dinero por encima del impulso.',
       gastar:
-        'Lo compras “porque estaba lindo”. Uno solo no parece mucho, pero muchos “antojos” se suman.',
+        'Lo compras “porque estaba lindo”. Uno solo no parece mucho, pero muchos “antojos” se van sumando en tus gastos.',
       postergar:
-        'Lo dejas en tu lista de deseos para revisarlo después. Si luego sigue siendo importante, podrás decidir con más calma.',
+        'Lo dejas en tu lista de deseos para revisarlo después. Si luego sigue siendo importante, podrás decidir con más calma y con tu presupuesto a la vista.',
     },
     deltas: {
       guardar: +2,
@@ -92,14 +92,14 @@ const piggyEvents = [
   },
   {
     id: 'deadline_close',
-    text: 'Tu meta tiene un plazo cercano y aún te falta un poco.',
+    text: 'Se acerca fin de mes y aún no has ahorrado todo lo que tenías pensado.',
     feedback: {
       guardar:
-        'Ajustas algunos gastos y decides guardar un poco más estos días. Esa constancia final marca la diferencia.',
+        'Ajustas algunos gastos y decides guardar un poco más estos días. Esa constancia final marca la diferencia en tu ahorro.',
       gastar:
-        'Piensas “ya no alcanzo” y gastas sin cuidar. Cuando te rindes, la meta deja de avanzar.',
+        'Piensas “ya no alcanzo a ahorrar” y gastas sin cuidar. Cuando te rindes, tu ahorro deja de crecer.',
       postergar:
-        'No tomas decisiones claras y dejas que todo siga igual. Si no cambias nada, tampoco cambia el resultado.',
+        'No tomas decisiones claras y dejas que todo siga igual. Si no cambias nada, tampoco cambia lo que terminas ahorrando.',
     },
     deltas: {
       guardar: +3,
@@ -181,7 +181,7 @@ export default function PiggySavingsGame({ visible, onFinished }) {
             className={`piggy-pig ${pigSizeClass}`}
           />
           <p className="piggy-progress-label">
-            Progreso de tu meta: {score > 0 ? `+${score}` : score}
+            Nivel de ahorro: {score > 0 ? `+${score}` : score}
           </p>
         </div>
 

@@ -743,3 +743,55 @@
     flex-wrap: wrap;
   }
 }
+
+/* ---------- Tutorial de la evaluación (overlay centrado) ---------- */
+
+.evaluation-tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;      /* centra vertical */
+  justify-content: center;  /* centra horizontal */
+  background: rgba(15, 23, 42, 0.6); /* leve oscurecido del fondo */
+  z-index: 30;              /* por encima del juego */
+}
+
+.evaluation-tutorial-dialog {
+  width: min(90%, 780px);
+  background: linear-gradient(135deg, #0f172a, #020617);
+  border-radius: 18px;
+  padding: 24px 28px 22px;
+  box-shadow: 0 22px 45px rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  color: #e5e7eb;
+}
+
+.evaluation-tutorial-header {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a5b4fc;
+}
+
+.evaluation-tutorial-speaker {
+  display: inline-block;
+}
+
+.evaluation-tutorial-text {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.evaluation-tutorial-next {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.8rem;
+  text-align: right;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.evaluation-tutorial-next--visible {
+  opacity: 1;
+}
