@@ -24,8 +24,8 @@ export function GameWorldSimple({ onComplete }) {
   const computerObject = {
     id: 'management_pc',
     name: '💻 Computadora',
-    x: 11,
-    y: 3,
+    x: 10,
+    y: 1,
   };
 
   // Diálogo inicial
