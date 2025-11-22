@@ -14,6 +14,7 @@ export default function VideoStage({ onComplete, unitColor }) {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const handlePlayPause = () => {
+    if (!videoRef.current) return;
     if (!isPlaying) {
       videoRef.current.play();
     } else {
@@ -23,24 +24,28 @@ export default function VideoStage({ onComplete, unitColor }) {
   };
 
   const handleMute = () => {
+    if (!videoRef.current) return;
     videoRef.current.muted = !isMuted;
     setIsMuted(!isMuted);
   };
 
   const handleFullscreen = () => {
-    if (videoRef.current.requestFullscreen) {
+    if (videoRef.current && videoRef.current.requestFullscreen) {
       videoRef.current.requestFullscreen();
     }
   };
 
   const handleTimeUpdate = () => {
-    const current = videoRef.current.currentTime;
-    const total = videoRef.current.duration;
+    if (!videoRef.current) return;
+    const current = videoRef.current.currentTime || 0;
+    const total = videoRef.current.duration || 0;
+    if (!total) return;
     setProgress((current / total) * 100);
   };
 
   const handleLoadedMetadata = () => {
-    setDuration(videoRef.current.duration);
+    if (!videoRef.current) return;
+    setDuration(videoRef.current.duration || 0);
   };
 
   const handleVideoEnd = () => {
@@ -49,46 +54,17 @@ export default function VideoStage({ onComplete, unitColor }) {
   };
 
   const formatTime = (sec) => {
-    if (!sec) return '0:00';
+    if (!sec || Number.isNaN(sec)) return '0:00';
     const minutes = Math.floor(sec / 60);
     const seconds = Math.floor(sec % 60).toString().padStart(2, '0');
     return `${minutes}:${seconds}`;
   };
 
-  // Puntos clave ultra resumidos
-  const keyPoints = [
-    {
-      id: 1,
-      title: 'Define tus metas',
-      description: 'Saber qué quieres lograr guía tus decisiones con el dinero.',
-    },
-    {
-      id: 2,
-      title: 'Corto vs largo plazo',
-      description: 'Hay metas para pronto y metas que toman más tiempo.',
-    },
-    {
-      id: 3,
-      title: 'Separa primero',
-      description: 'Aparta algo para tus metas antes de empezar a gastar.',
-    },
-    {
-      id: 4,
-      title: 'Piensa antes de gastar',
-      description: 'Pregúntate si esa compra te acerca o te aleja de tus metas.',
-    },
-    {
-      id: 5,
-      title: 'Constancia > montos grandes',
-      description: 'Pequeñas decisiones buenas, repetidas, hacen la diferencia.',
-    },
-  ];
-
   return (
     <div className="stage-container">
       <div className="stage-grid">
-        {/* VIDEO PLAYER */}
-        <div className="video-section">
+        {/* VIDEO PLAYER a todo el ancho */}
+        <div className="video-section" style={{ gridColumn: '1 / -1' }}>
           <div className="video-player">
             {/* VIDEO */}
             <div className="video-screen">
@@ -147,38 +123,12 @@ export default function VideoStage({ onComplete, unitColor }) {
           </div>
         </div>
 
-        {/* SIDEBAR */}
-        <div className="sidebar-section">
-          <div className="sidebar-card">
-            <h3 className="sidebar-title">Puntos Clave</h3>
-
-            <div className="key-points-list">
-              {keyPoints.map((point, index) => (
-                <div key={point.id} className="key-point-item">
-                  <div className="key-point-number">{index + 1}</div>
-                  <div>
-                    <div className="key-point-title">{point.title}</div>
-                    <div className="key-point-description">
-                      {point.description}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="sidebar-divider" />
-
-            <div className="example-box">
-              <div className="example-label">Ejemplo</div>
-              <div className="example-content">
-                "Carmina recibe un pago. Primero separa una parte para su meta
-                de estudiar y luego decide cuánto usar para divertirse. Así sus
-                decisiones diarias apoyan sus metas."
-              </div>
-            </div>
-          </div>
-
-          {isCompleted && (
+        {/* BOTÓN DE CONTINUAR (solo tras ver el video completo) */}
+        {isCompleted && (
+          <div
+            className="video-continue-wrapper"
+            style={{ gridColumn: '1 / -1', marginTop: '16px' }}
+          >
             <button onClick={onComplete} className="continue-button">
               Continuar al Tutorial
               <svg
@@ -192,8 +142,8 @@ export default function VideoStage({ onComplete, unitColor }) {
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
