@@ -13,6 +13,20 @@
   cursor: pointer;
 }
 
+.dialogue-roota {
+    position: absolute;
+  left: 50%;
+  bottom: 80px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  z-index: 20;
+  cursor: pointer;
+  bottom: 260px;
+}
+
+
 /* Marco de la carita (mismo marco para todos los personajes) */
 .dialogue-face-wrapper {
   width: 140px;

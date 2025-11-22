@@ -76,7 +76,7 @@ export default function DialogueBox({
     (isPig ? ' dialogue-face-wrapper--pig' : '');
 
   return (
-    <div className="dialogue-root" onClick={handleClick}>
+    <div className="dialogue-roota" onClick={handleClick}>
       <div className={wrapperClassName}>
         <div
           className={faceClassName}
@@ -171,7 +171,7 @@ export function DialogueBoxUnit4({
     (isPig ? ' dialogue-face-wrapper--pig' : '');
 
   return (
-    <div className="dialogue-root" onClick={handleClick}>
+    <div className="dialogue-roota" onClick={handleClick}>
       <div className={wrapperClassName}>
         <div
           className={faceClassName}
