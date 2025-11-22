@@ -264,18 +264,23 @@ export default function SnakeFinancialGame({ visible, onComplete }) {
             {showIntro && (
                 <div className="snake-window">
                     <div className="container-intro">
-                        <h2>La Serpiente Financiera</h2>
+                        <h2>Gestor de Riesgo Financiero</h2>
 
                         <p className="description">
-                            Maneja tu deuda. La serpiente representa tus obligaciones financieras.
+                            Controla la exposición al riesgo de tu empresa.
                             <br />
-                            Los <span className="good">verdes</span> reducen la deuda.
-                            Los <span className="bad">rojos</span> la aumentan.
+                            La serpiente representa el nivel de riesgo acumulado.
                             <br /><br />
-                            Las <strong>oleadas de deuda</strong> son gastos inevitables que llegan de golpe.
+                            Los <span className="good">verdes</span> son buenas prácticas de gestión del riesgo:
+                            reducen tu exposición.
                             <br />
-                            <span className="good">Completa 250 puntos para terminarlo</span>,
-                            <span className="bad"> si tu puntaje llega a -50 pierdes.</span>
+                            Los <span className="bad">rojos</span> representan riesgos financieros y operativos.
+                            <br /><br />
+                            Las <strong>oleadas de riesgo</strong> simbolizan choques externos:
+                            crisis de mercado, alzas de tasas o caída de ingresos.
+                            <br />
+                            <span className="good">Llega a 250 puntos para demostrar resiliencia.</span>
+                            <span className="bad">Si llegas a -50, tu empresa entra en insolvencia.</span>
                         </p>
                     </div>
                     <button className="snake-btn" onClick={() => setShowIntro(false)}>
@@ -296,18 +301,20 @@ export default function SnakeFinancialGame({ visible, onComplete }) {
                         height={rows * tileSize}
                     />
                     <div className="score-box">
-                        Puntaje: <span>{score}</span> / 250
+                        Exposición controlada: <span>{score}</span> / 250
                     </div>
+
 
                     {/* =============== GAME OVER SCREEN =============== */}
                     {gameOver && (
                         <div className="game-over">
 
                             {score >= 250 ? (
-                                <p class="description"> ¡Dominas tus finanzas! Gran trabajo.</p>
+                                <p className="description">¡Excelente! Tu empresa gestionó el riesgo con éxito.</p>
                             ) : (
-                                <p class="description">La deuda se salió de control.</p>
+                                <p className="description">La exposición al riesgo se volvió insostenible.</p>
                             )}
+
 
                             <button className="snake-btn" onClick={resetGame}>
                                 Reintentar

@@ -46,78 +46,87 @@ import DialogueBox from '../core/dialogue/DialogueBox';
 // 1. DIÁLOGOS DE CADA ZONA
 // -------------------------------------------------------------
 
+// -------------------------------------------------------------
+// 1. DIÁLOGOS DE CADA ZONA (VERSIÓN ANÁLISIS FINANCIERO)
+// -------------------------------------------------------------
+
 const introDialogue = [
-    "Bienvenido a la Unidad 3. Hoy aprenderemos cómo funcionan los préstamos.",
-    "Cada zona del banco tiene una actividad distinta: préstamo, necesidades, interés, comparación y planificación.",
-    "Explora cada sección para desbloquear la comprensión completa de un préstamo real", "ve al cartel de '¿Qué es un préstamo?' y da clic sobre la mesa para comenzar.",
+    "Bienvenido a la Unidad 3: Fundamentos del Análisis Financiero.",
+    "Cada zona del centro financiero tiene una actividad distinta: conceptos financieros, clasificación de indicadores, rentabilidad, riesgo y decisiones estratégicas.",
+    "Explora cada sección para desbloquear la comprensión completa de cómo analizar la salud financiera de una empresa.",
+    "Ve al cartel de '1' y haz clic sobre la mesa para comenzar."
 ];
 
 const loanIntroDialogue = [
-    "Antes de comenzar, déjame explicarte qué es un préstamo.",
-    "Cuando pides un préstamo, recibes un monto inicial llamado capital.",
-    "Pero a cambio, debes devolver ese dinero más un costo adicional llamado interés.",
-    "La suma total que debes pagar se llama deuda.",
-    "Y normalmente esa deuda se paga en cuotas fijas cada mes.",
-    "Ahora sí, vamos a verlo con un minijuego para entenderlo mejor."
+    "Antes de comenzar, repasemos los conceptos fundamentales del análisis financiero.",
+    "Toda evaluación financiera se basa en cuatro pilares clave: liquidez, endeudamiento, rentabilidad y eficiencia.",
+    "La liquidez indica si una empresa puede cumplir sus obligaciones inmediatas.",
+    "El endeudamiento refleja cuánto depende la empresa de recursos ajenos.",
+    "La rentabilidad muestra si la empresa está generando valor.",
+    "Y la eficiencia mide qué tan bien aprovecha sus recursos.",
+    "Vamos a identificarlos mejor con un minijuego interactivo."
 ];
 
 const loanPosterDialogue = [
-    "Este es el cartel de '¿Qué es un préstamo?'.",
-    "Un préstamo siempre implica un capital inicial, un interés y un pago mensual.",
-    "¡Vamos a verlo con un minijuego visual!",
+    "Este es el cartel de 'Conceptos financieros esenciales'.",
+    "Un buen analista reconoce rápidamente qué representa cada indicador y cómo afecta la situación de la empresa.",
+    "¡Vamos a practicar identificándolos en un minijuego visual!"
 ];
 
 const needsPosterDialogue = [
-    "En esta zona aprenderás sobre la clasificacion de gastos según tus necesidades.",
-    "Clasificalas segun su importancia, es un buen habito para llevar una vida tranquila.",
+    "Aquí aprenderás a priorizar indicadores financieros según su relevancia para evaluar la salud de una empresa.",
+    "Algunos indicadores son críticos para la supervivencia, otros para evaluar rendimiento o eficiencia.",
+    "Ordenarlos correctamente es una habilidad clave en el análisis financiero."
 ];
 
 const interestPosterDialogue = [
-    "Aquí aprenderás cómo la tasa de interés cambia el valor final de tu préstamo.",
-    "ten cuidado de que el moustro del interés no se coma todo tu dinero!",
-    "cada que pases por un obstáculo rojo el moustro del interés te hará una pregunta sobre interés.",
-    "Buena suerte :)",
+    "Esta zona está dedicada a la rentabilidad.",
+    "Tu misión es mantener los márgenes positivos mientras los costos y riesgos intentan reducirlos.",
+    "Cada obstáculo rojo activará preguntas sobre análisis de rentabilidad, márgenes y eficiencia.",
+    "¡Demuestra que puedes mantener el rendimiento bajo presión!"
 ];
 
 const creditDeskDialogue = [
-    "Has encontrado el minujuego oculto de la computadora.",
-    "No es necesario terminarlo para completar el modulo, pero si quieres aceptar el reto, adelante",
+    "Has encontrado el simulador oculto de gestión del riesgo financiero.",
+    "No es obligatorio para completar la unidad, pero te ayudará a entender cómo los riesgos afectan la estabilidad de una empresa.",
+    "Si quieres aceptar el reto y administrar la exposición al riesgo, adelante."
 ];
 
 const paymentPuzzleDialogue = [
-    "Finalmente, aprenderás a planificar tus pagos en un calendario mensual.",
-    "Completa el rompecabezas para equilibrar tus gastos.",
+    "Aquí aprenderás a evaluar decisiones financieras estratégicas.",
+    "Analizarás alternativas de inversión, su riesgo, su retorno y su impacto en la empresa.",
+    "Completa el rompecabezas financiero seleccionando las mejores decisiones."
 ];
 
 const finalDialogue = [
     "¡Excelente! Has completado todas las zonas de la Unidad 3.",
-    "Ahora entiendes qué es un préstamo, cuándo usarlo, cómo calcular interés y cómo elegir la mejor oferta.",
-    "¡Eres oficialmente una persona financiera nivel PRO!",
+    "Ahora dominas los conceptos básicos del análisis financiero: liquidez, riesgo, rentabilidad y toma de decisiones.",
+    "¡Felicidades! Ya estás a nivel Analista Financiero Junior."
 ];
 
 const lockedDialogue = [
     "Aún no puedes acceder a esta zona.",
-    "Primero debes completar la actividad anterior para continuar."
+    "Primero debes completar la actividad anterior para continuar con el análisis financiero."
 ];
 
 const postLoanGameDialogue = [
-    "¡Lo hiciste muy bien con el préstamo!",
-    "Ahora ya sabes qué es el capital, el interés, la deuda y las cuotas.",
-    "Ve ahora a la zona de necesidades para seguir aprendiendo."
+    "¡Excelente trabajo identificando los conceptos financieros!",
+    "Ya diferencias liquidez, endeudamiento, eficiencia y rentabilidad.",
+    "Ahora avanza a la zona '2' para aprender a priorizar estos indicadores."
 ];
 
 const postNeedsGameDialogue = [
-    "Buen trabajo clasificando las necesidades.",
-    "Recuerda: no todos los préstamos son para gustos, algunos son para cosas realmente importantes.",
-    "Ahora ve a la zona de interés para ver cómo cambia el costo del préstamo.",
-    "o puedes ir a la computadora para jugar el minijuego oculto si quieres.",
-    "pero shhh, es un secreto 😉"
+    "Muy bien, clasificaste correctamente los indicadores según su importancia estratégica.",
+    "Comprender la prioridad de cada indicador es esencial para interpretar estados financieros.",
+    "Ahora ve a la zona '3' para aprender cómo mantener márgenes positivos.",
+    "O, si quieres, prueba el simulador oculto de riesgo financiero en la computadora.",
+    "Pero shhh… sigue siendo un secreto 😉"
 ];
 
 const postInterestGameDialogue = [
-    "¡Excelente! Ya viste cómo la tasa de interés cambia el valor final.",
-    "Una tasa más alta siempre significa pagar más.",
-    "Puedes seguir explorando o ir al siguiente reto."
+    "¡Excelente! Ya viste cómo las decisiones afectan directamente los márgenes de rentabilidad.",
+    "Recuerda: controlar costos, optimizar procesos y analizar riesgos es clave para mantener utilidades.",
+    "Puedes seguir explorando el mapa o continuar al siguiente desafío analítico."
 ];
 
 // -------------------------------------------------------------

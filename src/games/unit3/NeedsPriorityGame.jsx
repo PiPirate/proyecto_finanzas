@@ -13,22 +13,22 @@ export default function NeedsPriorityGame({ visible, onComplete }) {
     const initialItems = useMemo(
         () =>
             shuffle([
-                { id: "alimentacion", label: "🥦 Alimentación", type: "essential" },
-                { id: "vivienda", label: "🏠 Vivienda / Arriendo", type: "essential" },
-                { id: "servicios", label: "💡 Servicios Públicos", type: "essential" },
-                { id: "transporte", label: "🚍 Transporte", type: "essential" },
-                { id: "salud", label: "👩‍⚕️ Salud", type: "essential" },
+                { id: "rcorriente", label: "📊 Razón Corriente", type: "essential" },
+                { id: "pacida", label: "💧 Prueba Ácida", type: "essential" },
+                { id: "capital_trabajo", label: "⚙ Capital de Trabajo", type: "essential" },
+                { id: "flujo_oper", label: "💵 Flujo Operacional", type: "essential" },
+                { id: "caja_disponible", label: "🧾 Caja y Bancos", type: "essential" },
 
-                { id: "ahorro", label: "💰 Ahorro / Fondo de emergencia", type: "important" },
+                { id: "cobertura_interes", label: "📉 Cobertura de Intereses", type: "important" },
 
-                { id: "supermercado", label: "🛒 Supermercado extra", type: "variable" },
-                { id: "comidas_fuera", label: "😋 Comidas fuera", type: "variable" },
-                { id: "suscripciones", label: "🎮 Suscripciones", type: "variable" },
-                { id: "ropa", label: "👕 Compras de ropa", type: "variable" },
+                { id: "rotacion_inventario", label: "📦 Rotación de Inventarios", type: "variable" },
+                { id: "rotacion_cartera", label: "📬 Rotación de Cartera", type: "variable" },
+                { id: "ciclo_efectivo", label: "🔄 Ciclo de Conversión de Efectivo", type: "variable" },
+                { id: "periodo_prom_pago", label: "📅 Periodo Promedio de Pago", type: "variable" },
 
-                { id: "ocio", label: "🎉 Ocio / Salidas", type: "capricho" },
-                { id: "celular", label: "📱 Nuevo celular", type: "capricho" },
-                { id: "viaje", label: "✈ Viaje", type: "capricho" }
+                { id: "roe", label: "📈 ROE – Rentabilidad del Patrimonio", type: "capricho" },
+                { id: "roa", label: "📉 ROA – Rentabilidad del Activo", type: "capricho" },
+                { id: "margen_neto", label: "💼 Margen Neto", type: "capricho" }
             ]),
         []
     );
@@ -79,15 +79,18 @@ export default function NeedsPriorityGame({ visible, onComplete }) {
 
         if (mistakes === 0) {
             setFinalMessage(
-                "🎉 ¡Muy bien! Priorizaste tus gastos correctamente.\n" +
-                "Primero lo esencial, luego el ahorro, después lo variable y al final los caprichos."
+                "🎉 ¡Excelente! Ordenaste correctamente los indicadores de liquidez.\n" +
+                "Primero los indicadores críticos, luego los de solvencia, después los operativos " +
+                "y por último los de rentabilidad, que no influyen directamente en la liquidez inmediata."
             );
         } else {
             setFinalMessage(
-                "⚠ Cuidado. Algunas prioridades están desordenadas.\n" +
-                "Asegúrate de priorizar lo esencial antes que los gustos."
+                "⚠ Atención. Algunos indicadores están mal priorizados.\n" +
+                "Recuerda: para evaluar liquidez, primero van razón corriente, prueba ácida, capital de trabajo " +
+                "y caja disponible."
             );
         }
+
 
         setShowResult(true);
     };
@@ -149,19 +152,19 @@ export default function NeedsPriorityGame({ visible, onComplete }) {
 
                     {/* COLUMNA 1 - INFO */}
                     <div className="col-info">
-                        <h2> Arma tu Presupuesto</h2>
+                        <h2>Análisis de Liquidez — Ordena los Indicadores</h2>
 
                         <p className="income">
-                            Tu ingreso mensual es:
+                            La empresa presenta ingresos por:
                             <strong> ${income.toLocaleString("es-CO")} </strong>
                         </p>
 
-                        {!showResult && (
-                            <p className="instructions">
-                                Arrastra y suelta para ordenar tus prioridades financieras.
-                                Cuando termines, haz clic en "Evaluar".
-                            </p>
-                        )}
+                        <p className="instructions">
+                            Ordena los indicadores según su prioridad para evaluar la liquidez y capacidad de pago
+                            de una empresa.
+                            Cuando termines, haz clic en "Evaluar".
+                        </p>
+
 
                         {showResult && (
                             <p className="summary-label"> Análisis del presupuesto</p>
@@ -241,17 +244,18 @@ export default function NeedsPriorityGame({ visible, onComplete }) {
 
                         {answer === "yes" && (
                             <p className="result-message">
-                                ¡Genial! Si te sobra dinero después de tus gastos esenciales, puedes ahorrar una parte
-                                cada mes o destinarlo a metas personales importantes.
+                                ¡Muy bien! Si después de evaluar la liquidez la empresa tiene excedentes, puede destinarlos a
+                                inversión, expansión o fortalecer reservas estratégicas.
                             </p>
                         )}
 
                         {answer === "no" && (
                             <p className="result-message">
-                                No te preocupes. Revisa en qué puedes reducir gastos o busca alternativas más económicas.
-                                A veces pequeños ajustes hacen una gran diferencia.
+                                La empresa podría enfrentar problemas de solvencia. Es recomendable revisar los pasivos a corto
+                                plazo, buscar financiamiento o mejorar la recuperación de cartera.
                             </p>
                         )}
+
 
                     </div>
                 </div>

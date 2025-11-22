@@ -10,184 +10,185 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     const rounds = [
         // ------------------- 1 -------------------
         {
-            situation: "Mi lavadora se dañó. Trabajo lavando ropa desde casa y la necesito para seguir generando ingresos.",
-            offer: { monto: "$1.200.000", tasa: "24% anual", plazo: "12 meses", cuota: "$132.000" },
+            situation: "Tu empresa puede comprar una máquina que aumenta la producción un 25% y reduce costos.",
+            offer: { monto: "$12.000.000", tasa: "VPN positivo", plazo: "Vida útil 5 años", cuota: "Retorno anual 18%" },
             options: [
-                { dir: "right", label: "Tomar préstamo (necesidad productiva)", correct: true, msg: "Correcto. Es una herramienta de trabajo." },
-                { dir: "left", label: "No tomarlo", correct: false, msg: "Sin lavadora no puedes trabajar." },
-                { dir: "up", label: "Plazo más corto", correct: true, msg: "Menos intereses, buena decisión." },
-                { dir: "down", label: "Buscar tasa más baja", correct: true, msg: "Siempre compara tasas." }
+                { dir: "right", label: "Invertir", correct: true, msg: "Correcto. Mejora productividad y reduce costos." },
+                { dir: "left", label: "Rechazar inversión", correct: false, msg: "Perderías una oportunidad rentable." },
+                { dir: "up", label: "Analizar flujo de caja", correct: true, msg: "Excelente. El flujo es clave." },
+                { dir: "down", label: "Esperar sin razones", correct: false, msg: "Retrasar una inversión rentable trae costo de oportunidad." }
             ]
         },
 
         // ------------------- 2 -------------------
         {
-            situation: "Quiero cambiar mi celular por uno más nuevo. El mío funciona bien.",
-            offer: { monto: "$3.200.000", tasa: "32% anual", plazo: "24 meses", cuota: "$196.000" },
+            situation: "Proponen comprar un software costoso que no aporta valor directo ni reduce costos.",
+            offer: { monto: "$3.500.000", tasa: "VPN negativo", plazo: "Indefinido", cuota: "Impacto en utilidad: nulo" },
             options: [
-                { dir: "right", label: "Tomarlo", correct: false, msg: "No es recomendable endeudarse por deseos." },
-                { dir: "left", label: "No tomarlo", correct: true, msg: "Correcto. Es un deseo con tasa alta." },
-                { dir: "up", label: "Es compra pequeña", correct: false, msg: "Pequeña no significa buena." },
-                { dir: "down", label: "Ahorrar y comprarlo", correct: true, msg: "Financieramente ideal." }
+                { dir: "right", label: "Invertir", correct: false, msg: "No es rentable según VPN." },
+                { dir: "left", label: "Rechazar", correct: true, msg: "Correcto. No genera retorno económico." },
+                { dir: "up", label: "Negociar precio", correct: true, msg: "Puede volverse viable si baja el costo." },
+                { dir: "down", label: "Financiar sin analizar", correct: false, msg: "Nunca financies algo sin rentabilidad." }
             ]
         },
 
         // ------------------- 3 -------------------
         {
-            situation: "Quiero estudiar un curso técnico que aumentará mis ingresos.",
-            offer: { monto: "$2.500.000", tasa: "12% anual", plazo: "18 meses", cuota: "$154.000" },
+            situation: "Te ofrecen invertir en una franquicia con alta demanda y retorno estimado del 22%.",
+            offer: { monto: "$20.000.000", tasa: "Retorno 22%", plazo: "24 meses", cuota: "Flujo mensual estable" },
             options: [
-                { dir: "right", label: "Tomarlo para estudiar", correct: true, msg: "La educación es una inversión." },
-                { dir: "left", label: "No tomarlo", correct: false, msg: "Es una inversión útil." },
-                { dir: "up", label: "Pedir solo lo necesario", correct: true, msg: "Excelente manejo de deuda." },
-                { dir: "down", label: "Plazo de 5 años", correct: false, msg: "Excesivo, genera intereses altos." }
+                { dir: "right", label: "Invertir", correct: true, msg: "Buena inversión: retorno alto y estable." },
+                { dir: "left", label: "No invertir", correct: false, msg: "Perderías un retorno atractivo." },
+                { dir: "up", label: "Analizar riesgo del sector", correct: true, msg: "Siempre analiza riesgos." },
+                { dir: "down", label: "Pedir préstamo para cubrirlo todo", correct: false, msg: "Exceso de deuda aumenta riesgo." }
             ]
         },
 
         // ------------------- 4 -------------------
         {
-            situation: "Quiero comprar una moto para trabajar en domicilios.",
-            offer: { monto: "$6.000.000", tasa: "20% anual", plazo: "36 meses", cuota: "$223.000" },
+            situation: "Tu empresa evalúa abrir una nueva sede, pero la zona tiene baja demanda histórica.",
+            offer: { monto: "$15.000.000", tasa: "Retorno incierto", plazo: "36 meses", cuota: "Riesgo alto" },
             options: [
-                { dir: "right", label: "Tomarlo para trabajar", correct: true, msg: "Aumenta tus ingresos." },
-                { dir: "left", label: "Es un deseo", correct: false, msg: "Es una herramienta laboral." },
-                { dir: "up", label: "Buscar tasa más baja", correct: true, msg: "Créditos de vehículo son mejores." },
-                { dir: "down", label: "Plazo de 60 meses", correct: false, msg: "Plazo excesivo = más intereses." }
+                { dir: "right", label: "Abrir sede", correct: false, msg: "Alta inversión y baja demanda = mala idea." },
+                { dir: "left", label: "Cancelar proyecto", correct: true, msg: "Correcto. Evitas pérdidas potenciales." },
+                { dir: "up", label: "Estudiar mercado", correct: true, msg: "Siempre analiza antes de decidir." },
+                { dir: "down", label: "Financiar sin análisis", correct: false, msg: "Nunca sin análisis de demanda." }
             ]
         },
 
         // ------------------- 5 -------------------
         {
-            situation: "Quiero ir a la playa con mis amigos. No tengo ahorros.",
-            offer: { monto: "$1.800.000", tasa: "30% anual", plazo: "18 meses", cuota: "$138.000" },
+            situation: "Tu empresa puede comprar inventario con descuento del 20% por compra anticipada.",
+            offer: { monto: "$8.000.000", tasa: "Ahorro efectivo", plazo: "Rotación 2 meses", cuota: "Mejora margen" },
             options: [
-                { dir: "right", label: "Tomarlo para viajar", correct: false, msg: "Nunca por deseos con tasa alta." },
-                { dir: "left", label: "Se paga fácil", correct: false, msg: "Intereses muy altos." },
-                { dir: "up", label: "No tomarlo", correct: true, msg: "Es un deseo con tasa alta." },
-                { dir: "down", label: "Ahorrar y viajar luego", correct: true, msg: "La mejor opción." }
+                { dir: "right", label: "Comprar inventario", correct: true, msg: "Descuentos altos mejoran margen." },
+                { dir: "left", label: "No comprar", correct: false, msg: "Perderías ahorro directo." },
+                { dir: "up", label: "Revisar capital de trabajo", correct: true, msg: "Debe existir liquidez suficiente." },
+                { dir: "down", label: "Comprar más de lo necesario", correct: false, msg: "Exceso de inventario reduce liquidez." }
             ]
         },
 
         // ------------------- 6 -------------------
         {
-            situation: "Mi nevera falló. Sin ella pierdo comida y gasto más comprando afuera.",
-            offer: { monto: "$1.900.000", tasa: "26% anual", plazo: "12 meses", cuota: "$171.000" },
+            situation: "Una startup te ofrece invertir a cambio del 10% de participación, con riesgo alto y retorno incierto.",
+            offer: { monto: "$5.000.000", tasa: "Riesgo alto", plazo: "Retorno incierto", cuota: "Opciones a futuro" },
             options: [
-                { dir: "right", label: "Tomarlo", correct: true, msg: "Es una necesidad básica." },
-                { dir: "left", label: "No tomarlo", correct: false, msg: "Terminarás gastando más." },
-                { dir: "up", label: "Pedir solo lo necesario", correct: true, msg: "Menos deuda = mejor." },
-                { dir: "down", label: "Plazo de 36 meses", correct: false, msg: "Pagarías demás en intereses." }
+                { dir: "right", label: "Invertir", correct: false, msg: "Riesgo muy alto sin retorno claro." },
+                { dir: "left", label: "Rechazar", correct: true, msg: "Correcto. No hay evidencia de retorno." },
+                { dir: "up", label: "Solicitar proyecciones financieras", correct: true, msg: "Siempre exígelas." },
+                { dir: "down", label: "Invertir por intuición", correct: false, msg: "Las decisiones deben ser analíticas." }
             ]
         },
 
         // ------------------- 7 -------------------
         {
-            situation: "Necesito un computador para estudiar diseño y trabajar freelance.",
-            offer: { monto: "$4.500.000", tasa: "22% anual", plazo: "24 meses", cuota: "$260.000" },
+            situation: "Puedes invertir en marketing digital, lo que aumentaría tus ventas un 15%.",
+            offer: { monto: "$3.000.000", tasa: "Rentabilidad esperada: alta", plazo: "6 meses", cuota: "Retorno rápido" },
             options: [
-                { dir: "right", label: "Tomarlo", correct: true, msg: "Herramienta productiva." },
-                { dir: "left", label: "No tomarlo", correct: false, msg: "Reduce tus oportunidades laborales." },
-                { dir: "up", label: "Buscar tasa mejor", correct: true, msg: "Siempre compara antes." },
-                { dir: "down", label: "Plazo máximo", correct: false, msg: "Plazo largo = más intereses." }
+                { dir: "right", label: "Invertir", correct: true, msg: "Buena decisión: impacto directo en ventas." },
+                { dir: "left", label: "No invertir", correct: false, msg: "Perderías crecimiento potencial." },
+                { dir: "up", label: "Medir retorno por canal", correct: true, msg: "Optimiza la estrategia." },
+                { dir: "down", label: "Duplicar presupuesto sin análisis", correct: false, msg: "No gastes sin analizar." }
             ]
         },
 
         // ------------------- 8 -------------------
         {
-            situation: "Mi familia necesita pagar un tratamiento médico urgente.",
-            offer: { monto: "$3.700.000", tasa: "18% anual", plazo: "24 meses", cuota: "$220.000" },
+            situation: "Puedes adquirir una licencia tecnológica que automatiza procesos y ahorra tiempo.",
+            offer: { monto: "$2.400.000", tasa: "ROI 20%", plazo: "12 meses", cuota: "Reduce costos operativos" },
             options: [
-                { dir: "right", label: "Tomarlo inmediatamente", correct: true, msg: "Es una urgencia médica." },
-                { dir: "left", label: "Esperar a ahorrar", correct: false, msg: "No puedes esperar para salud." },
-                { dir: "up", label: "Buscar tasa más baja", correct: true, msg: "Vale la pena comparar." },
-                { dir: "down", label: "Pedir más por si acaso", correct: false, msg: "Nunca pidas más de lo necesario." }
+                { dir: "right", label: "Invertir", correct: true, msg: "Automatizar mejora productividad." },
+                { dir: "left", label: "No invertir", correct: false, msg: "Perderías eficiencia." },
+                { dir: "up", label: "Solicitar prueba gratuita", correct: true, msg: "Una prueba reduce riesgo." },
+                { dir: "down", label: "Ignorar el ROI", correct: false, msg: "El ROI es clave en decisiones." }
             ]
         },
 
         // ------------------- 9 -------------------
         {
-            situation: "Vi una promoción: crédito 'cero intereses' pero con cuota de manejo alta.",
-            offer: { monto: "$2.000.000", tasa: "0% (pero con cargos)", plazo: "12 meses", cuota: "$210.000" },
+            situation: "Te ofrecen un 'paquete VIP' de servicios sin impacto financiero real.",
+            offer: { monto: "$1.800.000", tasa: "Sin retorno", plazo: "Inmediato", cuota: "Costo hundido" },
             options: [
-                { dir: "right", label: "Tomarlo", correct: false, msg: "Cero intereses NO significa barato." },
-                { dir: "left", label: "Analizar costos ocultos", correct: true, msg: "¡Bien! Mira el costo total." },
-                { dir: "up", label: "Buscar alternativas", correct: true, msg: "Siempre compara." },
-                { dir: "down", label: "No importa la cuota de manejo", correct: false, msg: "Sí importa. Mucho." }
+                { dir: "right", label: "Comprar paquete", correct: false, msg: "No genera retorno." },
+                { dir: "left", label: "Rechazar oferta", correct: true, msg: "Correcto. Evita gastos inútiles." },
+                { dir: "up", label: "Negociar beneficios reales", correct: true, msg: "Solo vale si aporta valor." },
+                { dir: "down", label: "Aceptar porque 'se ve bien'", correct: false, msg: "No se decide por apariencia." }
             ]
         },
 
         // ------------------- 10 -------------------
         {
-            situation: "El banco ofrece refinanciar mi deuda actual pero aumentando el plazo.",
-            offer: { monto: "$5.000.000", tasa: "15% anual", plazo: "48 meses", cuota: "$165.000" },
+            situation: "Puedes ampliar tu negocio a un nuevo mercado con crecimiento sostenido.",
+            offer: { monto: "$10.000.000", tasa: "Retorno 16%", plazo: "30 meses", cuota: "Demanda creciente" },
             options: [
-                { dir: "right", label: "Aceptar refinanciación", correct: false, msg: "Pagarás más intereses a largo plazo." },
-                { dir: "left", label: "Negociar mejor oferta", correct: true, msg: "Correcto. Puedes mejorar tasa o plazo." },
-                { dir: "up", label: "Mantener plazo actual", correct: true, msg: "Evita que aumenten intereses." },
-                { dir: "down", label: "Pedir más dinero", correct: false, msg: "Nunca aumentes deuda sin necesidad." }
+                { dir: "right", label: "Expandir negocio", correct: true, msg: "Crecimiento sostenible." },
+                { dir: "left", label: "No expandir", correct: false, msg: "Perderías oportunidad." },
+                { dir: "up", label: "Realizar análisis de competencia", correct: true, msg: "Evita sorpresas." },
+                { dir: "down", label: "Ignorar estudios de mercado", correct: false, msg: "Clave para decisiones estratégicas." }
             ]
         },
 
         // ------------------- 11 -------------------
         {
-            situation: "Me ofrecen una tarjeta de crédito con interés bajo pero sin tope de compras.",
-            offer: { monto: "$Cupos variables", tasa: "18% anual + cargos", plazo: "Indefinido", cuota: "Depende del uso" },
+            situation: "Puedes invertir en maquinaria usada mucho más barata, pero con alto costo de mantenimiento.",
+            offer: { monto: "$4.000.000", tasa: "Costo oculto alto", plazo: "Variable", cuota: "Riesgo de fallas" },
             options: [
-                { dir: "right", label: "Tomarla y usarla sin control", correct: false, msg: "Gran riesgo de endeudamiento." },
-                { dir: "left", label: "Tomarla pero usarla responsablemente", correct: true, msg: "Crédito útil si se maneja bien." },
-                { dir: "up", label: "Comparar otras tarjetas", correct: true, msg: "Siempre busca la mejor opción." },
-                { dir: "down", label: "Rechazarla automáticamente", correct: false, msg: "Puede ser útil si se usa bien." }
+                { dir: "right", label: "Comprar usada", correct: false, msg: "El ahorro inicial no compensa el costo total." },
+                { dir: "left", label: "Rechazar oferta", correct: true, msg: "Correcto. El costo oculto afecta rentabilidad." },
+                { dir: "up", label: "Calcular costo total de propiedad", correct: true, msg: "Excelente. Evalúa todo." },
+                { dir: "down", label: "Confiar en suerte", correct: false, msg: "Las finanzas no se basan en suerte." }
             ]
         },
 
         // ------------------- 12 -------------------
         {
-            situation: "Me ofrecen un crédito para remodelar, pero realmente quiero cambiar mi televisor.",
-            offer: { monto: "$4.000.000", tasa: "26%", plazo: "36 meses", cuota: "$189.000" },
+            situation: "Una inversión promete retorno del 50%, pero sin respaldo ni datos verificados.",
+            offer: { monto: "$2.000.000", tasa: "Promesa no verificada", plazo: "Desconocido", cuota: "Riesgo extremo" },
             options: [
-                { dir: "right", label: "Tomarlo para el televisor", correct: false, msg: "Créditos grandes no son para caprichos." },
-                { dir: "left", label: "No tomarlo", correct: true, msg: "Correcto. No es una necesidad." },
-                { dir: "up", label: "Ahorrar", correct: true, msg: "Buena decisión." },
-                { dir: "down", label: "Plazo más largo", correct: false, msg: "Más intereses por un gusto innecesario." }
+                { dir: "right", label: "Invertir", correct: false, msg: "Muy riesgoso sin datos confiables." },
+                { dir: "left", label: "Rechazar", correct: true, msg: "Correcto. Evitas fraude o pérdida." },
+                { dir: "up", label: "Solicitar información verificada", correct: true, msg: "Paso indispensable." },
+                { dir: "down", label: "Creer en la promesa", correct: false, msg: "Muy peligroso." }
             ]
         },
 
         // ------------------- 13 -------------------
         {
-            situation: "Mi negocio necesita capital para comprar inventario y crecer.",
-            offer: { monto: "$8.000.000", tasa: "14%", plazo: "24 meses", cuota: "$380.000" },
+            situation: "Tu empresa puede introducir un nuevo producto con alta demanda y bajo costo de producción.",
+            offer: { monto: "$6.500.000", tasa: "ROI 28%", plazo: "12 meses", cuota: "Alta rotación" },
             options: [
-                { dir: "right", label: "Tomarlo para invertir", correct: true, msg: "Es un préstamo productivo." },
-                { dir: "left", label: "No tomarlo", correct: false, msg: "Limitaría el crecimiento del negocio." },
-                { dir: "up", label: "Buscar tasa más baja", correct: true, msg: "Un préstamo empresarial puede mejorar." },
-                { dir: "down", label: "Pedir más dinero del necesario", correct: false, msg: "Nunca pidas más de lo que necesitas." }
+                { dir: "right", label: "Lanzar producto", correct: true, msg: "Gran oportunidad de rentabilidad." },
+                { dir: "left", label: "No lanzarlo", correct: false, msg: "Perderías ventaja competitiva." },
+                { dir: "up", label: "Analizar ciclo de vida del producto", correct: true, msg: "Importante para proyectar retorno." },
+                { dir: "down", label: "Invertir todo sin análisis", correct: false, msg: "Riesgo financiero innecesario." }
             ]
         },
 
         // ------------------- 14 -------------------
         {
-            situation: "Mi crédito actual tiene tasa del 32%. Otro banco me ofrece 18%.",
-            offer: { monto: "Cambio de entidad", tasa: "18%", plazo: "20 meses", cuota: "Variable" },
+            situation: "Tienes la opción de reinvertir utilidades en mejoras internas con retorno garantizado del 12%.",
+            offer: { monto: "Utilidades", tasa: "12% anual", plazo: "Continuo", cuota: "Bajo riesgo" },
             options: [
-                { dir: "right", label: "Aceptar la nueva tasa", correct: true, msg: "Correcto. Reduces intereses." },
-                { dir: "left", label: "Quedarme por pereza", correct: false, msg: "Pagarías de más." },
-                { dir: "up", label: "Negociar aún mejor", correct: true, msg: "A veces se puede mejorar más." },
-                { dir: "down", label: "Mantener la tasa del 32%", correct: false, msg: "Estás perdiendo dinero." }
+                { dir: "right", label: "Reinvertir", correct: true, msg: "Rentabilidad segura." },
+                { dir: "left", label: "Retirar utilidades", correct: false, msg: "Pierdes el retorno." },
+                { dir: "up", label: "Comparar contra alternativas", correct: true, msg: "Siempre evalúa opciones." },
+                { dir: "down", label: "Gastar utilidades", correct: false, msg: "Reducirías crecimiento." }
             ]
         },
 
-        // ------------------- 15 (más difícil) -------------------
+        // ------------------- 15 -------------------
         {
-            situation: "Me ofrecen un préstamo inmediato: 'Aprobación en 5 minutos'. Tasa no especificada claramente.",
-            offer: { monto: "$3.000.000", tasa: "???", plazo: "12 meses", cuota: "Desconocida" },
+            situation: "Debes decidir entre dos proyectos: uno con retorno estable del 10%, otro con posible 35% pero riesgo muy alto.",
+            offer: { monto: "$Elección estratégica", tasa: "10% seguro vs 35% incierto", plazo: "18 meses", cuota: "Depende del riesgo" },
             options: [
-                { dir: "right", label: "Tomarlo ya mismo", correct: false, msg: "Nunca aceptes préstamos sin tasa clara." },
-                { dir: "left", label: "Exigir tasa y costo total", correct: true, msg: "Correcto. Es tu derecho." },
-                { dir: "up", label: "Comparar con otras entidades", correct: true, msg: "Perfecto. Evita estafas." },
-                { dir: "down", label: "No importa la tasa", correct: false, msg: "¡Importa muchísimo!" }
+                { dir: "right", label: "Elegir retorno alto", correct: false, msg: "El riesgo es excesivo y no controlado." },
+                { dir: "left", label: "Elegir retorno estable", correct: true, msg: "Mejor riesgo-retorno para empresa." },
+                { dir: "up", label: "Comparar riesgo ajustado al retorno", correct: true, msg: "Excelente análisis financiero." },
+                { dir: "down", label: "Elegir sin análisis", correct: false, msg: "Nunca sin análisis de riesgo." }
             ]
-        }
+        },
     ];
+
 
 
     // ------------------------------------------------------

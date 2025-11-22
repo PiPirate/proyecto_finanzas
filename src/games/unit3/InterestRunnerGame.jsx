@@ -27,54 +27,54 @@ export default function InterestRunnerGame({ visible, onComplete }) {
     const [isPaused, setIsPaused] = useState(false);
     const questions = [
         {
-            text: "Si pagas solo el pago mínimo de una tarjeta, la deuda puede crecer.",
+            text: "Si los costos suben más rápido que los ingresos, el margen neto disminuye.",
             answer: true,
-            explanation: "El pago mínimo suele cubrir solo intereses, la deuda sigue subiendo."
+            explanation: "El margen neto depende directamente de la relación entre ingresos y costos."
         },
         {
-            text: "Una tasa de interés más alta significa que pagas menos al final.",
+            text: "Un margen bruto alto significa que la empresa controla bien sus costos directos.",
+            answer: true,
+            explanation: "El margen bruto evalúa la eficiencia de la producción o ventas."
+        },
+        {
+            text: "El EBITDA es una medida de rentabilidad después de impuestos.",
             answer: false,
-            explanation: "Una tasa alta significa pagar MÁS intereses."
+            explanation: "El EBITDA excluye impuestos, intereses y depreciación."
         },
         {
-            text: "Refinanciar puede ayudarte a reducir intereses.",
+            text: "Si una empresa reduce precios sin reducir costos, su margen empeora.",
             answer: true,
-            explanation: "Refinanciar puede darte una tasa más baja."
+            explanation: "Bajar precios con costos iguales reduce la utilidad."
         },
         {
-            text: "Los intereses simples se calculan solo sobre el capital inicial.",
+            text: "El ROE mide la rentabilidad del patrimonio de los accionistas.",
             answer: true,
-            explanation: "El interés simple no se acumula; siempre se calcula sobre el monto original."
+            explanation: "Mide cuánto gana la empresa por cada peso invertido por los dueños."
         },
         {
-            text: "El interés compuesto cobra intereses sobre los intereses acumulados.",
+            text: "Un ROA alto indica mayor eficiencia en el uso de los activos.",
             answer: true,
-            explanation: "El interés compuesto crece más rápido porque cada periodo se suman intereses al capital."
+            explanation: "ROA mide el rendimiento generado por los activos totales."
         },
         {
-            text: "Si aumentas el plazo de un préstamo, siempre pagarás menos intereses.",
+            text: "Un incremento en gastos administrativos mejora el margen operativo.",
             answer: false,
-            explanation: "Plazos más largos suelen significar más intereses acumulados."
+            explanation: "Más gastos operativos reducen el margen operativo."
         },
         {
-            text: "Una tasa de interés del 0% siempre significa que no pagarás más del precio original.",
+            text: "El margen neto siempre será más alto que el margen bruto.",
             answer: false,
-            explanation: "A veces las tiendas aumentan el precio o incluyen cargos adicionales ocultos."
+            explanation: "El margen neto es el último: incluye todos los gastos e impuestos."
         },
         {
-            text: "Pagar más del mínimo reduce el total de intereses pagados.",
+            text: "La rentabilidad puede aumentar si se mejora la eficiencia operativa.",
             answer: true,
-            explanation: "Al disminuir el capital más rápido, reduces lo que generará intereses."
+            explanation: "Reducir desperdicios y optimizar procesos mejora márgenes."
         },
         {
-            text: "Una tasa de interés variable puede cambiar con el tiempo.",
-            answer: true,
-            explanation: "Este tipo de tasa depende de factores del mercado y puede subir o bajar."
-        },
-        {
-            text: "Todos los préstamos cobran el mismo tipo de interés.",
+            text: "Una empresa rentable siempre tiene liquidez.",
             answer: false,
-            explanation: "Existen tasas fijas, variables, preferenciales, moratorias, entre otras."
+            explanation: "Una empresa puede ser rentable en papel pero sin efectivo disponible."
         }
     ];
 
@@ -383,16 +383,16 @@ export default function InterestRunnerGame({ visible, onComplete }) {
 
             {showIntro && (
                 <div className="intro-window">
-                    <h2>¡Escapa del monstruo del interés!</h2>
+                    <h2>¡Corre para proteger tu rentabilidad!</h2>
 
                     <p>
-                        El interés es un monstruo que siempre te persigue.
+                        En este juego eres una empresa intentando mantener sus márgenes de ganancia.
                         <br /><br />
-                        🟢 <strong>Powerups buenos</strong> → lo hacen más lento
+                        🟢 <strong>Buenas decisiones financieras</strong> → mejoran tu rentabilidad y alejan al “monstruo del costo”.
                         <br />
-                        🔴 <strong>Errores financieros</strong> → lo hacen más rápido
+                        🔴 <strong>Errores operativos</strong> → reducen tus márgenes y acercan al monstruo.
                         <br /><br />
-                        Corre hasta llegar a <strong>5800</strong>  puntos.
+                        Llega a <strong>5800</strong> puntos para demostrar que tu empresa es rentable.
                     </p>
 
                     <button onClick={() => setShowIntro(false)}>Comenzar</button>
@@ -406,7 +406,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
                             <div className="question-modal">
                                 <div className="modal-box">
 
-                                    <h3>Pregunta</h3>
+                                    <h3>Evaluación Financiera</h3>
 
                                     <p>{questionModal.text}</p>
 
@@ -433,12 +433,12 @@ export default function InterestRunnerGame({ visible, onComplete }) {
 
                             {distance >= goalDistance ? (
                                 <>
-                                    <p class="final-text">🎉 ¡Escapaste del interés!</p>
+                                    <p class="final-text"> ¡Protegiste la rentabilidad de tu empresa!</p>
                                     <button onClick={onComplete}>Continuar</button>
                                 </>
                             ) : (
                                 <>
-                                    <p class="final-text">💀 El interés te alcanzó...</p>
+                                    <p class="final-text">💀 Los costos superaron tus márgenes...</p>
                                     <button onClick={resetGame}>Reintentar</button>
                                 </>
                             )}
