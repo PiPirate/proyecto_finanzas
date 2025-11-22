@@ -1,27 +1,48 @@
-// src/pages/unit1/TutorialStage.jsx
+// src/pages/unit1/EvaluationStage.jsx
 import React, { useState } from 'react';
-import '../css/TutorialStage.css';
-import { GameWorld } from '../../games/unit2/components/GameWorld'
-import '../../games/unit2/styles/globals.css';
+import { useNavigate } from 'react-router-dom';
+import '../css/EvaluationStage.css';
 
-export default function TutorialStage({ onComplete }) {
-  const [completed, setCompleted] = useState(false);
+// IMPORTAMOS EL JUEGO
+import { PuzzleGamePanel } from '../../games/evaluation/PuzzleGamePanel';
 
-  const handleGoalReached = () => {
-    // Evitamos marcar completado varias veces
-    setCompleted((prev) => (prev ? prev : true));
-  };
+export default function EvaluationStage({ onComplete, unitColor }) {
+  const navigate = useNavigate();
+  const [showGame, setShowGame] = useState(true);
 
-  const handleContinue = () => {
+  const handleFinishEvaluation = () => {
     if (typeof onComplete === 'function') {
       onComplete();
     }
+    navigate('/'); // Regresa a módulos
   };
 
   return (
-    <div className="app-container">
-      {/* Escena del banco */}
-      <GameWorld />
+    <div className="tutorial-map-container">
+
+      {/* Contenedor central tipo TutorialStage */}
+      <div className="evaluation-map-frame">
+        {showGame && (
+          <PuzzleGamePanel
+            onComplete={handleFinishEvaluation}
+            onClose={() => setShowGame(false)}
+          />
+        )}
+
+        {!showGame && (
+          <div className="evaluation-empty">
+            <h2 className="evaluation-title">Evaluación</h2>
+            <p className="evaluation-description">
+              Completa la actividad o continúa cuando quieras.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Botón flotante SIEMPRE visible */}
+      <div className="floating-continue-btn" onClick={handleFinishEvaluation}>
+        Continuar →
+      </div>
     </div>
   );
 }
