@@ -42,3 +42,7 @@
 .unit4-game-container .dialogue-overlay {
   bottom: 160px;   /* ajusta este valor si ves todavía mucho espacio */
 }
+
+.dialogue-root {
+  bottom: 260px;
+}
