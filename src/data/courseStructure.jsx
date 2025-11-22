@@ -12,68 +12,72 @@ export const courseOverview = {
 export const units = [
   {
     id: 'unidad-1',
-    title: 'Tu dinero y tus metas',
     number: '01',
-    tagline: 'Convierte aspiraciones en objetivos financieros alcanzables.',
-    description: 'Define metas SMART conectadas con tu presupuesto diario y prioriza acciones concretas para avanzar cada semana. Aprende a traducir deseos financieros en objetivos específicos, medibles, alcanzables, relevantes y con fecha límite.',
+    title: 'Introducción a las Finanzas',
+    tagline: 'Metas claras, presupuesto y ahorro básico.',
+    description:
+      'Conoces al asesor del banco y aprendes a pasar de gastos vagos a gastos claros con monto, plazo y propósito. Entre la mesa de presupuesto, la alcancía y el combate final practicas cómo planear tu ahorro y tomar decisiones responsables con el dinero.',
     isAvailable: true,
     icon: 'target',
     color: 'from-blue-500 to-cyan-500',
     highlights: [
-      'Mapeo de metas SMART',
-      'Estaciones de presupuesto y ahorro',
-      'Juego de ritmo tipo guitar hero'
+      'Fundamentos con el asesor',
+      'Mesa de presupuesto y alcancía',
+      'Combate Finance Kombat final'
     ],
     duration: '15-20 min',
     difficulty: 'Principiante'
   },
   {
     id: 'unidad-2',
-    title: 'Mini-presupuesto: 50-30-20',
     number: '02',
-    tagline: 'Organiza tu dinero: necesidades, gustos y ahorro.',
-    description: 'Distingue gastos esenciales de opcionales para asi llevar una salud financiera y adapta la regla 50-30-20 a tu realidad financiera. Aprende a equilibrar necesidades, gustos personales y ahorro programado con casos cotidianos.',
+    title: 'Administración del Presupuesto',
+    tagline: 'Organiza tu presupuesto entre necesidades, gustos y ahorro.',
+    description:
+      'El asesor te enseña la regla 50-30-20 y organizas tu mes entre necesidades, gastos opcionales y ahorro. Recorres cocina, sala de juegos y dormitorio para clasificar gastos y luego equilibras tu presupuesto en el Dungeon del Equilibrio.',
     isAvailable: true,
     icon: 'wallet',
     color: 'from-purple-500 to-pink-500',
     highlights: [
-      'Casos cotidianos en casa',
-      'Regla 50-30-20 adaptable',
-      'Juego estratégico por turnos'
+      'Explicación simple 50-30-20',
+      'Minijuegos por tipo de gasto',
+      'Dungeon para equilibrar el presupuesto'
     ],
     duration: '15-20 min',
     difficulty: 'Principiante'
   },
   {
     id: 'unidad-3',
-    title: 'Préstamos inteligentes',
     number: '03',
-    tagline: 'Evalúa préstamos y elige la mejor opción.',
-    description: 'Compara cuota mensual, plazo, comisiones ocultas y costo total real antes de firmar cualquier crédito. Descubre cómo los trade-offs de un préstamo afectan tu bolsillo y cómo negociar pagos anticipados sostenibles.',
+    title: 'Análisis Financiero',
+    tagline: 'Usa indicadores para leer tu salud financiera.',
+    description:
+      'En el centro financiero conoces indicadores como liquidez, endeudamiento, eficiencia, rentabilidad y riesgo. A través de minijuegos los clasificas, los priorizas y en el Laboratorio de Decisiones analizas casos reales para decidir qué opciones son sostenibles.',
     isAvailable: true,
     icon: 'handshake',
     color: 'from-green-500 to-emerald-500',
     highlights: [
-      'Oficina de crédito interactiva',
-      'Comparador de ofertas en tiempo real',
-      'Puzzle de planificación de pagos'
+      'Mapa de indicadores clave',
+      'Retos de liquidez, riesgo y rentabilidad',
+      'Laboratorio de Decisiones final'
     ],
     duration: '20-25 min',
     difficulty: 'Intermedio'
   },
   {
     id: 'unidad-4',
-    title: 'Pagos digitales seguros',
     number: '04',
-    tagline: 'Usa QR, tarjetas y transferencias con seguridad.',
-    description: 'Identifica amenazas comunes en pagos digitales, valida información crítica y aplica protocolos de autenticación segura antes de aprobar cualquier transacción. Protege tu dinero de fraudes y estafas digitales.',
+    title: 'Toma de Decisiones Financieras',
+    tagline: 'Decide mejor sobre compras, deudas y metas.',
+    description:
+      'En la cafetería ves qué hace sólida una meta financiera y cómo tus decisiones diarias la aceleran o frenan. Usas el celular retro y la Ruta de Decisiones para evaluar compras, ahorros y deudas, diferenciando elecciones responsables de riesgosas.',
     isAvailable: true,
     icon: 'shield-check',
     color: 'from-orange-500 to-red-500',
     highlights: [
-      'Cafetería con escenarios reales',
-      'Checklist de verificación paso a paso',
-      'Tower defense contra intentos de fraude'
+      'Cafetería con escenarios cotidianos',
+      'Análisis de metas en el celular',
+      'Ruta de Decisiones evaluativa'
     ],
     duration: '15-20 min',
     difficulty: 'Intermedio'
