@@ -1,48 +1,30 @@
-// src/pages/unit1/EvaluationStage.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../css/EvaluationStage.css';
+// src/pages/unit1/TutorialStage.jsx
+import React from 'react';
+import '../css/TutorialStage.css';
 
-// IMPORTAMOS EL JUEGO
-import { PuzzleGamePanel } from '../../games/evaluation/PuzzleGamePanel';
+// Juego de la unidad 2
+import { GameWorld } from '../../games/unit2/components/GameWorld';
+import '../../games/unit2/styles/globals.css';
 
-export default function EvaluationStage({ onComplete, unitColor }) {
-  const navigate = useNavigate();
-  const [showGame, setShowGame] = useState(true);
+export default function TutorialStage({ onComplete }) {
 
-  const handleFinishEvaluation = () => {
+  const handleContinue = () => {
     if (typeof onComplete === 'function') {
-      onComplete();
+      onComplete(); // Avanza a EvaluationStage
     }
-    navigate('/'); // Regresa a módulos
   };
 
   return (
     <div className="tutorial-map-container">
 
-      {/* Contenedor central tipo TutorialStage */}
-      <div className="evaluation-map-frame">
-        {showGame && (
-          <PuzzleGamePanel
-            onComplete={handleFinishEvaluation}
-            onClose={() => setShowGame(false)}
-          />
-        )}
-
-        {!showGame && (
-          <div className="evaluation-empty">
-            <h2 className="evaluation-title">Evaluación</h2>
-            <p className="evaluation-description">
-              Completa la actividad o continúa cuando quieras.
-            </p>
-          </div>
-        )}
-      </div>
+      {/* Escena del banco UNIT 2 */}
+      <GameWorld onComplete={() => {}} />
 
       {/* Botón flotante SIEMPRE visible */}
-      <div className="floating-continue-btn" onClick={handleFinishEvaluation}>
+      <div className="floating-continue-btn" onClick={handleContinue}>
         Continuar →
       </div>
+
     </div>
   );
 }
