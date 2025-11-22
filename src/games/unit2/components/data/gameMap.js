@@ -51,16 +51,6 @@ export const interactiveObjects = [
     dialogue: null,
   },
 
-  {
-    id: 'management_pc',
-    x: 10,
-    y: 1,
-    type: 'computer',
-    name: 'Simulador',
-    icon: '💻',
-    action: 'expense_game',
-    dialogue: null,
-  },
 ];
 
 // Diálogos de MK-25

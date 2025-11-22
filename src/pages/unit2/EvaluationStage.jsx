@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/EvaluationStage.css';
-
+import { GameWorldSimple } from '../../games/unit2/components/GameEvaluation';
+import '../../games/unit2/styles/globals.css';
 export default function EvaluationStage({ onComplete, unitColor }) {
   const navigate = useNavigate();
 
@@ -12,17 +13,13 @@ export default function EvaluationStage({ onComplete, unitColor }) {
 
   return (
     <div className="stage-container">
-      <div className="evaluation-empty">
         <h2 className="evaluation-title">Evaluación</h2>
+      {/* Escena del banco UNIT 2 */}
+      <GameWorldSimple onComplete={() => {}} />
 
-        <p className="evaluation-description">
-          Aquí estará la evaluación interactiva de esta unidad.  
-          Esta vista está limpia y lista para agregar el juego de preguntas más adelante.
-        </p>
-
-        <button className="evaluation-finish-btn" onClick={handleFinish}>
-          Finalizar evaluación
-        </button>
+      {/* Botón flotante SIEMPRE visible */}
+      <div className="floating-continue-btn" onClick={handleFinish}>
+        Continuar →
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { NPC } from '../components/game/NPC';
 import DialogueBox from '../components/game/DialogueBox';
 import { BudgetPanel } from '../components/game/BudgetPanel';
 import { MemoryGamePanel } from '../components/game/MemoryGamePanel';
-import { PuzzleGamePanel } from './game/PuzzleGamePanel';
+
 import { gameMap, interactiveObjects, mk25Dialogues, zoneDialogues } from '../components/data/gameMap';
 import mk25Sprite from '../assets/mk25sprite.png';
 
@@ -838,17 +838,6 @@ export function GameWorld({ onComplete } = {}) {
           />
         )}
 
-        {gameState === 'puzzle_game' && (
-          <PuzzleGamePanel
-            onComplete={() => {
-              // Puzzle completado
-              setGameState('exploring');
-            }}
-            onClose={() => {
-              setGameState('exploring');
-            }}
-          />
-        )}
       </div>
 
       {gameState === 'dialogue' && currentDialogueQueue[currentDialogueIndex] && (() => {
