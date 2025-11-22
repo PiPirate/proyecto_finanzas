@@ -2,9 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, CheckCircle } from 'lucide-react';
 import '../css/VideoStage.css';
 
-
-import demoVideo from '../../assets/unit1/Modulo1.mp4'; 
-
+import demoVideo from '../../assets/unit1/Modulo1.mp4';
 
 export default function VideoStage({ onComplete, unitColor }) {
   const videoRef = useRef(null);
@@ -16,6 +14,7 @@ export default function VideoStage({ onComplete, unitColor }) {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const handlePlayPause = () => {
+    if (!videoRef.current) return;
     if (!isPlaying) {
       videoRef.current.play();
     } else {
@@ -25,77 +24,48 @@ export default function VideoStage({ onComplete, unitColor }) {
   };
 
   const handleMute = () => {
+    if (!videoRef.current) return;
     videoRef.current.muted = !isMuted;
     setIsMuted(!isMuted);
   };
 
   const handleFullscreen = () => {
-    if (videoRef.current.requestFullscreen) {
+    if (videoRef.current && videoRef.current.requestFullscreen) {
       videoRef.current.requestFullscreen();
     }
   };
 
   const handleTimeUpdate = () => {
-    const current = videoRef.current.currentTime;
-    const total = videoRef.current.duration;
+    if (!videoRef.current) return;
+    const current = videoRef.current.currentTime || 0;
+    const total = videoRef.current.duration || 0;
+    if (!total) return;
     setProgress((current / total) * 100);
   };
 
   const handleLoadedMetadata = () => {
-    setDuration(videoRef.current.duration);
+    if (!videoRef.current) return;
+    setDuration(videoRef.current.duration || 0);
   };
 
   const handleVideoEnd = () => {
     setIsPlaying(false);
-    setIsCompleted(true);
+    setIsCompleted(true); // solo aquí se puede continuar
   };
 
   const formatTime = (sec) => {
-    if (!sec) return "0:00";
+    if (!sec || Number.isNaN(sec)) return '0:00';
     const minutes = Math.floor(sec / 60);
-    const seconds = Math.floor(sec % 60).toString().padStart(2, "0");
+    const seconds = Math.floor(sec % 60).toString().padStart(2, '0');
     return `${minutes}:${seconds}`;
   };
-
-const keyPoints = [
-  { 
-    id: 1, 
-    title: 'Del deseo a la meta', 
-    description: 'Pasa de “quiero ahorrar” a una meta concreta.'
-  },
-  { 
-    id: 2, 
-    title: 'Meta conectada a tu vida', 
-    description: 'Que la meta encaje con tu realidad y prioridades.'
-  },
-  { 
-    id: 3, 
-    title: 'Pasos pequeños', 
-    description: 'Divide la meta en aportes mensuales manejables.'
-  },
-  { 
-    id: 4, 
-    title: 'Primer paso hoy', 
-    description: 'Elige una acción pequeña que puedas hacer hoy.'
-  },
-  { 
-    id: 5, 
-    title: 'Revisión y ajuste', 
-    description: 'Ajusta la meta si cambian tus ingresos o gastos.'
-  }
-];
-
-
-
 
   return (
     <div className="stage-container">
       <div className="stage-grid">
-        
-        {/* VIDEO PLAYER */}
-        <div className="video-section">
+        {/* VIDEO PLAYER ocupando todo el ancho */}
+        <div className="video-section" style={{ gridColumn: '1 / -1' }}>
           <div className="video-player">
-            
             {/* VIDEO */}
             <div className="video-screen">
               <video
@@ -109,8 +79,8 @@ const keyPoints = [
 
               {/* PROGRESS */}
               <div className="video-progress-bar">
-                <div 
-                  className="video-progress-fill" 
+                <div
+                  className="video-progress-fill"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -153,42 +123,27 @@ const keyPoints = [
           </div>
         </div>
 
-        {/* SIDEBAR */}
-        <div className="sidebar-section">
-          <div className="sidebar-card">
-            <h3 className="sidebar-title">Puntos Clave</h3>
-
-            <div className="key-points-list">
-              {keyPoints.map((point, index) => (
-                <div key={point.id} className="key-point-item">
-                  <div className="key-point-number">{index + 1}</div>
-                  <div>
-                    <div className="key-point-title">{point.title}</div>
-                    <div className="key-point-description">{point.description}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="sidebar-divider" />
-
-            <div className="example-box">
-              <div className="example-label">Ejemplo</div>
-              <div className="example-content">
-                "Meta: reparar tu celular en 3 meses. Cuesta 300; ahorras 100 cada mes."
-              </div>
-            </div>
-          </div>
-
-          {isCompleted && (
+        {/* BOTÓN DE CONTINUAR ABAJO DEL VIDEO (solo tras ver el video completo) */}
+        {isCompleted && (
+          <div
+            className="video-continue-wrapper"
+            style={{ gridColumn: '1 / -1', marginTop: '16px' }}
+          >
             <button onClick={onComplete} className="continue-button">
               Continuar al Tutorial
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
