@@ -173,7 +173,7 @@ export default function PiggySavingsGame({ visible, onFinished }) {
 
   return (
     <div className="piggy-overlay">
-      <div className="piggy-frame">
+      <div className="piggy-frame minigame-container">
         <div className="piggy-pig-wrapper">
           <img
             src={pigIcon}

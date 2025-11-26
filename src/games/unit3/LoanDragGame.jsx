@@ -413,7 +413,7 @@ export default function LoanDragGame({ visible, onComplete }) {
     if (showIntro) {
         return (
             <div className="loan-game-overlay">
-                <div className="loan-game-window intro">
+            <div className="loan-game-window intro minigame-container">
                     <h2>Aprende sobre análisis financieros</h2>
                     <p>No necesitas saber nada. Aquí aprenderás paso a paso, arrastrando ideas claras y entendibles.</p>
                     <button className="loan-finish-btn" onClick={() => {
@@ -430,7 +430,7 @@ export default function LoanDragGame({ visible, onComplete }) {
     if (showEnding) {
         return (
             <div className="loan-game-overlay">
-                <div className="loan-game-window intro">
+                <div className="loan-game-window intro minigame-container">
                     <h2> ¡Muy bien!</h2>
                     <p>Ahora tienes una comprensión completa y práctica sobre cómo funciona el análisis financiero.</p>
                     <button className="loan-finish-btn" onClick={onComplete}>Finalizar</button>
@@ -443,7 +443,7 @@ export default function LoanDragGame({ visible, onComplete }) {
 
     return (
         <div className="loan-game-overlay">
-            <div className="loan-game-window">
+            <div className="loan-game-window minigame-container">
 
                 <h2 className="module-title">{module.title}</h2>
                 <p className="module-desc">{module.description}</p>
