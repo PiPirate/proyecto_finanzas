@@ -51,6 +51,7 @@
   text-align: center;
   max-width: 280px;
   font-size: 0.95rem;
+  z-index: 900;
 }
 
 .tutorial-continue-btn {
