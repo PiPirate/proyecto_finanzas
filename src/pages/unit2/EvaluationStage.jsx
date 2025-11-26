@@ -4,7 +4,7 @@ import '../css/EvaluationStage.css';
 import { GameWorldSimple } from '../../games/unit2/components/GameEvaluation';
 import '../../games/unit2/styles/globals.css';
 import GameViewport from '../../components/responsive/GameViewport';
-export default function EvaluationStage({ onComplete, unitColor }) {
+export default function EvaluationStage({ onComplete, unitColor,}) {
   const navigate = useNavigate();
 
   const handleFinish = () => {
@@ -13,9 +13,9 @@ export default function EvaluationStage({ onComplete, unitColor }) {
   };
 
   return (
-    <GameViewport showControls={false} forceFullscreen>
+    <GameViewport showControls={true} forceFullscreen>
       <div className="stage-container">
-        <h2 className="evaluation-title">Evaluación</h2>
+        
         {/* Escena del banco UNIT 2 */}
         <GameWorldSimple onComplete={() => {}} />
 

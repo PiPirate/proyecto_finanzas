@@ -3,7 +3,7 @@ import { TileMap } from '../components/game/TileMap';
 import { Player } from '../components/game/Player';
 import DialogueBox from '../components/game/DialogueBox';
 import { PuzzleGamePanel } from './game/PuzzleGamePanel';
-import { gameMap} from '../components/data/gameMap';
+import { gameMap } from '../components/data/gameMap';
 import useCameraFollow from '../../core/hooks/useCameraFollow';
 import { useDeviceMode } from '../../../hooks/useDeviceMode';
 
@@ -43,6 +43,7 @@ export function GameWorldSimple({ onComplete }) {
     mapDimensions,
     isEnabled: isMobile,
   });
+
   const touchStartRef = useRef({ x: 0, y: 0 });
 
   // Objeto interactivo simplificado - solo la computadora
@@ -70,7 +71,7 @@ export function GameWorldSimple({ onComplete }) {
         setIntroShown(true);
       }, 500);
     }
-  }, []);
+  }, [introShown]);
 
   const startDialogueSequence = (dialogues) => {
     setCurrentDialogueQueue(dialogues);
@@ -113,24 +114,27 @@ export function GameWorldSimple({ onComplete }) {
       case 'right':
         newX += 1;
         break;
+      default:
+        break;
     }
 
     if (isWalkable(newX, newY)) {
       setIsMoving(true);
       setPlayerPos({ x: newX, y: newY });
       setTimeout(() => setIsMoving(false), 200);
+
       setCanMove(false);
       setTimeout(() => setCanMove(true), MOVE_COOLDOWN);
     }
-    
+
     // Detectar objeto enfrentado después del movimiento
     updateFacingObject(newX, newY, newDir);
   }, [playerPos, gameState, canMove]);
-  
+
   const updateFacingObject = (x, y, dir) => {
     let targetX = x;
     let targetY = y;
-    
+
     switch (dir) {
       case 'up':
         targetY -= 1;
@@ -144,11 +148,13 @@ export function GameWorldSimple({ onComplete }) {
       case 'right':
         targetX += 1;
         break;
+      default:
+        break;
     }
-    
+
     const obj = getObjectAt(targetX, targetY);
     const isNearby = obj ? Math.abs(x - obj.x) <= 1 && Math.abs(y - obj.y) <= 1 : false;
-    
+
     if (obj && isNearby) {
       setFacingObjectName(obj.name);
     } else {
@@ -175,12 +181,14 @@ export function GameWorldSimple({ onComplete }) {
       case 'right':
         interactX += 1;
         break;
+      default:
+        break;
     }
 
     const obj = getObjectAt(interactX, interactY);
 
     if (obj && obj.id === 'management_pc') {
-      // Abrir directamente el puzzle game
+      // Abrir directamente el puzzle game evaluativo
       setGameState('puzzle_game');
     }
   }, [playerPos, direction, gameState]);
@@ -264,6 +272,8 @@ export function GameWorldSimple({ onComplete }) {
           e.preventDefault();
           handleMove('right');
           break;
+        default:
+          break;
       }
     };
 
@@ -283,17 +293,17 @@ export function GameWorldSimple({ onComplete }) {
 
   const viewportStyle = isMobile
     ? {
-      width: '100%',
-      height: '100%',
-      minHeight: 'var(--app-vh, 100dvh)',
-      overflow: 'hidden',
-    }
+        width: '100%',
+        height: '100%',
+        minHeight: 'var(--app-vh, 100dvh)',
+        overflow: 'hidden',
+      }
     : undefined;
 
   const cameraStyle = isMobile
     ? {
-      transform: `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)`,
-    }
+        transform: `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)`,
+      }
     : undefined;
 
   return (
@@ -306,7 +316,6 @@ export function GameWorldSimple({ onComplete }) {
         if (isMobile && gameState === 'exploring') e.preventDefault();
       }}
     >
-
       <div
         className="game-world-container"
         ref={isMobile ? viewportRef : null}
@@ -318,7 +327,9 @@ export function GameWorldSimple({ onComplete }) {
           {/* Objeto interactivo - Computadora */}
           {(() => {
             const obj = computerObject;
-            const isNearby = Math.abs(playerPos.x - obj.x) <= 1 && Math.abs(playerPos.y - obj.y) <= 1;
+            const isNearby =
+              Math.abs(playerPos.x - obj.x) <= 1 &&
+              Math.abs(playerPos.y - obj.y) <= 1;
 
             let targetX = playerPos.x;
             let targetY = playerPos.y;
@@ -336,14 +347,22 @@ export function GameWorldSimple({ onComplete }) {
               case 'right':
                 targetX += 1;
                 break;
+              default:
+                break;
             }
 
-            const facingObject = Math.abs(targetX - obj.x) < 0.6 && Math.abs(targetY - obj.y) < 0.6;
+            const facingObject =
+              Math.abs(targetX - obj.x) < 0.6 &&
+              Math.abs(targetY - obj.y) < 0.6;
 
             return (
               <div
                 key={obj.id}
-                className={`interactive-object ${isNearby && facingObject ? 'interactive-object--highlighted' : ''}`}
+                className={`interactive-object ${
+                  isNearby && facingObject
+                    ? 'interactive-object--highlighted'
+                    : ''
+                }`}
                 style={{
                   position: 'absolute',
                   left: `${obj.x * TILE_SIZE}px`,
@@ -364,39 +383,43 @@ export function GameWorldSimple({ onComplete }) {
           })()}
 
           <Player position={playerPos} direction={direction} isMoving={isMoving} />
-
-          {/* Puzzle Game */}
-          {gameState === 'puzzle_game' && (
-            <PuzzleGamePanel
-              onComplete={() => {
-                setGameState('exploring');
-                if (onComplete) {
-                  onComplete();
-                }
-              }}
-              onClose={() => {
-                setGameState('exploring');
-              }}
-            />
-          )}
         </div>
       </div>
 
+      {/* Puzzle Game evaluativo como overlay, igual que en el juego grande */}
+      {gameState === 'puzzle_game' && (
+        <PuzzleGamePanel
+          onComplete={() => {
+            setGameState('exploring');
+            if (onComplete) {
+              onComplete();
+            }
+          }}
+          onClose={() => {
+            setGameState('exploring');
+          }}
+        />
+      )}
+
       {/* Diálogos */}
-      {gameState === 'dialogue' && currentDialogueQueue && currentDialogueQueue[currentDialogueIndex] && (() => {
-        const dialogue = currentDialogueQueue[currentDialogueIndex];
-        const speakerName = dialogue.speaker === 'system' ? 'Sistema' : 'Instructor';
-        
-        return (
-          <DialogueBox 
-            text={dialogue.text}
-            speakerName={speakerName}
-            onNext={handleDialogueAdvance}
-            speakingSprite={undefined}
-            idleSprite={undefined}
-          />
-        );
-      })()}
+      {gameState === 'dialogue' &&
+        currentDialogueQueue &&
+        currentDialogueQueue[currentDialogueIndex] &&
+        (() => {
+          const dialogue = currentDialogueQueue[currentDialogueIndex];
+          const speakerName =
+            dialogue.speaker === 'system' ? 'Sistema' : 'Instructor';
+
+          return (
+            <DialogueBox
+              text={dialogue.text}
+              speakerName={speakerName}
+              onNext={handleDialogueAdvance}
+              speakingSprite={undefined}
+              idleSprite={undefined}
+            />
+          );
+        })()}
 
       {/* Barra de instrucciones inferior */}
       {gameState === 'exploring' && facingObjectName && (
