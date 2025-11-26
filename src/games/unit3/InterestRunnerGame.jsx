@@ -102,7 +102,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
     const [showIntro, setShowIntro] = useState(true);
 
     const gravity = 1.1;
-    const goalDistance = 5800; // distancia para ganar
+    const goalDistance = 100; // distancia para ganar
 
     // ---------- GENERACIÓN DE ÍTEMS ----------
     const spawnItem = () => {

@@ -373,7 +373,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
 
             {/* Tarjeta principal */}
             <div
-                className="loan-card minigame-container"
+                className="loan-card"
                 draggable
                 onDragStart={onDragStart}
                 onDrag={onDrag}

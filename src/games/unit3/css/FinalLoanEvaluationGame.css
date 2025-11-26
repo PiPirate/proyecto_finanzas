@@ -1,5 +1,5 @@
 /* ----------------------------------------------
-   CONTENEDOR PRINCIPAL DEL JUEGO
+   1. CONTENEDOR PRINCIPAL DEL JUEGO
 ---------------------------------------------- */
 .final-loan-overlay {
     position: fixed;
@@ -15,7 +15,7 @@
 }
 
 /* ----------------------------------------------
-   TARJETA PRINCIPAL (POKER CARD)
+   2. TARJETA PRINCIPAL (POKER CARD)
 ---------------------------------------------- */
 .loan-card {
     background: #fafafa;
@@ -28,6 +28,10 @@
     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
     cursor: grab;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    /* Para centrar contenido si es necesario */
+    display: flex;
+    flex-direction: column;
 }
 
 .loan-card:active {
@@ -66,7 +70,7 @@
 }
 
 /* ----------------------------------------------
-   TARJETAS LATERALES (OPCIONES)
+   3. TARJETAS LATERALES (OPCIONES)
 ---------------------------------------------- */
 .side-card {
     position: absolute;
@@ -81,42 +85,53 @@
     text-align: center;
     transition: 0.2s ease;
     pointer-events: none;
+    z-index: 100;
 }
 
 .side-card:hover {
     transform: scale(1.05);
 }
 
-/* Lateral izquierdo */
+/* Posiciones por defecto (PC) */
 .side-left {
     left: 8%;
     top: 50%;
     transform: translateY(-50%);
 }
 
-/* Lateral derecho */
 .side-right {
     right: 8%;
     top: 50%;
     transform: translateY(-50%);
 }
 
-/* Superior */
 .side-up {
     top: 8%;
     left: 50%;
     transform: translateX(-50%);
 }
 
-/* Inferior */
 .side-down {
     bottom: 8%;
     left: 50%;
     transform: translateX(-50%);
 }
 
+/* Highlights dinámicos */
+.side-card.highlight {
+    transform: scale(1.12);
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.25);
+    border: 3px solid #fff;
+}
+
+.side-right.highlight { box-shadow: 0 0 20px 6px rgba(0, 255, 0, 0.7); }
+.side-left.highlight { box-shadow: 0 0 20px 6px rgba(255, 0, 0, 0.7); }
+.side-up.highlight { box-shadow: 0 0 20px 6px rgba(0, 150, 255, 0.7); }
+.side-down.highlight { box-shadow: 0 0 20px 6px rgba(255, 200, 0, 0.7); }
+
 /* ----------------------------------------------
-   FEEDBACK EFECTO BURBUJA
+   4. FEEDBACK EFECTO BURBUJA
 ---------------------------------------------- */
 .feedback-box {
     position: absolute;
@@ -132,19 +147,12 @@
 }
 
 @keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.6);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+    from { opacity: 0; transform: scale(0.6); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 /* ----------------------------------------------
-   PANTALLA FINAL
+   5. PANTALLA FINAL
 ---------------------------------------------- */
 .final-screen {
     position: fixed;
@@ -156,7 +164,6 @@
     z-index: 300;
 }
 
-/* Caja final */
 .final-box {
     width: 500px;
     padding: 30px;
@@ -167,28 +174,13 @@
 }
 
 @keyframes dropIn {
-    from {
-        opacity: 0;
-        transform: translateY(-40px) scale(0.8);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(-40px) scale(0.8); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.final-box.success {
-    background: linear-gradient(135deg, #22c55e, #15803d);
-}
-
-.final-box.medium {
-    background: linear-gradient(135deg, #facc15, #d97706);
-}
-
-.final-box.fail {
-    background: linear-gradient(135deg, #ef4444, #991b1b);
-}
+.final-box.success { background: linear-gradient(135deg, #22c55e, #15803d); }
+.final-box.medium { background: linear-gradient(135deg, #facc15, #d97706); }
+.final-box.fail { background: linear-gradient(135deg, #ef4444, #991b1b); }
 
 .score {
     margin-top: 10px;
@@ -196,9 +188,6 @@
     font-weight: bold;
 }
 
-/* ----------------------------------------------
-   BOTONES FINALES
----------------------------------------------- */
 .final-buttons {
     margin-top: 20px;
     display: flex;
@@ -206,8 +195,7 @@
     justify-content: center;
 }
 
-.retry-btn,
-.finish-btn {
+.retry-btn, .finish-btn {
     padding: 12px 20px;
     border-radius: 10px;
     cursor: pointer;
@@ -217,50 +205,84 @@
     transition: 0.2s ease;
 }
 
-.retry-btn {
-    background: #ffffff;
-    color: #d32f2f;
-}
+.retry-btn { background: #ffffff; color: #d32f2f; }
+.retry-btn:hover { background: #ffe7e7; }
 
-.retry-btn:hover {
-    background: #ffe7e7;
-}
+.finish-btn { background: #ffffff; color: #1e3a8a; }
+.finish-btn:hover { background: #e0ebff; }
 
-.finish-btn {
-    background: #ffffff;
-    color: #1e3a8a;
-}
 
-.finish-btn:hover {
-    background: #e0ebff;
-}
+/* ==========================================================================
+   6. MEDIA QUERY: AJUSTES PARA CELULARES
+   (Colocado al final para asegurar que sobrescriba los estilos anteriores)
+   ========================================================================== */
+@media (max-width: 900px) { 
+    
+    /* Ajuste del contenedor general */
+    .final-loan-overlay {
+        transform: none; /* Quitamos cualquier escalado global */
+        padding: 10px;
+        align-items: center;
+    }
 
-/* Colores para highlight dinámico */
-.side-card.highlight {
-    transform: scale(1.12);
-    font-weight: bold;
-    background: rgba(255, 255, 255, 0.25);
-    border: 3px solid #fff;
-}
+    /* Ajuste de la tarjeta central */
+    .loan-card {
+        width: 85vw !important; /* Forzamos el ancho */
+        min-height: auto;
+        height: auto;
+        max-height: 75vh;
+        padding: 20px;
+        
+        /* Quitamos transformaciones que achicaban la carta */
+        transform: none !important;
+        
+        /* Habilitar scroll interno si el texto es muy largo */
+        overflow-y: auto;
+    }
+    
+    /* Texto más pequeño en la tarjeta */
+    .loan-card h2 { font-size: 22px; margin-bottom: 8px; }
+    .loan-card h3 { font-size: 16px; margin-top: 12px; }
+    .loan-card p { font-size: 13px; }
+    .loan-card ul { padding-left: 15px; font-size: 13px; }
 
-/* Colores individuales por dirección */
-.side-right.highlight {
-    box-shadow: 0 0 20px 6px rgba(0, 255, 0, 0.7);
-}
+    /* Ajuste de las tarjetas laterales (Opciones) */
+    .side-card {
+        width: auto;
+        max-width: 100px; /* Mucho más estrechas */
+        padding: 8px 10px;
+        font-size: 11px;
+        line-height: 1.2;
+        background: rgba(255, 255, 255, 0.95);
+        z-index: 250; /* Por encima de todo */
+    }
 
-.side-left.highlight {
-    box-shadow: 0 0 20px 6px rgba(255, 0, 0, 0.7);
-}
+    /* Reposicionamiento para que no estorben */
+    .side-left {
+        left: 5px;
+        transform: translateY(-50%);
+    }
 
-.side-up.highlight {
-    box-shadow: 0 0 20px 6px rgba(0, 150, 255, 0.7);
-}
+    .side-right {
+        right: 5px;
+        transform: translateY(-50%);
+    }
 
-.side-down.highlight {
-    box-shadow: 0 0 20px 6px rgba(255, 200, 0, 0.7);
-}
+    .side-up {
+        top: 15px;
+        max-width: 200px; /* Arriba puede ser más ancha */
+        transform: translateX(-50%);
+    }
 
-/* Transición suave */
-.side-card {
-    transition: 0.25s ease;
+    .side-down {
+        bottom: 15px;
+        max-width: 200px; /* Abajo puede ser más ancha */
+        transform: translateX(-50%);
+    }
+    
+    /* Ajustes finales de la pantalla de resultado para móvil */
+    .final-box {
+        width: 90%;
+        padding: 20px;
+    }
 }
