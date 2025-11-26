@@ -205,28 +205,32 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     if (endScreen) {
         return (
             <div className="final-loan-overlay">
-                <div className={`final-box ${endScreen.type}`}>
-                    <h2>Resultado final</h2>
-                    <p>{endScreen.msg}</p>
-                    <p className="score">Aciertos: {correctCount} / {rounds.length}</p>
+                <div className={`final-box ${endScreen.type} minigame-container`}>
+                    <div className="minigame-header">
+                        <h2>Resultado final</h2>
+                    </div>
+                    <div className="minigame-content">
+                        <p>{endScreen.msg}</p>
+                        <p className="score">Aciertos: {correctCount} / {rounds.length}</p>
 
-                    <div className="final-buttons">
-                        {endScreen.type !== "success" && (
-                            <button className="retry-btn" onClick={resetGame}>
-                                Reintentar
+                        <div className="final-buttons">
+                            {endScreen.type !== "success" && (
+                                <button className="retry-btn" onClick={resetGame}>
+                                    Reintentar
+                                </button>
+                            )}
+
+                            <button
+                                className="finish-btn"
+                                onClick={() => onFinish({
+                                    score: correctCount,
+                                    total: rounds.length,
+                                    passed: endScreen.type === "success"
+                                })}
+                            >
+                                Finalizar
                             </button>
-                        )}
-
-                        <button
-                            className="finish-btn"
-                            onClick={() => onFinish({
-                                score: correctCount,
-                                total: rounds.length,
-                                passed: endScreen.type === "success"
-                            })}
-                        >
-                            Finalizar
-                        </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -369,7 +373,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
 
             {/* Tarjeta principal */}
             <div
-                className="loan-card"
+                className="loan-card minigame-container"
                 draggable
                 onDragStart={onDragStart}
                 onDrag={onDrag}
@@ -379,20 +383,24 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
                 onTouchEnd={(e) => { e.preventDefault(); onDragEnd(e); }}
             >
 
-                <h2>Ronda {index + 1} / {rounds.length}</h2>
+                <div className="minigame-header">
+                    <h2>Ronda {index + 1} / {rounds.length}</h2>
+                </div>
 
-                <h3>Situación</h3>
-                <p>{round.situation}</p>
+                <div className="minigame-content minigame-scroll-area">
+                    <h3>Situación</h3>
+                    <p>{round.situation}</p>
 
-                <h3>Oferta del préstamo</h3>
-                <ul>
-                    <li><strong>Monto:</strong> {round.offer.monto}</li>
-                    <li><strong>Tasa:</strong> {round.offer.tasa}</li>
-                    <li><strong>Plazo:</strong> {round.offer.plazo}</li>
-                    <li><strong>Cuota mensual:</strong> {round.offer.cuota}</li>
-                </ul>
+                    <h3>Oferta del préstamo</h3>
+                    <ul>
+                        <li><strong>Monto:</strong> {round.offer.monto}</li>
+                        <li><strong>Tasa:</strong> {round.offer.tasa}</li>
+                        <li><strong>Plazo:</strong> {round.offer.plazo}</li>
+                        <li><strong>Cuota mensual:</strong> {round.offer.cuota}</li>
+                    </ul>
 
-                <p className="swipe-hint">Arrastra esta carta hacia una opción</p>
+                    <p className="swipe-hint">Arrastra esta carta hacia una opción</p>
+                </div>
             </div>
 
             {feedback && <div className="feedback-box">{feedback}</div>}

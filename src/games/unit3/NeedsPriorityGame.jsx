@@ -180,7 +180,7 @@ export default function NeedsPriorityGame({ visible, onComplete }) {
 
     return (
         <div className="needs-overlay">
-            <div className="needs-window">
+            <div className="needs-window minigame-container">
 
                 <div className="needs-columns">
 

@@ -262,7 +262,7 @@ export default function SnakeFinancialGame({ visible, onComplete }) {
 
             {/* =============== INTRO MODAL =============== */}
             {showIntro && (
-                <div className="snake-window">
+                <div className="snake-window minigame-container">
                     <div className="container-intro">
                         <h2>Gestor de Riesgo Financiero</h2>
 
@@ -292,7 +292,7 @@ export default function SnakeFinancialGame({ visible, onComplete }) {
 
             {/* =============== GAME WINDOW =============== */}
             {!showIntro && (
-                <div className="snake-window">
+                <div className="snake-window minigame-container">
 
                     {/* CANVAS DEL JUEGO */}
                     <canvas
