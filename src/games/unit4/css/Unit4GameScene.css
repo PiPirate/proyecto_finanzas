@@ -33,7 +33,8 @@
 }
 
 /* NUEVO: wrapper que escala solo el mapa de la cafetería */
-.unit4-game-inner {       /* 0.8 = como verlo al 80% */
+.unit4-game-inner {
+  transform: scale(0.7);           /* 0.8 = como verlo al 80% */
   transform-origin: top center;    /* se encoge hacia abajo manteniendo el top */
 }
 
