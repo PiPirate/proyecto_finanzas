@@ -1,9 +1,11 @@
 // src/games/unit4/Unit4GameScene.jsx
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import TileMap from '../core/map/TileMap';
 import Player from '../core/player/Player';
 import usePlayerMovement from '../core/hooks/usePlayerMovement';
+import useCameraFollow from '../core/hooks/useCameraFollow';
 import { DialogueBoxUnit4 } from '../core/dialogue/DialogueBox';
+import { useDeviceMode } from '../../hooks/useDeviceMode';
 
 import {
   unit4MapMatrix,
@@ -157,6 +159,7 @@ const vendorQrOutroDialogue = [
 ];
 
 function Unit4GameScene({ onGoalReached }) {
+  const { isMobile } = useDeviceMode();
   // 'intro' | 'vendorIntro' | 'vendorReminder' | 'phoneIntro'
   // | 'phoneOutro' | 'vendorQrIntro' | 'vendorQrOutro' | null
   const [dialogueMode, setDialogueMode] = useState('intro');
@@ -284,6 +287,21 @@ function Unit4GameScene({ onGoalReached }) {
     }
   );
 
+  const mapDimensions = useMemo(
+    () => ({
+      width: unit4MapMatrix[0].length * unit4TileSize,
+      height: unit4MapMatrix.length * unit4TileSize,
+    }),
+    [],
+  );
+
+  const { cameraPosition, viewportRef } = useCameraFollow({
+    playerPixelPosition: pixelPosition,
+    mapDimensions,
+    isEnabled: isMobile,
+  });
+  // cameraPosition indica el offset aplicado al mapa en móvil (acotado al borde en el hook).
+
   /* ======= CLICK EN TILES ======= */
 
   const handleTileClick = ({ x, y, value }) => {
@@ -334,6 +352,25 @@ function Unit4GameScene({ onGoalReached }) {
       return;
     }
   };
+
+  const findNearestInteractive = useCallback(() => {
+    const MAX_DISTANCE = 2.1;
+    let closest = null;
+    let closestDistance = Infinity;
+
+    unit4InteractiveZones.forEach((zone) => {
+      const tileValue = unit4MapMatrix?.[zone.y]?.[zone.x];
+      if (tileValue !== 2) return;
+
+      const dist = Math.hypot(zone.x - tilePosition.x, zone.y - tilePosition.y);
+      if (dist <= MAX_DISTANCE && dist < closestDistance) {
+        closest = zone;
+        closestDistance = dist;
+      }
+    });
+
+    return closest;
+  }, [tilePosition.x, tilePosition.y]);
 
   /* ======= AVANZAR DIÁLOGO ======= */
 
@@ -419,6 +456,26 @@ function Unit4GameScene({ onGoalReached }) {
     }
   };
 
+  useEffect(() => {
+    if (!isMobile) return undefined;
+
+    const handleMobileAction = () => {
+      if (isDialogueVisible) {
+        handleDialogueNext();
+        return;
+      }
+
+      const nearest = findNearestInteractive();
+      if (nearest) {
+        const value = unit4MapMatrix?.[nearest.y]?.[nearest.x] ?? 2;
+        handleTileClick({ x: nearest.x, y: nearest.y, value });
+      }
+    };
+
+    window.addEventListener('mobile-action', handleMobileAction);
+    return () => window.removeEventListener('mobile-action', handleMobileAction);
+  }, [findNearestInteractive, handleDialogueNext, handleTileClick, isDialogueVisible, isMobile]);
+
   return (
     <div className="unit4-game-container">
       {/* Wrapper escalable solo para Unit 4 */}
@@ -428,6 +485,8 @@ function Unit4GameScene({ onGoalReached }) {
           tileSize={unit4TileSize}
           mapImage={cafeImage}
           onTileClick={handleTileClick}
+          cameraPosition={isMobile ? cameraPosition : null}
+          viewportRef={isMobile ? viewportRef : null}
         >
           <Player
             pixelPosition={pixelPosition}
