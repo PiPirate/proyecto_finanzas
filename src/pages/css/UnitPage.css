@@ -124,6 +124,21 @@
   background: linear-gradient(to bottom, #fff, #f9fafb);
 }
 
+.unit-page--fullscreen {
+  background: #0b1120;
+  min-height: var(--app-vh, 100dvh);
+}
+
+.unit-fullscreen-shell {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: var(--app-vh, 100dvh);
+  z-index: 1200;
+  overflow: hidden;
+  background: #0b1120;
+}
+
 .unit-page-container {
   max-width: 1600px;
   margin: 0 auto;
