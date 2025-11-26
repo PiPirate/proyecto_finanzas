@@ -667,7 +667,7 @@ export function TowerDefensePanel({ onComplete, onClose }) {
 
   return (
     <div className="td-overlay">
-      <div className="td-panel">
+      <div className="td-panel minigame-container">
         {/* INTRO */}
         {gamePhase === 'intro' && (
           <div className="td-intro-content">

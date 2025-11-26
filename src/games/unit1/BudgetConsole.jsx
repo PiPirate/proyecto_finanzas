@@ -1015,7 +1015,7 @@ export default function BudgetConsole({
 
   return (
     <div className="budget-console-overlay" onClick={handleOverlayClick}>
-      <div className="budget-console-frame">
+      <div className="budget-console-frame minigame-container">
         <div
           className="budget-console-monitor"
           style={{ backgroundImage: `url(${computerImage})` }}

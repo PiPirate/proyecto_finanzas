@@ -91,7 +91,7 @@ export default function LinksSecurityGame({ visible, onFinished }) {
 
   return (
     <div className="links-game-overlay">
-      <div className="links-game-phone-shell">
+      <div className="links-game-phone-shell minigame-container">
         <div className="links-game-phone-bezel">
           <div className="links-game-phone-speaker" />
 

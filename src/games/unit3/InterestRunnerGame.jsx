@@ -382,7 +382,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
         <div className="interest-runner-overlay">
 
             {showIntro && (
-                <div className="intro-window">
+                <div className="intro-window minigame-container">
                     <h2>¡Corre para proteger tu rentabilidad!</h2>
 
                     <p>
@@ -400,7 +400,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
             )}
 
             {!showIntro && (
-                <div className="game-window">
+                <div className="game-window minigame-container">
                     {
                         questionModal && (
                             <div className="question-modal">
