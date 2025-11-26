@@ -1,5 +1,5 @@
 // src/games/unit1/Unit1GameScene.jsx
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
 import TileMap from '../core/map/TileMap';
 import Player from '../core/player/Player';
 import usePlayerMovement from '../core/hooks/usePlayerMovement';
@@ -432,6 +432,26 @@ function Unit1GameScene({ onGoalReached }) {
     }
   };
 
+  const findNearestInteractive = useCallback(() => {
+    const MAX_DISTANCE = 1.25;
+
+    let closest = null;
+    let closestDistance = Infinity;
+
+    unit1InteractiveZones.forEach((zone) => {
+      const tileValue = unit1MapMatrix?.[zone.y]?.[zone.x];
+      if (tileValue !== 2) return;
+
+      const dist = Math.hypot(zone.x - tilePosition.x, zone.y - tilePosition.y);
+      if (dist <= MAX_DISTANCE && dist < closestDistance) {
+        closest = zone;
+        closestDistance = dist;
+      }
+    });
+
+    return closest;
+  }, [tilePosition.x, tilePosition.y]);
+
   const handleDialogueNext = () => {
     if (dialogueMode === 'intro') {
       if (dialogueIndex < introDialogue.length - 1) {
@@ -524,6 +544,26 @@ function Unit1GameScene({ onGoalReached }) {
       return;
     }
   };
+
+  useEffect(() => {
+    if (!isMobile) return undefined;
+
+    const handleMobileAction = () => {
+      if (isDialogueVisible) {
+        handleDialogueNext();
+        return;
+      }
+
+      const nearest = findNearestInteractive();
+      if (nearest) {
+        const value = unit1MapMatrix?.[nearest.y]?.[nearest.x] ?? 2;
+        handleTileClick({ x: nearest.x, y: nearest.y, value });
+      }
+    };
+
+    window.addEventListener('mobile-action', handleMobileAction);
+    return () => window.removeEventListener('mobile-action', handleMobileAction);
+  }, [findNearestInteractive, handleDialogueNext, handleTileClick, isDialogueVisible, isMobile]);
 
   return (
     <div className="unit1-game-container">

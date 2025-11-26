@@ -19,8 +19,12 @@
 
     padding: 30px;
     width: 600px;
+    max-width: 95vw;
+    max-height: 90vh;
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    touch-action: none;
 }
 
 .module-title{
@@ -63,6 +67,7 @@
     user-select: none;
     min-height: auto !important;
     color: black !important;
+    touch-action: none;
 }
 
 
@@ -129,4 +134,19 @@
     border: 2px solid #2e7d32;
     cursor: default;
     opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .loan-game-window {
+        width: calc(100vw - 32px);
+        padding: 16px;
+    }
+
+    .loan-cards {
+        flex-direction: column;
+    }
+
+    .loan-dropzones {
+        grid-template-columns: 1fr;
+    }
 }
