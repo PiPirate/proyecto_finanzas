@@ -169,6 +169,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                     setModuleCompleted(true);
                     setFeedback("🎉 ¡Completaste todas las asociaciones correctamente en este módulo!");
                 } else {
+                    // Nota: Idealmente, aquí se debería eliminar el item correcto de la lista shuffledItems
                     setCurrentQuestion((prev) => prev + 1);
                     setSelectedAnswer(null);
                     setFeedback("");
@@ -195,17 +196,12 @@ export default function LoanDragGame({ visible, onComplete }) {
         return (
             <div className="loan-game-overlay">
                 <div className="loan-game-window intro minigame-container">
-                    <h2 className="loan-title">Aprende sobre análisis financieros</h2>
-                    <p className="loan-subtitle">
-                        No necesitas saber nada. Aquí aprenderás paso a paso, seleccionando la respuesta correcta para cada situación.
-                    </p>
-                    <button
-                        className="loan-finish-btn"
-                        onClick={() => {
-                            setShowIntro(false);
-                            resetModuleState(0);
-                        }}
-                    >
+                    <h2>Aprende sobre análisis financieros</h2>
+                    <p>No necesitas saber nada. Aquí aprenderás paso a paso, seleccionando la respuesta correcta para cada situación.</p>
+                    <button className="loan-finish-btn" onClick={() => {
+                        setShowIntro(false);
+                        resetModuleState(0);
+                    }}>
                         Comenzar
                     </button>
                 </div>
@@ -217,13 +213,9 @@ export default function LoanDragGame({ visible, onComplete }) {
         return (
             <div className="loan-game-overlay">
                 <div className="loan-game-window intro minigame-container">
-                    <h2 className="loan-title">¡Muy bien!</h2>
-                    <p className="loan-subtitle">
-                        Ahora tienes una comprensión completa y práctica sobre cómo funciona el análisis financiero.
-                    </p>
-                    <button className="loan-finish-btn" onClick={onComplete}>
-                        Finalizar
-                    </button>
+                    <h2> ¡Muy bien!</h2>
+                    <p>Ahora tienes una comprensión completa y práctica sobre cómo funciona el análisis financiero.</p>
+                    <button className="loan-finish-btn" onClick={onComplete}>Finalizar</button>
                 </div>
             </div>
         );
@@ -236,6 +228,7 @@ export default function LoanDragGame({ visible, onComplete }) {
     return (
         <div className="loan-game-overlay">
             <div className="loan-game-window minigame-container">
+
                 <p className="loan-progress">
                     Módulo {currentModule + 1} de {modules.length} · Pregunta {currentQuestion + 1} de {totalQuestions}
                 </p>
