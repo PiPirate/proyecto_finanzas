@@ -248,6 +248,15 @@
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
 }
 
+/* ======== MÓVIL (pantallas menores a 640px) ======== */
+@media (max-height: 600px) {
+  .interaction-bar {
+    background: transparent !important;
+    border-top: none !important;
+    box-shadow: none !important;
+  }
+}
+
 .interaction-bar-content {
   display: flex;
   align-items: center;
