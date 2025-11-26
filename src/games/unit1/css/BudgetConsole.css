@@ -42,10 +42,10 @@
 /* Zona de la pantalla donde va el contenido */
 .budget-console-screen {
   position: absolute;
-  left: 90px;
-  right: 90px;
-  top: 90px;
-  bottom: 130px;
+  left: 9%;
+  right: 9%;
+  top: 20%;
+  bottom: 9%;
   background: transparent;
   border: none;
   box-shadow: none;
