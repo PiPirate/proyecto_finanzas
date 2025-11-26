@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./css/LoanDragGame.css";
 
 export default function LoanDragGame({ visible, onComplete }) {
@@ -188,49 +188,58 @@ export default function LoanDragGame({ visible, onComplete }) {
         setFeedback("");
     };
 
-    const resolveDrop = (itemId, zoneId) => {
-        if (!itemId) return;
+    const resolveDrop = useCallback(
+        (itemId, zoneId) => {
+            if (!itemId || !zoneId) return;
 
-        const correct = correctMap[itemId] === zoneId;
+            const correct = correctMap[itemId] === zoneId;
+            const moduleItems = modules[currentModule]?.items ?? [];
+            const hintText = moduleItems.find((i) => i.id === itemId)?.hint ?? "";
 
-        setDropped(prev => ({ ...prev, [itemId]: zoneId }));
+            if (correct) {
+                setFeedback(`✔ ¡Muy bien! ${hintText}`);
+                setDropped((prev) => ({ ...prev, [itemId]: zoneId }));
+                setLocked((prev) => {
+                    const updated = { ...prev, [itemId]: true };
+                    const allCorrect = Object.keys(correctMap).every((key) =>
+                        key === itemId ? true : updated[key]
+                    );
 
-        if (correct) {
-            setLocked(prev => ({ ...prev, [itemId]: true }));
-            const text = modules[currentModule].items.find(i => i.id === itemId).hint;
-            setFeedback(`✔ ¡Muy bien! ${text}`);
-        } else {
-            setDropped(prev => ({ ...prev, [itemId]: null }));
-            const text = modules[currentModule].items.find(i => i.id === itemId).hint;
-            setFeedback(`🤔 No corresponde aquí.\n💡 Pista: ${text}`);
-        }
+                    if (allCorrect) {
+                        setTimeout(() => {
+                            setFeedback("🎉 ¡Completaste todas las asociaciones correctamente!");
+                            setLocked({
+                                liquidez: true,
+                                rentabilidad: true,
+                                endeudamiento: true,
+                                eficiencia: true,
+                            });
+                        }, 200);
+                    }
 
-        // --- INICIO DEL BLOQUE CORREGIDO ---
-        const allCorrect = Object.keys(correctMap).every(key => {
-            // El ítem actual debe ser correcto
-            if (key === itemId) return correct;
-            
-            // Todos los demás ítems deben haber sido bloqueados antes (estado sincrónico)
-            return locked[key]; 
-        });
-
-        if (allCorrect && correct) {
-            setTimeout(() => {
-                setFeedback("🎉 ¡Completaste todas las asociaciones correctamente!");
-                // Asegura el bloqueo visual
-                setLocked({ liquidez: true, rentabilidad: true, endeudamiento: true, eficiencia: true }); 
-            }, 200);
-        }
-        // --- FIN DEL BLOQUE CORREGIDO ---
-    };
+                    return updated;
+                });
+            } else {
+                setFeedback(`🤔 No corresponde aquí.\n💡 Pista: ${hintText}`);
+                setDropped((prev) => ({ ...prev, [itemId]: null }));
+            }
+        },
+        [correctMap, currentModule, modules]
+    );
 
     const handleDrop = (e, zoneId) => {
         const itemId = e.dataTransfer.getData("itemId");
         resolveDrop(itemId, zoneId);
     };
 
-    // Eventos táctiles unificados con pointer events
+    const getZoneIdFromPoint = useCallback((clientX, clientY) => {
+        const el = document.elementFromPoint(clientX, clientY);
+        const zoneEl = el?.closest?.('[data-zone-id]');
+        return zoneEl?.dataset?.zoneId || null;
+    }, []);
+
     const handleTouchStart = (e, item) => {
+        if (e.pointerType !== 'touch') return;
         if (locked[item.id]) return;
         if (activePointerRef.current !== null) return;
 
@@ -239,30 +248,64 @@ export default function LoanDragGame({ visible, onComplete }) {
         activePointerRef.current = e.pointerId;
         touchTargetRef.current = null;
 
+        if (e.target.setPointerCapture) {
+            try {
+                e.target.setPointerCapture(e.pointerId);
+            } catch (err) {
+                // ignore capture errors
+            }
+        }
+
         setHint(item.hint);
         setFeedback("");
     };
 
-    const handleTouchMove = (e) => {
-        if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
-        e.preventDefault();
+    const handleGlobalPointerMove = useCallback(
+        (e) => {
+            if (e.pointerType !== 'touch') return;
+            if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
+            e.preventDefault();
 
-        const el = document.elementFromPoint(e.clientX, e.clientY);
-        touchTargetRef.current = el?.dataset?.zoneId || null;
-    };
+            touchTargetRef.current = getZoneIdFromPoint(e.clientX, e.clientY);
+        },
+        [getZoneIdFromPoint]
+    );
 
-    const handleTouchEnd = (e, fallbackZoneId) => {
-        if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
-        e.preventDefault();
+    const handleGlobalPointerEnd = useCallback(
+        (e) => {
+            if (e.pointerType !== 'touch') return;
+            if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
+            e.preventDefault();
 
-        const zoneId = touchTargetRef.current || fallbackZoneId;
+            const zoneId = getZoneIdFromPoint(e.clientX, e.clientY) || touchTargetRef.current;
+            if (zoneId) {
+                resolveDrop(touchItemRef.current, zoneId);
+            }
 
-        resolveDrop(touchItemRef.current, zoneId);
+            touchItemRef.current = null;
+            touchTargetRef.current = null;
+            activePointerRef.current = null;
+        },
+        [getZoneIdFromPoint, resolveDrop]
+    );
 
+    const handlePointerCancel = useCallback(() => {
         touchItemRef.current = null;
         touchTargetRef.current = null;
         activePointerRef.current = null;
-    };
+    }, []);
+
+    useEffect(() => {
+        window.addEventListener('pointermove', handleGlobalPointerMove, { passive: false });
+        window.addEventListener('pointerup', handleGlobalPointerEnd, { passive: false });
+        window.addEventListener('pointercancel', handlePointerCancel);
+
+        return () => {
+            window.removeEventListener('pointermove', handleGlobalPointerMove);
+            window.removeEventListener('pointerup', handleGlobalPointerEnd);
+            window.removeEventListener('pointercancel', handlePointerCancel);
+        };
+    }, [handleGlobalPointerEnd, handleGlobalPointerMove, handlePointerCancel]);
 
     const moduleCompleted =
         locked.liquidez &&
@@ -333,10 +376,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                             className={`loan-card ${locked[item.id] ? "locked" : ""}`}
                             draggable={!locked[item.id]}
                             onDragStart={(e) => !locked[item.id] && handleDragStart(e, item)}
-
                             onPointerDown={(e) => e.pointerType === 'touch' && handleTouchStart(e, item)}
-                            onPointerMove={(e) => e.pointerType === 'touch' && handleTouchMove(e)}
-                            onPointerUp={(e) => e.pointerType === 'touch' && handleTouchEnd(e)}
                         >
                             {item.label}
                         </div>
@@ -351,9 +391,6 @@ export default function LoanDragGame({ visible, onComplete }) {
                             data-zone-id={zone.zone}
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => handleDrop(e, zone.zone)}
-
-                            onPointerMove={(e) => e.pointerType === 'touch' && handleTouchMove(e)}
-                            onPointerUp={(e) => e.pointerType === 'touch' && handleTouchEnd(e, zone.zone)}
                         >
                             {zone.label}
                         </div>
