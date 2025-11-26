@@ -82,21 +82,28 @@ export function Player({ position, direction, isMoving }) {
       }}
     >
       {/* Sprite del jugador estático */}
-      <img 
-        src={getPlayerSprite()}
-        alt="player"
-        style={{
-          width: '100%',
-          height: '100%',
-          imageRendering: 'pixelated',
-          objectFit: 'contain',
-          position: 'absolute',
-          bottom: '0',
-          transform: `scale(${direction === 'right' ? '-2.04' : '2.04'}, 2.04)`,
-          transformOrigin: 'center bottom',
-          filter: 'drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3))',
-        }}
-      />
+    <img
+      src={getPlayerSprite()}
+      alt="player"
+      style={{
+        width: '100%',
+        height: '100%',
+        imageRendering: 'pixelated',
+        objectFit: 'contain',
+        position: 'absolute',
+        bottom: '0',
+
+        /* Mantiene escala correcta y voltea sin romper el tile */
+        transform: `
+          scale(2.04) 
+          scaleX(${direction === 'right' ? -1 : 1})
+        `,
+        transformOrigin: 'center bottom',
+
+        filter: 'drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3))',
+      }}
+    />
+
 
       {/* Sombra del personaje */}
       <div className="player-shadow" />
