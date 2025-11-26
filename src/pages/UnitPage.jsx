@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ArrowLeft, Play, CheckCircle, Lock, Circle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './css/UnitPage.css';
+import { useDeviceMode } from '../hooks/useDeviceMode';
+import { useOrientationLock } from '../hooks/useOrientationLock';
 
 export default function UnitPage({ 
   unitNumber,
@@ -9,11 +11,13 @@ export default function UnitPage({
   unitColor,
   VideoStage,
   TutorialStage,
-  EvaluationStage 
+  EvaluationStage
 }) {
   const navigate = useNavigate();
   const [currentStage, setCurrentStage] = useState(0); // 0: video, 1: tutorial, 2: evaluación
   const [completedStages, setCompletedStages] = useState([]);
+  const { isMobile } = useDeviceMode();
+  const { isLandscape } = useOrientationLock();
 
   const stages = [
     { 
@@ -55,6 +59,21 @@ export default function UnitPage({
   };
 
   const CurrentComponent = stages[currentStage].component;
+  const isTutorialStage = currentStage === 1;
+  const shouldShowProgress = !isMobile || !isTutorialStage;
+  const isMobileFullscreenGame = isMobile && isLandscape && isTutorialStage;
+
+  if (isMobileFullscreenGame) {
+    // En móvil horizontal durante el tutorial, ocultamos todo el layout
+    // y renderizamos únicamente el contenedor del juego y sus controles.
+    return (
+      <div className="unit-page unit-page--fullscreen">
+        <div className="unit-fullscreen-shell">
+          <CurrentComponent onComplete={handleStageComplete} unitColor={unitColor} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="unit-page">
@@ -80,38 +99,40 @@ export default function UnitPage({
         </header>
 
         {/* Progress Indicator */}
-        <div className="unit-progress-container">
-          <div className="unit-progress-wrapper">
-            {stages.map((stage, index) => (
-              <React.Fragment key={stage.id}>
-                <button
-                  onClick={() => canAccessStage(stage.id) && setCurrentStage(stage.id)}
-                  disabled={!canAccessStage(stage.id)}
-                  className={`progress-step ${currentStage === stage.id ? 'progress-step-active' : ''} ${completedStages.includes(stage.id) ? 'progress-step-completed' : ''} ${!canAccessStage(stage.id) ? 'progress-step-locked' : ''}`}
-                >
-                  <div className="progress-step-icon">
-                    {completedStages.includes(stage.id) ? (
-                      <CheckCircle className="step-icon-check" />
-                    ) : !canAccessStage(stage.id) ? (
-                      <Lock className="step-icon-lock" />
-                    ) : (
-                      <stage.icon className="step-icon-default" />
-                    )}
-                  </div>
-                  <div className="progress-step-content">
-                    <div className="progress-step-title">{stage.title}</div>
-                    <div className="progress-step-description">{stage.description}</div>
-                  </div>
-                  <div className="progress-step-number">{index + 1}</div>
-                </button>
-                
-                {index < stages.length - 1 && (
-                  <div className={`progress-connector ${completedStages.includes(stage.id) ? 'progress-connector-completed' : ''}`} />
-                )}
-              </React.Fragment>
-            ))}
+        {shouldShowProgress && (
+          <div className="unit-progress-container">
+            <div className="unit-progress-wrapper">
+              {stages.map((stage, index) => (
+                <React.Fragment key={stage.id}>
+                  <button
+                    onClick={() => canAccessStage(stage.id) && setCurrentStage(stage.id)}
+                    disabled={!canAccessStage(stage.id)}
+                    className={`progress-step ${currentStage === stage.id ? 'progress-step-active' : ''} ${completedStages.includes(stage.id) ? 'progress-step-completed' : ''} ${!canAccessStage(stage.id) ? 'progress-step-locked' : ''}`}
+                  >
+                    <div className="progress-step-icon">
+                      {completedStages.includes(stage.id) ? (
+                        <CheckCircle className="step-icon-check" />
+                      ) : !canAccessStage(stage.id) ? (
+                        <Lock className="step-icon-lock" />
+                      ) : (
+                        <stage.icon className="step-icon-default" />
+                      )}
+                    </div>
+                    <div className="progress-step-content">
+                      <div className="progress-step-title">{stage.title}</div>
+                      <div className="progress-step-description">{stage.description}</div>
+                    </div>
+                    <div className="progress-step-number">{index + 1}</div>
+                  </button>
+
+                  {index < stages.length - 1 && (
+                    <div className={`progress-connector ${completedStages.includes(stage.id) ? 'progress-connector-completed' : ''}`} />
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Stage Content */}
         <div className="unit-content">
