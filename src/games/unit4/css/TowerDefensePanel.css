@@ -408,6 +408,28 @@
   cursor: pointer;
 }
 
+
+/* SOLO PARA UNIT 4: replica EXACTA del estilo global */
+.unit4-game-container .minigame-container {
+    width: 80%;
+    max-width: 1300px;
+    background-color: #131b34;
+    border: 3px solid #4c6fbf;
+    border-radius: 14px;
+    box-shadow: 0 0 0 2px #192243, 
+                0 12px 0 rgba(0, 0, 0, 0.4);
+    animation: minigame-appear 0.3s ease-out;
+}
+
+/* SOLO PARA UNIT 4: media query exclusivo */
+@media (max-height: 500px) and (orientation: landscape) {
+    .unit4-game-container .minigame-container {
+        transform: scale(0.8);
+        transform-origin: center;
+    }
+}
+
+
 /* Que los elementos internos no bloqueen el click del contenedor */
 .td-lane,
 .td-player,
@@ -487,7 +509,6 @@
 
   .td-battlefield {
     width: 100% !important;
-    height: auto !important;
     /* Mantener proporción aproximada del campo (1100 x 450) */
     aspect-ratio: 11 / 4.5;
   }
@@ -496,3 +517,5 @@
     max-width: 540px;
   }
 }
+
+

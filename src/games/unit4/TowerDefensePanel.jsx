@@ -678,187 +678,191 @@ export function TowerDefensePanel({ onComplete, onClose }) {
   const livesLeft = Math.max(0, GAME_CONFIG.MAX_ENEMIES_PASSED - enemiesPassedCount);
 
   return (
-    <div className="td-overlay">
-      <div className="td-panel minigame-container">
-        {/* INTRO */}
-        {gamePhase === 'intro' && (
-          <div className="td-intro-content">
-            <h2 className="td-intro-title">Torre de Defensa Financiera</h2>
-            <p className="td-intro-description">
-              Bloquea a los enemigos colocándote en su carril y responde las preguntas
-              sobre pagos digitales seguros. Tienes varias vidas y{' '}
-              {GAME_CONFIG.TOTAL_GAME_TIME} segundos.
-            </p>
-            <button className="td-start-button" onClick={startGame}>
-              Comenzar Juego
-            </button>
-          </div>
-        )}
+    <div className="unit4-game-container">
+      <div className="td-overlay">
+        <div className="td-panel minigame-container">
+          {/* INTRO */}
+          {gamePhase === 'intro' && (
+            <div className="td-intro-content">
+              <h2 className="td-intro-title">Torre de Defensa Financiera</h2>
+              <p className="td-intro-description">
+                Bloquea a los enemigos colocándote en su carril y responde las preguntas
+                sobre pagos digitales seguros. Tienes varias vidas y{' '}
+                {GAME_CONFIG.TOTAL_GAME_TIME} segundos.
+              </p>
+              <button className="td-start-button" onClick={startGame}>
+                Comenzar Juego
+              </button>
+            </div>
+          )}
 
-        {/* JUEGO ACTIVO */}
-        {(gamePhase === 'playing' || gamePhase === 'question') && (
-          <>
-            {/* HEADER */}
-            <div className="td-header">
-              <div className="td-header-left">
-                <div className="td-stat">⏱ Tiempo: {gameTime}s</div>
-                <div className="td-stat">
-                  ✅ Correctas: {correctAnswers}/{GAME_CONFIG.QUESTIONS_TO_WIN}
+          {/* JUEGO ACTIVO */}
+          {(gamePhase === 'playing' || gamePhase === 'question') && (
+            <>
+              {/* HEADER */}
+              <div className="td-header">
+                <div className="td-header-left">
+                  <div className="td-stat">⏱ Tiempo: {gameTime}s</div>
+                  <div className="td-stat">
+                    ✅ Correctas: {correctAnswers}/{GAME_CONFIG.QUESTIONS_TO_WIN}
+                  </div>
+                </div>
+                <div className="td-header-right">
+                  <div className="td-stat">❤️ Vidas: {livesLeft}</div>
+                  <button className="td-close-button" onClick={onClose}>
+                    Salir ✖
+                  </button>
                 </div>
               </div>
-              <div className="td-header-right">
-                <div className="td-stat">❤️ Vidas: {livesLeft}</div>
-                <button className="td-close-button" onClick={onClose}>
-                  Salir ✖
-                </button>
-              </div>
-            </div>
 
-            {/* CAMPO */}
-            <div
-              ref={battlefieldRef}                    // 👈 IMPORTANTE
-              className={`td-battlefield ${
-                gamePhase === 'question' ? 'td-battlefield-blur' : ''
-              } ${isMobile ? 'td-battlefield--mobile' : ''}`}
-              style={{
-                width: GAME_CONFIG.GAME_WIDTH,
-                height: battlefieldHeight,
-                backgroundImage: `url(${mapSprite})`,
-                backgroundSize: '100% 100%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                transform: battlefieldScale !== 1 ? `scale(${battlefieldScale})` : 'none',
-                transformOrigin: 'center top',
-              }}
-              onClick={handleBattlefieldClick}
-              onTouchStart={handleBattlefieldClick}
-            >
-
-              {/* Carriles (solo líneas de referencia) */}
-              {[...Array(GAME_CONFIG.LANES)].map((_, i) => (
-                <div
-                  key={i}
-                  className="td-lane"
-                  style={{
-                    height: GAME_CONFIG.LANE_HEIGHT,
-                    top: i * GAME_CONFIG.LANE_HEIGHT
-                  }}
-                />
-              ))}
-
-              {/* Player */}
+              {/* CAMPO */}
               <div
-                className="td-player"
+                ref={battlefieldRef}                    // 👈 IMPORTANTE
+                className={`td-battlefield ${
+                  gamePhase === 'question' ? 'td-battlefield-blur' : ''
+                } ${isMobile ? 'td-battlefield--mobile' : ''}`}
                 style={{
-                  left: GAME_CONFIG.DEFENDER_X,
-                  top: getLaneCenterY(playerLane)
+                  width: GAME_CONFIG.GAME_WIDTH,
+                  height: battlefieldHeight,
+                  backgroundImage: `url(${mapSprite})`,
+                  backgroundSize: '100% 100%',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  transform: battlefieldScale !== 1 ? `scale(${battlefieldScale})` : 'none',
+                  transformOrigin: 'center top',
                 }}
+                onClick={handleBattlefieldClick}
+                onTouchStart={handleBattlefieldClick}
               >
-                <img src={playerSprite} alt="player" className="td-player-img" />
-              </div>
 
-              {/* Enemigos */}
-              {enemies.map((enemy) => (
+                {/* Carriles (solo líneas de referencia) */}
+                {[...Array(GAME_CONFIG.LANES)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="td-lane"
+                    style={{
+                      height: GAME_CONFIG.LANE_HEIGHT,
+                      top: i * GAME_CONFIG.LANE_HEIGHT
+                    }}
+                  />
+                ))}
+
+                {/* Player */}
                 <div
-                  key={enemy.id}
-                  className="td-enemy"
+                  className="td-player"
                   style={{
-                    left: enemy.x,
-                    top: enemy.y
+                    left: GAME_CONFIG.DEFENDER_X,
+                    top: getLaneCenterY(playerLane)
                   }}
                 >
-                  <img src={enemySprite} alt="enemy" className="td-enemy-img" />
+                  <img src={playerSprite} alt="player" className="td-player-img" />
                 </div>
-              ))}
-            </div>
 
-            {/* PREGUNTA (MODAL) */}
-            {gamePhase === 'question' && currentQuestion && (
-              <div className="td-question-overlay">
-                <div className={`td-question-panel ${isMobile ? 'td-question-panel--mobile' : ''}`}>
-                  <div className="td-question-header">
-                    <h3 className="td-question-title">❓ Pregunta</h3>
-                    <div
-                      className={`td-question-timer ${questionTime <= 10 ? 'td-timer-warning' : ''
-                        }`}
-                    >
-                      ⏰ {questionTime}s
-                    </div>
+                {/* Enemigos */}
+                {enemies.map((enemy) => (
+                  <div
+                    key={enemy.id}
+                    className="td-enemy"
+                    style={{
+                      left: enemy.x,
+                      top: enemy.y
+                    }}
+                  >
+                    <img src={enemySprite} alt="enemy" className="td-enemy-img" />
                   </div>
+                ))}
+              </div>
 
-                  <div className={`td-question-body ${isMobile ? 'td-question-body--mobile' : ''}`}>
-                    <div className="td-question-text">{currentQuestion.question}</div>
-
-                    <div className="td-options">
-                      {currentQuestion.options.map((op, idx) => (
-                        <button
-                          key={idx}
-                          disabled={showResult}
-                          className={`td-option ${showResult
-                            ? idx === currentQuestion.correct
-                              ? 'td-option-correct'
-                              : idx === selectedAnswer
-                                ? 'td-option-wrong'
-                                : ''
-                            : selectedAnswer === idx
-                              ? 'td-option-selected'
-                              : ''
-                            }`}
-                          onClick={() => !showResult && setSelectedAnswer(idx)}
-                        >
-                          {op}
-                        </button>
-                      ))}
+              {/* PREGUNTA (MODAL) */}
+              {gamePhase === 'question' && currentQuestion && (
+                <div className="td-question-overlay">
+                  <div className={`td-question-panel ${isMobile ? 'td-question-panel--mobile' : ''}`}>
+                    <div className="td-question-header">
+                      <h3 className="td-question-title">❓ Pregunta</h3>
+                      <div
+                        className={`td-question-timer ${
+                          questionTime <= 10 ? 'td-timer-warning' : ''
+                        }`}
+                      >
+                        ⏰ {questionTime}s
+                      </div>
                     </div>
 
-                    {showResult && (
-                      <div className="td-result-message">
-                        {selectedAnswer === currentQuestion.correct
-                          ? '✅ ¡Correcto!'
-                          : '❌ Incorrecto. Se te restan 10 segundos.'}
+                    <div className={`td-question-body ${isMobile ? 'td-question-body--mobile' : ''}`}>
+                      <div className="td-question-text">{currentQuestion.question}</div>
+
+                      <div className="td-options">
+                        {currentQuestion.options.map((op, idx) => (
+                          <button
+                            key={idx}
+                            disabled={showResult}
+                            className={`td-option ${
+                              showResult
+                                ? idx === currentQuestion.correct
+                                  ? 'td-option-correct'
+                                  : idx === selectedAnswer
+                                    ? 'td-option-wrong'
+                                    : ''
+                                : selectedAnswer === idx
+                                  ? 'td-option-selected'
+                                  : ''
+                            }`}
+                            onClick={() => !showResult && setSelectedAnswer(idx)}
+                          >
+                            {op}
+                          </button>
+                        ))}
                       </div>
+
+                      {showResult && (
+                        <div className="td-result-message">
+                          {selectedAnswer === currentQuestion.correct
+                            ? '✅ ¡Correcto!'
+                            : '❌ Incorrecto. Se te restan 10 segundos.'}
+                        </div>
+                      )}
+                    </div>
+
+                    {!showResult && (
+                      <button
+                        className="td-submit-button"
+                        disabled={selectedAnswer === null}
+                        onClick={() => handleAnswerSubmit(selectedAnswer)}
+                      >
+                        Confirmar Respuesta
+                      </button>
                     )}
                   </div>
-
-                  {!showResult && (
-                    <button
-                      className="td-submit-button"
-                      disabled={selectedAnswer === null}
-                      onClick={() => handleAnswerSubmit(selectedAnswer)}
-                    >
-                      Confirmar Respuesta
-                    </button>
-                  )}
                 </div>
-              </div>
-            )}
-          </>
-        )}
+              )}
+            </>
+          )}
 
-        {/* VICTORIA */}
-        {gamePhase === 'victory' && (
-          <div className="td-end-screen">
-            <h2>🏆 ¡Victoria financiera!</h2>
-            <p>Respondiste correctamente {GAME_CONFIG.QUESTIONS_TO_WIN} preguntas.</p>
-            <button className="td-end-button" onClick={onComplete}>
-              Finalizar
-            </button>
-          </div>
-        )}
+          {/* VICTORIA */}
+          {gamePhase === 'victory' && (
+            <div className="td-end-screen">
+              <h2>🏆 ¡Victoria financiera!</h2>
+              <p>Respondiste correctamente {GAME_CONFIG.QUESTIONS_TO_WIN} preguntas.</p>
+              <button className="td-end-button" onClick={onComplete}>
+                Finalizar
+              </button>
+            </div>
+          )}
 
-        {/* DERROTA */}
-        {gamePhase === 'defeat' && (
-          <div className="td-end-screen">
-            <h2>💔 Has perdido</h2>
-            <p>Se acabó el tiempo o pasaron demasiados enemigos.</p>
-            <button className="td-end-button" onClick={startGame}>
-              Reintentar
-            </button>
-            <button className="td-end-button" onClick={onClose}>
-              Salir
-            </button>
-          </div>
-        )}
+          {/* DERROTA */}
+          {gamePhase === 'defeat' && (
+            <div className="td-end-screen">
+              <h2>💔 Has perdido</h2>
+              <p>Se acabó el tiempo o pasaron demasiados enemigos.</p>
+              <button className="td-end-button" onClick={startGame}>
+                Reintentar
+              </button>
+              <button className="td-end-button" onClick={onClose}>
+                Salir
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
