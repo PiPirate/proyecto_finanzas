@@ -24,6 +24,8 @@
   box-shadow: 0 0 0 4px #111, 0 12px 24px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;   /* o simplemente: margin: 0 auto; */
 }
 
 @media (min-width: 1024px) {
