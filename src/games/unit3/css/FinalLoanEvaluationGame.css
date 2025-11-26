@@ -227,7 +227,7 @@
 
     /* Ajuste de la tarjeta central */
     .loan-card {
-        width: 85vw !important; /* Forzamos el ancho */
+        width: 70vw !important; /* Forzamos el ancho */
         min-height: auto;
         height: auto;
         max-height: 75vh;
