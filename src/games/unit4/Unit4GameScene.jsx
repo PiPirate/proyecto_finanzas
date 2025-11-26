@@ -3,7 +3,9 @@ import React, { useCallback, useMemo, useState } from 'react';
 import TileMap from '../core/map/TileMap';
 import Player from '../core/player/Player';
 import usePlayerMovement from '../core/hooks/usePlayerMovement';
+import useCameraFollow from '../core/hooks/useCameraFollow';
 import { DialogueBoxUnit4 } from '../core/dialogue/DialogueBox';
+import { useDeviceMode } from '../../hooks/useDeviceMode';
 
 import {
   unit4MapMatrix,
@@ -157,6 +159,7 @@ const vendorQrOutroDialogue = [
 ];
 
 function Unit4GameScene({ onGoalReached }) {
+  const { isMobile } = useDeviceMode();
   // 'intro' | 'vendorIntro' | 'vendorReminder' | 'phoneIntro'
   // | 'phoneOutro' | 'vendorQrIntro' | 'vendorQrOutro' | null
   const [dialogueMode, setDialogueMode] = useState('intro');
@@ -283,6 +286,21 @@ function Unit4GameScene({ onGoalReached }) {
       canMove,
     }
   );
+
+  const mapDimensions = useMemo(
+    () => ({
+      width: unit4MapMatrix[0].length * unit4TileSize,
+      height: unit4MapMatrix.length * unit4TileSize,
+    }),
+    [],
+  );
+
+  const { cameraPosition, viewportRef } = useCameraFollow({
+    playerPixelPosition: pixelPosition,
+    mapDimensions,
+    isEnabled: isMobile,
+  });
+  // cameraPosition indica el offset aplicado al mapa en móvil (acotado al borde en el hook).
 
   /* ======= CLICK EN TILES ======= */
 
@@ -428,6 +446,8 @@ function Unit4GameScene({ onGoalReached }) {
           tileSize={unit4TileSize}
           mapImage={cafeImage}
           onTileClick={handleTileClick}
+          cameraPosition={isMobile ? cameraPosition : null}
+          viewportRef={isMobile ? viewportRef : null}
         >
           <Player
             pixelPosition={pixelPosition}
