@@ -297,3 +297,20 @@
         padding: 8px 10px 8px 16px;
     }
 }
+
+/* Nuevo estilo para hacer scroll en las opciones */
+.loan-options-scrollable {
+    max-height: 250px; /* Define la altura máxima para las opciones */
+    overflow-y: auto; /* Aplica el scroll vertical si es necesario */
+    padding-right: 8px; /* Espacio para que la barra de scroll no se pegue al borde */
+}
+
+/* Opcional: mejora el aspecto del scroll en navegadores basados en Webkit */
+.loan-options-scrollable::-webkit-scrollbar {
+    width: 6px;
+}
+
+.loan-options-scrollable::-webkit-scrollbar-thumb {
+    background: rgba(187, 222, 251, 0.4);
+    border-radius: 10px;
+}

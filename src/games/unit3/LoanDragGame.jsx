@@ -241,7 +241,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                 <div className="loan-question">
                     <p className="loan-question-label">{zone.label}</p>
 
-                    <div className="loan-options">
+                    <div className="loan-options loan-options-scrollable"> {/* Clase agregada aquí */}
                         {shuffledItems.map((item) => {
                             const isSelected = selectedAnswer === item.id;
                             const isCorrectOption =

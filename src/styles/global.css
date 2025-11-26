@@ -48,8 +48,8 @@ iframe {
 
 @media (max-height: 500px) and (orientation: landscape) {
   .minigame-container {
-    transform: scale(0.5);
-    transform-origin: top;
+    transform: scale(0.9);
+    transform-origin: center;
   }
 
   .minigame-header {
@@ -108,23 +108,27 @@ iframe {
   }
 }
 
-/* Modificación de resize2 para minigame-container */
+/* ⬅️ CAMBIOS APLICADOS AQUÍ para dispositivos móviles */
 @media (max-width: 768px) {
     .minigame-container {
         transform: scale(0.9);
         transform-origin: top;
+        /* Scroll vertical y altura máxima para evitar que el contenedor se desborde */
+        max-height: 90vh;
+        overflow-y: auto;
     }
 }
+/* ⬅️ FIN DE CAMBIOS APLICADOS */
 
 .minigame-container {
   width: 90%;
-  max-width: 600px; /* Este valor prevalece sobre max-width: 700px de resize2, se queda el más estricto si no hay media query. He puesto 600px que venía en la rama más completa.*/
+  max-width: 600px;
   background-color: #131b34;
   border: 3px solid #4c6fbf;
   border-radius: 14px;
   box-shadow: 0 0 0 2px #192243, 0 12px 0 rgba(0, 0, 0, 0.4);
   animation: minigame-appear 0.3s ease-out;
-  overflow: hidden;
+  /* ⬅️ Se eliminó 'overflow: hidden' de la base para que el media query funcione. */
 }
 
 @keyframes minigame-appear {
