@@ -14,6 +14,20 @@
     color: white;
 }
 
+.loan-stage {
+    position: relative;
+    width: min(1100px, 92vw);
+    height: min(720px, 90vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.side-card-layer {
+    position: absolute;
+    inset: 0;
+}
+
 /* ----------------------------------------------
    2. TARJETA PRINCIPAL (POKER CARD)
 ---------------------------------------------- */
@@ -135,7 +149,9 @@
 ---------------------------------------------- */
 .feedback-box {
     position: absolute;
-    bottom: 40px;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
     background: #ffffff;
     color: #222;
     padding: 14px 22px;
@@ -221,21 +237,41 @@
     /* Ajuste del contenedor general */
     .final-loan-overlay {
         transform: none; /* Quitamos cualquier escalado global */
-        padding: 10px;
-        align-items: center;
+        padding: 16px 12px;
+        align-items: flex-start;
+        justify-content: center;
+        overflow-y: auto;
+    }
+
+    .loan-stage {
+        width: 100%;
+        max-width: 520px;
+        height: auto;
+        padding: 10px 0 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .side-card-layer {
+        position: static;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
     }
 
     /* Ajuste de la tarjeta central */
     .loan-card {
-        width: 70vw !important; /* Forzamos el ancho */
+        width: 100% !important; /* Forzamos el ancho */
         min-height: auto;
         height: auto;
-        max-height: 75vh;
-        padding: 20px;
-        
+        max-height: 70vh;
+        padding: 18px;
+
         /* Quitamos transformaciones que achicaban la carta */
         transform: none !important;
-        
+
         /* Habilitar scroll interno si el texto es muy largo */
         overflow-y: auto;
     }
@@ -248,38 +284,47 @@
 
     /* Ajuste de las tarjetas laterales (Opciones) */
     .side-card {
-        width: auto;
-        max-width: 100px; /* Mucho más estrechas */
-        padding: 8px 10px;
-        font-size: 11px;
-        line-height: 1.2;
-        background: rgba(255, 255, 255, 0.95);
+        position: relative;
+        width: 100%;
+        max-width: none; /* Mucho más estrechas */
+        padding: 10px 12px;
+        font-size: 12px;
+        line-height: 1.3;
+        background: rgba(255, 255, 255, 0.96);
         z-index: 250; /* Por encima de todo */
+        transform: none !important;
     }
 
     /* Reposicionamiento para que no estorben */
     .side-left {
-        left: 5px;
-        transform: translateY(-50%);
+        left: auto;
+        transform: none;
     }
 
     .side-right {
-        right: 5px;
-        transform: translateY(-50%);
+        right: auto;
+        transform: none;
     }
 
     .side-up {
-        top: 15px;
-        max-width: 200px; /* Arriba puede ser más ancha */
-        transform: translateX(-50%);
+        top: auto;
+        max-width: none; /* Arriba puede ser más ancha */
+        transform: none;
     }
 
     .side-down {
-        bottom: 15px;
-        max-width: 200px; /* Abajo puede ser más ancha */
-        transform: translateX(-50%);
+        bottom: auto;
+        max-width: none; /* Abajo puede ser más ancha */
+        transform: none;
     }
-    
+
+    .feedback-box {
+        position: static;
+        transform: none;
+        width: 100%;
+        text-align: center;
+    }
+
     /* Ajustes finales de la pantalla de resultado para móvil */
     .final-box {
         width: 90%;

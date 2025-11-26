@@ -360,86 +360,90 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     // ------------------------------------------------------
     return (
         <div className="final-loan-overlay">
+            <div className="loan-stage">
 
-            {/* Tarjetas laterales */}
-            {round.options.map(o => (
-                <div
-                    key={o.dir}
-                    className={`side-card side-${o.dir} ${hoverDirection === o.dir ? "highlight" : ""}`}
-                >
-                    {o.label}
-                </div>
-            ))}
-
-            {/* Tarjeta principal */}
-            <div
-                className="loan-card"
-                draggable
-                onDragStart={onDragStart}
-                onDrag={onDrag}
-                onDragEnd={onDragEnd}
-                onTouchStart={(e) => { e.preventDefault(); onDragStart(e); }}
-                onTouchMove={(e) => { e.preventDefault(); onDrag(e); }}
-                onTouchEnd={(e) => { e.preventDefault(); onDragEnd(e); }}
-            >
-
-                <div className="minigame-header">
-                    <h2>Ronda {index + 1} / {rounds.length}</h2>
-                </div>
-
-                <div className="minigame-content minigame-scroll-area">
-                    <h3>Situación</h3>
-                    <p>{round.situation}</p>
-
-                    <h3>Oferta del préstamo</h3>
-                    <ul>
-                        <li><strong>Monto:</strong> {round.offer.monto}</li>
-                        <li><strong>Tasa:</strong> {round.offer.tasa}</li>
-                        <li><strong>Plazo:</strong> {round.offer.plazo}</li>
-                        <li><strong>Cuota mensual:</strong> {round.offer.cuota}</li>
-                    </ul>
-
-                    <p className="swipe-hint">Arrastra esta carta hacia una opción</p>
-                </div>
-            </div>
-
-            {feedback && <div className="feedback-box">{feedback}</div>}
-
-            {/* Este bloque de endScreen es redundante y se eliminaría en una refactorización, 
-                pero lo dejo con la versión aceptada del conflicto. 
-                El bloque principal al inicio del componente ya maneja la pantalla final. 
-                Si este bloque se muestra, creará un overlay doble. */}
-            {endScreen && (
-                <div className="final-screen">
-                    <div className={`final-box ${endScreen.type}`}>
-                        <h2>Resultado final</h2>
-                        <p>{endScreen.msg}</p>
-                        <p className="score">Aciertos: {correctCount} / {rounds.length}</p>
-
-                        <div className="final-buttons">
-
-                            {endScreen.type !== "success" && (
-                                <button className="retry-btn" onClick={resetGame}>
-                                    Reintentar
-                                </button>
-
-                            )}
-
-                            <button
-                                className="finish-btn"
-                                onClick={() => onFinish({
-                                    score: correctCount,
-                                    total: rounds.length,
-                                    passed: endScreen.type === "success"
-                                })}
-                            >
-                                Finalizar
-                            </button>
-
+                <div className="side-card-layer">
+                    {/* Tarjetas laterales */}
+                    {round.options.map(o => (
+                        <div
+                            key={o.dir}
+                            className={`side-card side-${o.dir} ${hoverDirection === o.dir ? "highlight" : ""}`}
+                        >
+                            {o.label}
                         </div>
+                    ))}
+                </div>
+
+                {/* Tarjeta principal */}
+                <div
+                    className="loan-card"
+                    draggable
+                    onDragStart={onDragStart}
+                    onDrag={onDrag}
+                    onDragEnd={onDragEnd}
+                    onTouchStart={(e) => { e.preventDefault(); onDragStart(e); }}
+                    onTouchMove={(e) => { e.preventDefault(); onDrag(e); }}
+                    onTouchEnd={(e) => { e.preventDefault(); onDragEnd(e); }}
+                >
+
+                    <div className="minigame-header">
+                        <h2>Ronda {index + 1} / {rounds.length}</h2>
+                    </div>
+
+                    <div className="minigame-content minigame-scroll-area">
+                        <h3>Situación</h3>
+                        <p>{round.situation}</p>
+
+                        <h3>Oferta del préstamo</h3>
+                        <ul>
+                            <li><strong>Monto:</strong> {round.offer.monto}</li>
+                            <li><strong>Tasa:</strong> {round.offer.tasa}</li>
+                            <li><strong>Plazo:</strong> {round.offer.plazo}</li>
+                            <li><strong>Cuota mensual:</strong> {round.offer.cuota}</li>
+                        </ul>
+
+                        <p className="swipe-hint">Arrastra esta carta hacia una opción</p>
                     </div>
                 </div>
-            )}
+
+                {feedback && <div className="feedback-box">{feedback}</div>}
+
+                {/* Este bloque de endScreen es redundante y se eliminaría en una refactorización,
+                    pero lo dejo con la versión aceptada del conflicto.
+                    El bloque principal al inicio del componente ya maneja la pantalla final.
+                    Si este bloque se muestra, creará un overlay doble. */}
+                {endScreen && (
+                    <div className="final-screen">
+                        <div className={`final-box ${endScreen.type}`}>
+                            <h2>Resultado final</h2>
+                            <p>{endScreen.msg}</p>
+                            <p className="score">Aciertos: {correctCount} / {rounds.length}</p>
+
+                            <div className="final-buttons">
+
+                                {endScreen.type !== "success" && (
+                                    <button className="retry-btn" onClick={resetGame}>
+                                        Reintentar
+                                    </button>
+
+                                )}
+
+                                <button
+                                    className="finish-btn"
+                                    onClick={() => onFinish({
+                                        score: correctCount,
+                                        total: rounds.length,
+                                        passed: endScreen.type === "success"
+                                    })}
+                                >
+                                    Finalizar
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
