@@ -12,12 +12,18 @@ export default function GameViewport({
 }) {
   const { isMobile } = useDeviceMode();
   const { isLandscape } = useOrientationLock();
+  const isMobileLandscape = isMobile && isLandscape;
+  const isMobileFullscreen = isMobileLandscape && showControls;
 
   useEffect(() => {
     if (!isMobile) return;
     const updateVh = () => {
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      document.documentElement.style.setProperty('--app-vh', `${viewportHeight}px`);
+      const viewportHeight =
+        window.visualViewport?.height || window.innerHeight;
+      document.documentElement.style.setProperty(
+        '--app-vh',
+        `${viewportHeight}px`,
+      );
     };
 
     updateVh();
@@ -30,8 +36,24 @@ export default function GameViewport({
     };
   }, [isMobile]);
 
+  useEffect(() => {
+    if (!isMobileFullscreen) {
+      document.body.classList.remove('mobile-game-active');
+      return () => {};
+    }
+
+    document.body.classList.add('mobile-game-active');
+    return () => {
+      document.body.classList.remove('mobile-game-active');
+    };
+  }, [isMobileFullscreen]);
+
   return (
-    <div className={`game-viewport ${isMobile ? 'game-viewport--mobile' : ''}`}>
+    <div
+      className={`game-viewport ${
+        isMobile ? 'game-viewport--mobile' : ''
+      } ${isMobileFullscreen ? 'game-viewport--mobile-fullscreen' : ''}`}
+    >
       {isMobile && !isLandscape && (
         <div className="game-viewport__orientation-block">
           <div className="game-viewport__orientation-card">

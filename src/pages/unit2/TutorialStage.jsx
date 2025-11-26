@@ -24,7 +24,6 @@ export default function TutorialStage({ onComplete }) {
           isMobile ? 'tutorial-map-container--mobile' : ''
         }`}
       >
-
         {/* Escena del banco UNIT 2 */}
         <div
           className={`tutorial-game-wrapper ${
@@ -38,7 +37,6 @@ export default function TutorialStage({ onComplete }) {
         <div className="floating-continue-btn" onClick={handleContinue}>
           Continuar →
         </div>
-
       </div>
     </GameViewport>
   );
