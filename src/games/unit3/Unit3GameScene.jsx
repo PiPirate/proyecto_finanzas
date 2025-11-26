@@ -13,6 +13,8 @@ import React, { useState, useMemo, useCallback } from 'react';
 import TileMap from '../core/map/TileMap';
 import Player from '../core/player/Player';
 import usePlayerMovement from '../core/hooks/usePlayerMovement';
+import useCameraFollow from '../core/hooks/useCameraFollow';
+import { useDeviceMode } from '../../hooks/useDeviceMode';
 
 // Importar tu mapa
 import {
@@ -134,6 +136,7 @@ const postInterestGameDialogue = [
 // -------------------------------------------------------------
 
 function Unit3GameScene({ onGoalReached }) {
+    const { isMobile } = useDeviceMode();
     const [dialogueMode, setDialogueMode] = useState("intro");
     const [dialogueIndex, setDialogueIndex] = useState(0);
 
@@ -196,6 +199,21 @@ function Unit3GameScene({ onGoalReached }) {
         moveDuration: 260,
         canMove,
     });
+
+    const mapDimensions = useMemo(
+        () => ({
+            width: unit3MapMatrix[0].length * unit3TileSize,
+            height: unit3MapMatrix.length * unit3TileSize,
+        }),
+        []
+    );
+
+    const { cameraPosition, viewportRef } = useCameraFollow({
+        playerPixelPosition: pixelPosition,
+        mapDimensions,
+        isEnabled: isMobile,
+    });
+    // cameraPosition mantiene el desplazamiento del mapa para que el jugador quede centrado en móvil.
 
     // -------------------------------------------------------------
     // CONTROL DE CLICK EN ZONAS INTERACTIVAS/ Bloqueo de zonas
@@ -424,6 +442,8 @@ function Unit3GameScene({ onGoalReached }) {
                 tileSize={unit3TileSize}
                 mapImage={unit3MapImage}
                 onTileClick={handleTileClick}
+                cameraPosition={isMobile ? cameraPosition : null}
+                viewportRef={isMobile ? viewportRef : null}
             >
                 <Player
                     pixelPosition={pixelPosition}

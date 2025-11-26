@@ -3,9 +3,11 @@ import React, { useCallback, useState, useMemo } from 'react';
 import TileMap from '../core/map/TileMap';
 import Player from '../core/player/Player';
 import usePlayerMovement from '../core/hooks/usePlayerMovement';
+import useCameraFollow from '../core/hooks/useCameraFollow';
 import DialogueBox from '../core/dialogue/DialogueBox';
 import BudgetConsole from './BudgetConsole';
 import PiggySavingsGame from './PiggySavingsGame';
+import { useDeviceMode } from '../../hooks/useDeviceMode';
 
 import {
   unit1MapMatrix,
@@ -191,6 +193,8 @@ const pigOutroDialogue = [
 
 // onGoalReached: callback que se dispara cuando la unidad termina del todo
 function Unit1GameScene({ onGoalReached }) {
+  const { isMobile } = useDeviceMode();
+
   // 'intro' | 'advisorMain' | 'advisorRepeat' | 'advisorPostMk' | 'advisorWaitPig' | 'reconnecting' | 'pigIntro' | 'pigOutro' | null
   const [dialogueMode, setDialogueMode] = useState('intro');
   const [dialogueIndex, setDialogueIndex] = useState(0);
@@ -353,6 +357,21 @@ function Unit1GameScene({ onGoalReached }) {
     canMove,
   });
 
+  const mapDimensions = useMemo(
+    () => ({
+      width: unit1MapMatrix[0].length * unit1TileSize,
+      height: unit1MapMatrix.length * unit1TileSize,
+    }),
+    [],
+  );
+
+  const { cameraPosition, viewportRef } = useCameraFollow({
+    playerPixelPosition: pixelPosition,
+    mapDimensions,
+    isEnabled: isMobile,
+  });
+  // cameraPosition almacena el offset del mundo para mantener al jugador centrado (clamp dentro del hook).
+
   const handleTileClick = ({ x, y, value }) => {
     if (isDialogueVisible) return;
     if (value !== 2) return;
@@ -513,6 +532,8 @@ function Unit1GameScene({ onGoalReached }) {
         tileSize={unit1TileSize}
         mapImage={hallImage}
         onTileClick={handleTileClick}
+        cameraPosition={isMobile ? cameraPosition : null}
+        viewportRef={isMobile ? viewportRef : null}
       >
         <Player
           pixelPosition={pixelPosition}

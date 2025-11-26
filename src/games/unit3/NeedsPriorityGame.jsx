@@ -39,6 +39,7 @@ export default function NeedsPriorityGame({ visible, onComplete }) {
 
     const [items, setItems] = useState(initialItems);
     const [draggingItem, setDraggingItem] = useState(null);
+    const [touchTarget, setTouchTarget] = useState(null);
 
     const [showResult, setShowResult] = useState(false);
     const [finalMessage, setFinalMessage] = useState("");
@@ -51,6 +52,39 @@ export default function NeedsPriorityGame({ visible, onComplete }) {
 
     const handleDragStart = (item) => {
         setDraggingItem(item);
+    };
+
+    const handleTouchStart = (item, event) => {
+        // Evita que el scroll de la página interfiera con el arrastre táctil.
+        event.preventDefault();
+        handleDragStart(item);
+    };
+
+    const handleTouchMove = (event) => {
+        if (!draggingItem) return;
+
+        const touch = event.touches[0];
+        const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+        const itemNode = targetEl?.closest?.('.item');
+        const hoveredItem = items.find((i) => i.ref && i.ref === itemNode);
+
+        if (hoveredItem) {
+            setTouchTarget(hoveredItem);
+            handleDragOver(hoveredItem, hoveredItem.ref);
+        }
+
+        event.preventDefault();
+    };
+
+    const handleTouchEnd = (event) => {
+        if (!draggingItem) return;
+        event.preventDefault();
+
+        const target = touchTarget || draggingItem;
+        if (target) {
+            handleDrop(target);
+        }
+        setTouchTarget(null);
     };
 
     const handleDrop = (target) => {
@@ -230,6 +264,10 @@ export default function NeedsPriorityGame({ visible, onComplete }) {
                                             handleDragOver(item, e.currentTarget);
                                         }}
                                         onDrop={() => handleDrop(item)}
+                                        onTouchStart={(e) => handleTouchStart(item, e)}
+                                        onTouchMove={handleTouchMove}
+                                        onTouchEnd={handleTouchEnd}
+                                        onTouchCancel={handleTouchEnd}
                                         ref={(el) => (item.ref = el)}
                                     >
                                         {index + 1}. {item.label}
