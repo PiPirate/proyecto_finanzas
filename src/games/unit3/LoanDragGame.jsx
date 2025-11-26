@@ -205,16 +205,23 @@ export default function LoanDragGame({ visible, onComplete }) {
             setFeedback(`🤔 No corresponde aquí.\n💡 Pista: ${text}`);
         }
 
+        // --- INICIO DEL BLOQUE CORREGIDO ---
         const allCorrect = Object.keys(correctMap).every(key => {
-            return locked[key] || (key === itemId && correctMap[key] === zoneId);
+            // El ítem actual debe ser correcto
+            if (key === itemId) return correct;
+            
+            // Todos los demás ítems deben haber sido bloqueados antes (estado sincrónico)
+            return locked[key]; 
         });
 
-        if (allCorrect) {
+        if (allCorrect && correct) {
             setTimeout(() => {
                 setFeedback("🎉 ¡Completaste todas las asociaciones correctamente!");
-                setLocked({ liquidez: true, rentabilidad: true, endeudamiento: true, eficiencia: true });
+                // Asegura el bloqueo visual
+                setLocked({ liquidez: true, rentabilidad: true, endeudamiento: true, eficiencia: true }); 
             }, 200);
         }
+        // --- FIN DEL BLOQUE CORREGIDO ---
     };
 
     const handleDrop = (e, zoneId) => {
