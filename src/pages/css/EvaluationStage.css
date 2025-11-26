@@ -698,6 +698,10 @@
     border-radius: 14px;
   }
 
+  .fighting-arena {
+    align-items: center;
+  }
+
   .hud-top {
     height: 95px;
     padding: 8px 10px;
@@ -705,7 +709,8 @@
 
   .characters-container {
     padding: 0 70px;
-    bottom: 140px;
+    bottom: 115px;
+    height: 320px;
   }
 
   .character-sprite {
@@ -732,6 +737,15 @@
   .evaluation-question-panel {
     padding: 10px 14px 12px;
     bottom: 82px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 2px solid rgba(148, 163, 184, 0.45);
+    z-index: 60;
+  }
+
+  .evaluation-question-content--mobile {
+    max-height: 180px;
+    overflow-y: auto;
+    padding-right: 6px;
   }
 
   .evaluation-question-content--mobile {
@@ -753,12 +767,26 @@
     padding: 10px 12px;
     font-size: 12px;
   }
+
+  .question-step,
+  .question-context,
+  .question-text,
+  .evaluation-feedback,
+  .evaluation-result-text,
+  .evaluation-result-text--secondary {
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  .evaluation-result-title {
+    font-size: 1.1rem;
+  }
 }
 
 @media (max-width: 480px) {
   .characters-container {
     padding: 0 40px;
-    bottom: 135px;
+    bottom: 110px;
   }
 
   .character-sprite {
