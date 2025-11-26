@@ -22,9 +22,15 @@ export default function TutorialStage({ onComplete }) {
   return (
     <GameViewport>
       <div
-        className={`tutorial-map-container ${isMobile ? 'tutorial-map-container--mobile' : ''}`}
+        className={`tutorial-map-container ${
+          isMobile ? 'tutorial-map-container--mobile' : ''
+        }`}
       >
-        <div className={`tutorial-game-wrapper ${isMobile ? 'tutorial-game-wrapper--mobile-scale' : ''}`}>
+        <div
+          className={`tutorial-game-wrapper ${
+            isMobile ? 'tutorial-game-wrapper--mobile-scale' : ''
+          }`}
+        >
           {/* Escena de la cafetería + decisiones con el dinero + metas financieras */}
           <Unit4GameScene onGoalReached={handleGoalReached} />
         </div>
@@ -46,11 +52,11 @@ export default function TutorialStage({ onComplete }) {
                 financieras.
                 <br />
                 También aprendiste a diferenciar metas de corto plazo (logros
-                que puedes alcanzar pronto) y metas de largo plazo (objetivos que
-                requieren más tiempo y planificación).
+                que puedes alcanzar pronto) y metas de largo plazo (objetivos
+                que requieren más tiempo y planificación).
                 <br />
-                Ahora pasarás a la prueba evaluativa para poner en práctica lo que
-                aprendiste sobre organizar tu dinero y tus metas.
+                Ahora pasarás a la prueba evaluativa para poner en práctica lo
+                que aprendiste sobre organizar tu dinero y tus metas.
               </p>
 
               <button

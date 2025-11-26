@@ -5,13 +5,13 @@ import './css/UnitPage.css';
 import { useDeviceMode } from '../hooks/useDeviceMode';
 import { useOrientationLock } from '../hooks/useOrientationLock';
 
-export default function UnitPage({ 
+export default function UnitPage({
   unitNumber,
   unitTitle,
   unitColor,
   VideoStage,
   TutorialStage,
-  EvaluationStage
+  EvaluationStage,
 }) {
   const navigate = useNavigate();
   const [currentStage, setCurrentStage] = useState(0); // 0: video, 1: tutorial, 2: evaluación
@@ -20,34 +20,34 @@ export default function UnitPage({
   const { isLandscape } = useOrientationLock();
 
   const stages = [
-    { 
-      id: 0, 
-      title: 'Video Explicativo', 
+    {
+      id: 0,
+      title: 'Video Explicativo',
       description: 'Aprende los conceptos básicos',
       icon: Play,
-      component: VideoStage 
+      component: VideoStage,
     },
-    { 
-      id: 1, 
-      title: 'Tutorial Interactivo', 
+    {
+      id: 1,
+      title: 'Tutorial Interactivo',
       description: 'Practica con el asistente virtual',
       icon: Circle,
-      component: TutorialStage
+      component: TutorialStage,
     },
-    { 
-      id: 2, 
-      title: 'Evaluación', 
+    {
+      id: 2,
+      title: 'Evaluación',
       description: 'Demuestra lo que aprendiste',
       icon: CheckCircle,
-      component: EvaluationStage
-    }
+      component: EvaluationStage,
+    },
   ];
 
   const handleStageComplete = () => {
     if (!completedStages.includes(currentStage)) {
       setCompletedStages([...completedStages, currentStage]);
     }
-    
+
     if (currentStage < stages.length - 1) {
       setCurrentStage(currentStage + 1);
     }
@@ -69,7 +69,10 @@ export default function UnitPage({
     return (
       <div className="unit-page unit-page--fullscreen">
         <div className="unit-fullscreen-shell">
-          <CurrentComponent onComplete={handleStageComplete} unitColor={unitColor} />
+          <CurrentComponent
+            onComplete={handleStageComplete}
+            unitColor={unitColor}
+          />
         </div>
       </div>
     );
@@ -82,13 +85,13 @@ export default function UnitPage({
         <header className="unit-header">
           <div className="hero-decor-top"></div>
           <div className="hero-decor-bottom"></div>
-          
+
           <div className="hero-content">
             <button onClick={() => navigate('/')} className="back-button">
               <ArrowLeft />
               <span>Volver</span>
             </button>
-            
+
             <div className="unit-header-info">
               <div className="unit-badge">
                 <span>Unidad {unitNumber}</span>
@@ -105,9 +108,21 @@ export default function UnitPage({
               {stages.map((stage, index) => (
                 <React.Fragment key={stage.id}>
                   <button
-                    onClick={() => canAccessStage(stage.id) && setCurrentStage(stage.id)}
+                    onClick={() =>
+                      canAccessStage(stage.id) && setCurrentStage(stage.id)
+                    }
                     disabled={!canAccessStage(stage.id)}
-                    className={`progress-step ${currentStage === stage.id ? 'progress-step-active' : ''} ${completedStages.includes(stage.id) ? 'progress-step-completed' : ''} ${!canAccessStage(stage.id) ? 'progress-step-locked' : ''}`}
+                    className={`progress-step ${
+                      currentStage === stage.id ? 'progress-step-active' : ''
+                    } ${
+                      completedStages.includes(stage.id)
+                        ? 'progress-step-completed'
+                        : ''
+                    } ${
+                      !canAccessStage(stage.id)
+                        ? 'progress-step-locked'
+                        : ''
+                    }`}
                   >
                     <div className="progress-step-icon">
                       {completedStages.includes(stage.id) ? (
@@ -119,14 +134,26 @@ export default function UnitPage({
                       )}
                     </div>
                     <div className="progress-step-content">
-                      <div className="progress-step-title">{stage.title}</div>
-                      <div className="progress-step-description">{stage.description}</div>
+                      <div className="progress-step-title">
+                        {stage.title}
+                      </div>
+                      <div className="progress-step-description">
+                        {stage.description}
+                      </div>
                     </div>
-                    <div className="progress-step-number">{index + 1}</div>
+                    <div className="progress-step-number">
+                      {index + 1}
+                    </div>
                   </button>
 
                   {index < stages.length - 1 && (
-                    <div className={`progress-connector ${completedStages.includes(stage.id) ? 'progress-connector-completed' : ''}`} />
+                    <div
+                      className={`progress-connector ${
+                        completedStages.includes(stage.id)
+                          ? 'progress-connector-completed'
+                          : ''
+                      }`}
+                    />
                   )}
                 </React.Fragment>
               ))}
@@ -136,7 +163,10 @@ export default function UnitPage({
 
         {/* Stage Content */}
         <div className="unit-content">
-          <CurrentComponent onComplete={handleStageComplete} unitColor={unitColor} />
+          <CurrentComponent
+            onComplete={handleStageComplete}
+            unitColor={unitColor}
+          />
         </div>
       </div>
     </div>
