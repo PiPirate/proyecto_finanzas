@@ -405,6 +405,10 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
 
             {feedback && <div className="feedback-box">{feedback}</div>}
 
+            {/* Este bloque de endScreen es redundante y se eliminaría en una refactorización, 
+                pero lo dejo con la versión aceptada del conflicto. 
+                El bloque principal al inicio del componente ya maneja la pantalla final. 
+                Si este bloque se muestra, creará un overlay doble. */}
             {endScreen && (
                 <div className="final-screen">
                     <div className={`final-box ${endScreen.type}`}>

@@ -1,16 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import "./css/LoanDragGame.css";
 
 export default function LoanDragGame({ visible, onComplete }) {
     if (!visible) return null;
 
-    // ----------------------------------------------------------
-    // 📘 MÓDULOS DE ANÁLISIS FINANCIERO
-    // ----------------------------------------------------------
     const modules = [
-        // MÓDULO 1
         {
-            title: "Módulo 1 — Conceptos esenciales del análisis financiero",
             description: "Relaciona cada indicador financiero con su definición técnica.",
             zones: [
                 { zone: "zone_liquidez", label: "¿Qué evalúa la liquidez?" },
@@ -25,10 +20,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                 { id: "eficiencia", label: "El uso óptimo de recursos para generar ingresos", hint: "Rotación de inventarios, activos, cartera." }
             ]
         },
-
-        // MÓDULO 2
         {
-            title: "Módulo 2 — Interpretación de estados financieros",
             description: "Relaciona cada componente con su función dentro del análisis financiero.",
             zones: [
                 { zone: "zone_liquidez", label: "Elemento que determina si la empresa puede operar sin falta de efectivo" },
@@ -43,10 +35,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                 { id: "eficiencia", label: "Rotaciones y ciclos operativos", hint: "Evalúan velocidad de conversión de recursos." }
             ]
         },
-        
-        // MÓDULO 3
         {
-            title: "Módulo 3 — Consecuencias de decisiones financieras",
             description: "Cada decisión afecta los indicadores. Relaciónala con su impacto.",
             zones: [
                 { zone: "zone_liquidez", label: "¿Qué pasa si la empresa acumula inventarios?" },
@@ -61,10 +50,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                 { id: "eficiencia", label: "Mejora la eficiencia y aumenta la rotación de activos", hint: "Producción más ágil = más ingresos." }
             ]
         },
-
-        // MÓDULO 4
         {
-            title: "Módulo 4 — Errores frecuentes en análisis financiero",
             description: "Identifica el error según el mal uso de los indicadores.",
             zones: [
                 { zone: "zone_liquidez", label: "Error al interpretar recursos disponibles" },
@@ -79,10 +65,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                 { id: "eficiencia", label: "No medir rotaciones ni tiempos de ciclo", hint: "Sin métricas no hay eficiencia." }
             ]
         },
-
-        // MÓDULO 5
         {
-            title: "Módulo 5 — Buenas prácticas del analista financiero",
             description: "Relaciona cada buena práctica con su aplicación ideal.",
             zones: [
                 { zone: "zone_liquidez", label: "Para evaluar solvencia a corto plazo…" },
@@ -97,10 +80,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                 { id: "eficiencia", label: "Analizar rotaciones y ciclos operativos", hint: "Eficiencia = velocidad + control." }
             ]
         },
-
-        // MÓDULO 6
         {
-            title: "Módulo 6 — Tipos de análisis y riesgos",
             description: "Relaciona el tipo de análisis con su impacto financiero.",
             zones: [
                 { zone: "zone_liquidez", label: "Análisis que determina estabilidad a corto plazo" },
@@ -115,10 +95,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                 { id: "eficiencia", label: "Análisis de productividad y rotaciones", hint: "Rotación de activos, inventarios." }
             ]
         },
-
-        // MÓDULO 7
         {
-            title: "Módulo 7 — Escenarios reales y análisis inteligente",
             description: "Relaciona cada situación empresarial con el análisis adecuado.",
             zones: [
                 { zone: "zone_liquidez", label: "La empresa enfrenta presión de flujo de caja" },
@@ -135,7 +112,6 @@ export default function LoanDragGame({ visible, onComplete }) {
         }
     ];
 
-    // Mapa correcto
     const correctMap = {
         liquidez: "zone_liquidez",
         rentabilidad: "zone_rentabilidad",
@@ -144,281 +120,87 @@ export default function LoanDragGame({ visible, onComplete }) {
     };
 
     const [currentModule, setCurrentModule] = useState(0);
-    const [hint, setHint] = useState("");
-    const [feedback, setFeedback] = useState("");
+    const [currentQuestion, setCurrentQuestion] = useState(0);
     const [showIntro, setShowIntro] = useState(true);
     const [showEnding, setShowEnding] = useState(false);
+
+    const [hint, setHint] = useState("");
+    const [feedback, setFeedback] = useState("");
+    const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [shuffledItems, setShuffledItems] = useState([]);
-
-    const [dropped, setDropped] = useState({
-        liquidez: null,
-        rentabilidad: null,
-        endeudamiento: null,
-        eficiencia: null,
-    });
-
-    const [locked, setLocked] = useState({
-        liquidez: false,
-        rentabilidad: false,
-        endeudamiento: false,
-        eficiencia: false,
-    });
-
-    // Refs para manejar eventos táctiles/pointer
-    const touchItemRef = useRef(null);
-    const touchTargetRef = useRef(null);
-    const activePointerRef = useRef(null); // ID del puntero activo (para PointerEvent)
-    const activePointerTypeRef = useRef(null); // Tipo de puntero ('pointer' o 'touch' para Legacy)
-    const activeTouchIdRef = useRef(null); // ID del toque activo (para TouchEvent Legacy)
-
-    const handleDragStart = (e, item) => {
-        e.dataTransfer.setData("itemId", item.id);
-        setHint(item.hint);
-        setFeedback("");
-    };
-
-    // Función principal de resolución de drop (usada para Drag and Drop y Touch)
-    const resolveDrop = useCallback(
-        (itemId, zoneId) => {
-            if (!itemId || !zoneId) return;
-
-            const correct = correctMap[itemId] === zoneId;
-            const moduleItems = modules[currentModule]?.items ?? [];
-            const hintText = moduleItems.find((i) => i.id === itemId)?.hint ?? "";
-
-            setDropped((prev) => ({ ...prev, [itemId]: zoneId }));
-
-            if (correct) {
-                setFeedback(`✔ ¡Muy bien! ${hintText}`);
-                
-                // Usamos la función de actualización de setLocked para verificar si el módulo terminó
-                setLocked((prev) => {
-                    const updated = { ...prev, [itemId]: true };
-                    
-                    // Comprueba si todos los ítems están bloqueados (incluyendo el actual)
-                    const allCorrect = Object.keys(correctMap).every((key) => updated[key]);
-
-                    if (allCorrect) {
-                        setTimeout(() => {
-                            setFeedback("🎉 ¡Completaste todas las asociaciones correctamente!");
-                            // Doble seguridad para el bloqueo visual
-                            setLocked({
-                                liquidez: true,
-                                rentabilidad: true,
-                                endeudamiento: true,
-                                eficiencia: true,
-                            });
-                        }, 200);
-                    }
-
-                    return updated;
-                });
-
-            } else {
-                setFeedback(`🤔 No corresponde aquí.\n💡 Pista: ${hintText}`);
-                setDropped((prev) => ({ ...prev, [itemId]: null }));
-            }
-            setHint(""); // Limpiar pista después del intento
-        },
-        [correctMap, currentModule, modules]
-    );
-
-    const handleDrop = (e, zoneId) => {
-        const itemId = e.dataTransfer.getData("itemId");
-        resolveDrop(itemId, zoneId);
-    };
-
-    const getZoneIdFromPoint = useCallback((clientX, clientY) => {
-        const el = document.elementFromPoint(clientX, clientY);
-        // Busca el dropzone más cercano
-        const zoneEl = el?.closest?.('[data-zone-id]');
-        return zoneEl?.dataset?.zoneId || null;
-    }, []);
-
-    // --- Manejo de Puntero (Moderno: PointerEvent) ---
-    const handleTouchStart = (e, item) => {
-        if (e.pointerType !== 'touch') return;
-        if (locked[item.id]) return;
-        if (activePointerRef.current !== null) return; // Solo un toque a la vez
-
-        e.preventDefault();
-        touchItemRef.current = item.id;
-        activePointerRef.current = e.pointerId;
-        activePointerTypeRef.current = 'pointer';
-        touchTargetRef.current = null;
-
-        if (e.target.setPointerCapture) {
-            try {
-                e.target.setPointerCapture(e.pointerId);
-            } catch (err) {
-                // Si falla el capture, se ignora
-            }
-        }
-
-        setHint(item.hint);
-        setFeedback("");
-    };
-
-    const handleGlobalPointerMove = useCallback(
-        (e) => {
-            if (e.pointerType !== 'touch') return;
-            if (activePointerTypeRef.current !== 'pointer') return;
-            if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
-            e.preventDefault(); // Previene el scroll
-
-            touchTargetRef.current = getZoneIdFromPoint(e.clientX, e.clientY);
-        },
-        [getZoneIdFromPoint]
-    );
-
-    const handleGlobalPointerEnd = useCallback(
-        (e) => {
-            if (e.pointerType !== 'touch') return;
-            if (activePointerTypeRef.current !== 'pointer') return;
-            if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
-            e.preventDefault();
-
-            // Resuelve la caída usando la zona actual (si existe) o la última conocida (touchTargetRef)
-            const zoneId = getZoneIdFromPoint(e.clientX, e.clientY) || touchTargetRef.current;
-            
-            // Si hay una zona válida, resuelve el drop
-            if (zoneId) {
-                resolveDrop(touchItemRef.current, zoneId);
-            }
-
-            // Restablece el estado
-            touchItemRef.current = null;
-            touchTargetRef.current = null;
-            activePointerRef.current = null;
-            activePointerTypeRef.current = null;
-            activeTouchIdRef.current = null;
-        },
-        [getZoneIdFromPoint, resolveDrop]
-    );
-
-    // --- Manejo de Toque (Legacy: TouchEvent) ---
-
-    const handleLegacyTouchStart = (e, item) => {
-        if ("PointerEvent" in window) return; // Si soporta PointerEvent, ignora Legacy
-        if (locked[item.id]) return;
-        if (activePointerRef.current !== null) return; // Solo un toque a la vez
-
-        const touch = e.touches?.[0];
-        if (!touch) return;
-        e.preventDefault();
-
-        touchItemRef.current = item.id;
-        activePointerRef.current = touch.identifier; // Usamos identifier como ID del puntero
-        activePointerTypeRef.current = 'touch';
-        activeTouchIdRef.current = touch.identifier;
-        touchTargetRef.current = null;
-
-        setHint(item.hint);
-        setFeedback("");
-    };
-
-    const handleGlobalTouchMove = useCallback(
-        (e) => {
-            if (activePointerTypeRef.current !== 'touch') return;
-            // Busca el toque activo por ID
-            const touch = Array.from(e.touches || []).find((t) => t.identifier === activeTouchIdRef.current);
-            if (!touch || !touchItemRef.current) return;
-            e.preventDefault();
-
-            touchTargetRef.current = getZoneIdFromPoint(touch.clientX, touch.clientY);
-        },
-        [getZoneIdFromPoint]
-    );
-
-    const handleGlobalTouchEnd = useCallback(
-        (e) => {
-            if (activePointerTypeRef.current !== 'touch') return;
-            // Busca el toque que terminó
-            const touch = Array.from(e.changedTouches || []).find((t) => t.identifier === activeTouchIdRef.current);
-            if (!touch || !touchItemRef.current) return;
-            e.preventDefault();
-
-            const zoneId = getZoneIdFromPoint(touch.clientX, touch.clientY) || touchTargetRef.current;
-            if (zoneId) {
-                resolveDrop(touchItemRef.current, zoneId);
-            }
-
-            // Restablece el estado
-            touchItemRef.current = null;
-            touchTargetRef.current = null;
-            activePointerRef.current = null;
-            activePointerTypeRef.current = null;
-            activeTouchIdRef.current = null;
-        },
-        [getZoneIdFromPoint, resolveDrop]
-    );
-
-    const handlePointerCancel = useCallback(() => {
-        // Restablece todo el estado en caso de interrupción (ej. llamada entrante)
-        touchItemRef.current = null;
-        touchTargetRef.current = null;
-        activePointerRef.current = null;
-        activePointerTypeRef.current = null;
-        activeTouchIdRef.current = null;
-    }, []);
-
-    // --- Efecto de Escucha Global ---
-    useEffect(() => {
-        // Pointer Events (Moderno)
-        window.addEventListener('pointermove', handleGlobalPointerMove, { passive: false });
-        window.addEventListener('pointerup', handleGlobalPointerEnd, { passive: false });
-        window.addEventListener('pointercancel', handlePointerCancel);
-
-        // Touch Events (Legacy)
-        window.addEventListener('touchmove', handleGlobalTouchMove, { passive: false });
-        window.addEventListener('touchend', handleGlobalTouchEnd, { passive: false });
-        window.addEventListener('touchcancel', handlePointerCancel, { passive: false });
-
-        return () => {
-            window.removeEventListener('pointermove', handleGlobalPointerMove);
-            window.removeEventListener('pointerup', handleGlobalPointerEnd);
-            window.removeEventListener('pointercancel', handlePointerCancel);
-
-            window.removeEventListener('touchmove', handleGlobalTouchMove);
-            window.removeEventListener('touchend', handleGlobalTouchEnd);
-            window.removeEventListener('touchcancel', handlePointerCancel);
-        };
-    }, [handleGlobalPointerEnd, handleGlobalPointerMove, handleGlobalTouchEnd, handleGlobalTouchMove, handlePointerCancel]);
-
-    // --- Lógica del Flujo del Juego ---
-
-    const moduleCompleted =
-        locked.liquidez &&
-        locked.rentabilidad &&
-        locked.endeudamiento &&
-        locked.eficiencia;
-
-    const nextModule = () => {
-        if (currentModule < modules.length - 1) {
-            setCurrentModule(currentModule + 1);
-            setHint("");
-            setFeedback("");
-            setDropped({ liquidez: null, rentabilidad: null, endeudamiento: null, eficiencia: null });
-            setLocked({ liquidez: false, rentabilidad: false, endeudamiento: false, eficiencia: false });
-            setShuffledItems(shuffle(modules[currentModule + 1].items));
-        } else setShowEnding(true);
-    };
+    const [moduleCompleted, setModuleCompleted] = useState(false);
 
     function shuffle(array) {
         return [...array].sort(() => Math.random() - 0.5);
     }
 
-    // --- Renderizado ---
+    const resetModuleState = (moduleIndex) => {
+        const module = modules[moduleIndex];
+        setCurrentQuestion(0);
+        setHint("");
+        setFeedback("");
+        setSelectedAnswer(null);
+        setModuleCompleted(false);
+        setShuffledItems(shuffle(module.items));
+    };
+
+    const handleAnswer = (itemId) => {
+        if (moduleCompleted) return;
+
+        const module = modules[currentModule];
+        const zone = module.zones[currentQuestion];
+        const zoneId = zone.zone;
+
+        const item = module.items.find((i) => i.id === itemId);
+        const hintText = item?.hint ?? "";
+
+        setSelectedAnswer(itemId);
+
+        const correct = correctMap[itemId] === zoneId;
+
+        if (correct) {
+            setFeedback(`✔ ¡Muy bien! ${hintText}`);
+            setHint("");
+
+            setTimeout(() => {
+                const isLastQuestion = currentQuestion === module.zones.length - 1;
+
+                if (isLastQuestion) {
+                    setModuleCompleted(true);
+                    setFeedback("🎉 ¡Completaste todas las asociaciones correctamente en este módulo!");
+                } else {
+                    // Nota: Idealmente, aquí se debería eliminar el item correcto de la lista shuffledItems
+                    setCurrentQuestion((prev) => prev + 1);
+                    setSelectedAnswer(null);
+                    setFeedback("");
+                    setHint("");
+                }
+            }, 600);
+        } else {
+            setFeedback(`🤔 No corresponde aquí.\n💡 Pista: ${hintText}`);
+            setHint(hintText);
+        }
+    };
+
+    const nextModule = () => {
+        if (currentModule < modules.length - 1) {
+            const nextIndex = currentModule + 1;
+            setCurrentModule(nextIndex);
+            resetModuleState(nextIndex);
+        } else {
+            setShowEnding(true);
+        }
+    };
 
     if (showIntro) {
         return (
             <div className="loan-game-overlay">
-            <div className="loan-game-window intro minigame-container">
+                <div className="loan-game-window intro minigame-container">
                     <h2>Aprende sobre análisis financieros</h2>
-                    <p>No necesitas saber nada. Aquí aprenderás paso a paso, arrastrando ideas claras y entendibles.</p>
+                    <p>No necesitas saber nada. Aquí aprenderás paso a paso, seleccionando la respuesta correcta para cada situación.</p>
                     <button className="loan-finish-btn" onClick={() => {
                         setShowIntro(false);
-                        setShuffledItems(shuffle(modules[0].items));
+                        resetModuleState(0);
                     }}>
                         Comenzar
                     </button>
@@ -440,54 +222,62 @@ export default function LoanDragGame({ visible, onComplete }) {
     }
 
     const module = modules[currentModule];
+    const zone = module.zones[currentQuestion];
+    const totalQuestions = module.zones.length;
 
     return (
         <div className="loan-game-overlay">
             <div className="loan-game-window minigame-container">
 
+                <p className="loan-progress">
+                    Módulo {currentModule + 1} de {modules.length} · Pregunta {currentQuestion + 1} de {totalQuestions}
+                </p>
                 <h2 className="module-title">{module.title}</h2>
                 <p className="module-desc">{module.description}</p>
 
                 {hint && <div className="loan-hint-box">💡 {hint}</div>}
                 {feedback && <div className="loan-feedback-box">{feedback}</div>}
 
-                <div className="loan-cards">
-                    {shuffledItems.map(item => (
-                        <div
-                            key={item.id}
-                            className={`loan-card ${locked[item.id] ? "locked" : ""}`}
-                            draggable={!locked[item.id]}
-                            onDragStart={(e) => !locked[item.id] && handleDragStart(e, item)}
-                            
-                            // Eventos de inicio de arrastre para móvil
-                            onPointerDown={(e) => e.pointerType === 'touch' && handleTouchStart(e, item)}
-                            onTouchStart={(e) => handleLegacyTouchStart(e, item)} 
-                        >
-                            {item.label}
-                        </div>
-                    ))}
-                </div>
+                <div className="loan-question">
+                    <p className="loan-question-label">{zone.label}</p>
 
-                <div className="loan-dropzones">
-                    {module.zones.map(zone => (
-                        <div
-                            key={zone.zone}
-                            className="dropzone"
-                            data-zone-id={zone.zone}
-                            onDragOver={(e) => e.preventDefault()}
-                            onDrop={(e) => handleDrop(e, zone.zone)}
-                        >
-                            {zone.label}
-                        </div>
-                    ))}
+                    <div className="loan-options">
+                        {shuffledItems.map((item) => {
+                            const isSelected = selectedAnswer === item.id;
+                            const isCorrectOption =
+                                moduleCompleted && correctMap[item.id] === zone.zone;
+                            const isWrongSelected =
+                                isSelected && !moduleCompleted && correctMap[item.id] !== zone.zone;
+
+                            const classes = [
+                                "loan-option-btn",
+                                isSelected ? "selected" : "",
+                                isCorrectOption ? "correct" : "",
+                                isWrongSelected ? "wrong" : "",
+                            ]
+                                .join(" ")
+                                .trim();
+
+                            return (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    className={classes}
+                                    onClick={() => handleAnswer(item.id)}
+                                    disabled={moduleCompleted}
+                                >
+                                    {item.label}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
 
                 {moduleCompleted && (
-                    <button className="loan-finish-btn" onClick={nextModule}>
+                    <button className="loan-finish-btn loan-next-module-btn" onClick={nextModule}>
                         {currentModule === modules.length - 1 ? "Terminar" : "Siguiente módulo"}
                     </button>
                 )}
-
             </div>
         </div>
     );
