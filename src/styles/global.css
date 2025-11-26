@@ -48,13 +48,13 @@ iframe {
 
 @media (max-height: 500px) and (orientation: landscape) {
     .minigame-container {
-        transform: scale(0.5);
+        transform: scale(0.9);
         transform-origin: top;
     }
 }
 .minigame-container {
     width: 90%;
-    max-width: 600px;
+    max-width: 700px;
     background-color: #131b34;
     border: 3px solid #4c6fbf;
     border-radius: 14px;
