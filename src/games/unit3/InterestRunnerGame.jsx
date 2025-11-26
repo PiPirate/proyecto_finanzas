@@ -378,7 +378,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
 
 
     return (
-
+<div className="unit3-game-container">  
         <div className="interest-runner-overlay">
 
             {showIntro && (
@@ -449,5 +449,6 @@ export default function InterestRunnerGame({ visible, onComplete }) {
                 </div>
             )}
         </div>
+        </div> 
     );
 }

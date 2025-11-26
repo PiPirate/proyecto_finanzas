@@ -108,8 +108,6 @@ const postNeedsGameDialogue = [
     "Muy bien, clasificaste correctamente los indicadores según su importancia estratégica.",
     "Comprender la prioridad de cada indicador es esencial para interpretar estados financieros.",
     "Ahora ve a la zona '3' para aprender cómo mantener márgenes positivos.",
-    "O, si quieres, prueba el simulador oculto de riesgo financiero en la computadora.",
-    "Pero shhh… sigue siendo un secreto 😉"
 ];
 
 const postInterestGameDialogue = [
@@ -266,9 +264,9 @@ function Unit3GameScene({ onGoalReached }) {
                 break;
 
             // Simulador de riesgo en computador (opcional, siempre accesible después de la intro)
-            case "computer":
-                setDialogueMode("credit");
-                break;
+            // case "computer":
+            //     setDialogueMode("credit");
+            //     break;
 
             default:
                 break;
