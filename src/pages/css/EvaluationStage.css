@@ -33,6 +33,29 @@
   color: #fff;
 }
 
+@media (max-width: 900px) {
+  .stage-container {
+    width: 100%;
+    min-height: var(--app-vh, 100dvh);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .evaluation-stage {
+    padding: 0;
+    min-height: var(--app-vh, 100dvh);
+  }
+
+  .fighting-game-container {
+    width: 100vw;
+    height: var(--app-vh, 100dvh);
+    max-width: none;
+    border-radius: 0;
+  }
+}
+
 /* ================================
    HUD SUPERIOR (VIDAS / TIMER)
 =================================== */
