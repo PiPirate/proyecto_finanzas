@@ -200,12 +200,13 @@ export default function LoanDragGame({ visible, onComplete }) {
             const text = modules[currentModule].items.find(i => i.id === itemId).hint;
             setFeedback(`✔ ¡Muy bien! ${text}`);
         } else {
+            setDropped(prev => ({ ...prev, [itemId]: null }));
             const text = modules[currentModule].items.find(i => i.id === itemId).hint;
             setFeedback(`🤔 No corresponde aquí.\n💡 Pista: ${text}`);
         }
 
         const allCorrect = Object.keys(correctMap).every(key => {
-            return correctMap[key] === (key === itemId ? zoneId : (dropped[key] || correctMap[key]));
+            return locked[key] || (key === itemId && correctMap[key] === zoneId);
         });
 
         if (allCorrect) {
@@ -221,29 +222,36 @@ export default function LoanDragGame({ visible, onComplete }) {
         resolveDrop(itemId, zoneId);
     };
 
-    // Eventos táctiles reutilizan resolveDrop para compartir la misma validación que el drag con mouse.
+    // Eventos táctiles unificados con pointer events
     const handleTouchStart = (e, item) => {
         if (locked[item.id]) return;
+        if (activePointerRef.current !== null) return;
+
         e.preventDefault();
         touchItemRef.current = item.id;
         activePointerRef.current = e.pointerId;
         touchTargetRef.current = null;
+
         setHint(item.hint);
         setFeedback("");
     };
 
     const handleTouchMove = (e) => {
-        if (activePointerRef.current !== e.pointerId) return;
+        if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
         e.preventDefault();
+
         const el = document.elementFromPoint(e.clientX, e.clientY);
         touchTargetRef.current = el?.dataset?.zoneId || null;
     };
 
     const handleTouchEnd = (e, fallbackZoneId) => {
-        if (!touchItemRef.current) return;
+        if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
         e.preventDefault();
+
         const zoneId = touchTargetRef.current || fallbackZoneId;
+
         resolveDrop(touchItemRef.current, zoneId);
+
         touchItemRef.current = null;
         touchTargetRef.current = null;
         activePointerRef.current = null;
@@ -258,7 +266,8 @@ export default function LoanDragGame({ visible, onComplete }) {
     const nextModule = () => {
         if (currentModule < modules.length - 1) {
             setCurrentModule(currentModule + 1);
-            setHint(""); setFeedback("");
+            setHint("");
+            setFeedback("");
             setDropped({ liquidez: null, rentabilidad: null, endeudamiento: null, eficiencia: null });
             setLocked({ liquidez: false, rentabilidad: false, endeudamiento: false, eficiencia: false });
             setShuffledItems(shuffle(modules[currentModule + 1].items));
@@ -273,11 +282,10 @@ export default function LoanDragGame({ visible, onComplete }) {
                     <p>No necesitas saber nada. Aquí aprenderás paso a paso, arrastrando ideas claras y entendibles.</p>
                     <button className="loan-finish-btn" onClick={() => {
                         setShowIntro(false);
-                        setShuffledItems(shuffle(modules[0].items)); // Mezclar módulo inicial
+                        setShuffledItems(shuffle(modules[0].items));
                     }}>
                         Comenzar
                     </button>
-
                 </div>
             </div>
         );
@@ -318,6 +326,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                             className={`loan-card ${locked[item.id] ? "locked" : ""}`}
                             draggable={!locked[item.id]}
                             onDragStart={(e) => !locked[item.id] && handleDragStart(e, item)}
+
                             onPointerDown={(e) => e.pointerType === 'touch' && handleTouchStart(e, item)}
                             onPointerMove={(e) => e.pointerType === 'touch' && handleTouchMove(e)}
                             onPointerUp={(e) => e.pointerType === 'touch' && handleTouchEnd(e)}
@@ -335,6 +344,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                             data-zone-id={zone.zone}
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => handleDrop(e, zone.zone)}
+
                             onPointerMove={(e) => e.pointerType === 'touch' && handleTouchMove(e)}
                             onPointerUp={(e) => e.pointerType === 'touch' && handleTouchEnd(e, zone.zone)}
                         >
