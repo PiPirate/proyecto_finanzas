@@ -677,7 +677,7 @@
 @media (max-width: 1024px) {
   .characters-container {
     padding: 0 90px;
-    bottom: 150px;
+    bottom: 20px;
   }
 
   .character-sprite {
