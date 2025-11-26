@@ -33,23 +33,23 @@ const MAP_WIDTH = 16;
 const MAP_HEIGHT = 17;
 
 const DUNGEON_MAP = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1],
-  [1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,1],
-  [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
-  [1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1],
-  [1,0,0,1,1,0,0,1,0,1,0,0,0,1,0,1],
-  [1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,3,0,1],
-  [1,0,4,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+  [1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1],
+  [1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 1],
+  [1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 // 0 = piso, 1 = pared, 2 = altar necesidades, 3 = altar gustos, 4 = altar ahorro
 
@@ -59,13 +59,13 @@ const GAME_OBJECTS = [
   { id: 'transport', name: 'Transporte', category: 'needs', sprite: '🚌', value: 10, description: 'Movilidad para desplazarte' },
   { id: 'rent', name: 'Vivienda', category: 'needs', sprite: '🏠', value: 15, description: 'Un lugar donde habitar' },
   { id: 'medicine', name: 'Salud', category: 'needs', sprite: '💊', value: 10, description: 'Recursos para tu salud' },
-  
+
   // GUSTOS (total 30)
   { id: 'gaming', name: 'Videojuegos', category: 'wants', sprite: '🎮', value: 10, description: 'Entretenimiento digital interactivo' },
   { id: 'pizza', name: 'Comida Fuera', category: 'wants', sprite: '🍕', value: 10, description: 'Disfrutar comida en restaurantes' },
   { id: 'cinema', name: 'Cine', category: 'wants', sprite: '🎬', value: 5, description: 'Entretenimiento audiovisual' },
   { id: 'clothes', name: 'Ropa de Moda', category: 'wants', sprite: '👕', value: 5, description: 'Vestimenta adicional' },
-  
+
   // AHORRO (total 20)
   { id: 'investment', name: 'Inversión', category: 'savings', sprite: '📈', value: 10, description: 'Hacer crecer tu capital' },
   { id: 'education', name: 'Curso Online', category: 'savings', sprite: '🎓', value: 5, description: 'Aprender nuevas habilidades' },
@@ -88,7 +88,7 @@ const WIZARD_TIPS = [
 
 export function PuzzleGamePanel({ onComplete, onClose }) {
 
-  const { isMobile } = useDeviceMode(); 
+  const { isMobile } = useDeviceMode();
 
   const [stage, setStage] = useState('intro');
   const [playerPos, setPlayerPos] = useState({ x: 3, y: 2 });
@@ -97,20 +97,20 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   const [playerHp, setPlayerHp] = useState(5);
   const [maxPlayerHp] = useState(5);
   const [invulnerable, setInvulnerable] = useState(false);
-  
+
   const [objects, setObjects] = useState([]);
   const [enemies, setEnemies] = useState([]);
   const [projectiles, setProjectiles] = useState([]);
   const [canShoot, setCanShoot] = useState(true);
-  
+
   const [needsAltar, setNeedsAltar] = useState([]);
   const [wantsAltar, setWantsAltar] = useState([]);
   const [savingsAltar, setSavingsAltar] = useState([]);
-  
+
   const [currentTip, setCurrentTip] = useState('');
   const [showTipBanner, setShowTipBanner] = useState(false);
   const [tipsShown, setTipsShown] = useState(new Set());
-  
+
   const [puzzleSolved, setPuzzleSolved] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [nearbyObject, setNearbyObject] = useState(null);
@@ -121,7 +121,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   const enemiesRef = useRef([]);
   const stepCountRef = useRef(0);
 
-    // Dimensiones del mapa en píxeles
+  // Dimensiones del mapa en píxeles
   const mapDimensions = {
     width: MAP_WIDTH * TILE_SIZE,
     height: MAP_HEIGHT * TILE_SIZE,
@@ -143,23 +143,24 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   // Estilos del viewport y de la capa que se mueve con la cámara
   const viewportStyle = isMobile
     ? {
-        width: '100%',
-        maxWidth: '100%',
-        height: '100%',
-        maxHeight: '70vh',      // para que quepa dentro del modal
-        overflow: 'hidden',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }
+      width: '100%',
+      maxWidth: '100%',
+      height: '100%',
+      maxHeight: '70vh',      // para que quepa dentro del modal
+      overflow: 'hidden',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }
     : {
-        display: 'flex',
-        justifyContent: 'center',
-      };
+      display: 'flex',
+      justifyContent: 'center',
+    };
 
-  const cameraStyle = 
-   {  transform: `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)`,
-      };
+  const cameraStyle =
+  {
+    transform: `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)`,
+  };
 
 
   // Sincronizar enemiesRef
@@ -170,21 +171,21 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   // Detectar objeto cercano
   useEffect(() => {
     if (stage !== 'playing') return;
-    
+
     const nearby = objects.find(obj => {
       const dist = Math.abs(obj.position.x - playerPos.x) + Math.abs(obj.position.y - playerPos.y);
       return dist <= 1.5;
     });
-    
+
     setNearbyObject(nearby || null);
-    
+
     // Verificar colisión con enemigos
-    const touchingEnemy = enemies.find(enemy => 
+    const touchingEnemy = enemies.find(enemy =>
       enemy.isAlive &&
       Math.abs(enemy.position.x - playerPos.x) < 0.7 &&
       Math.abs(enemy.position.y - playerPos.y) < 0.7
     );
-    
+
     if (touchingEnemy && !invulnerable) {
       setPlayerHp(prev => {
         const newHp = Math.max(0, prev - 0.5);
@@ -208,12 +209,12 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
         { name: 'BottomLeft', xMin: 1, xMax: 6, yMin: 10, yMax: 15 }, // Sala inferior izquierda
         { name: 'BottomRight', xMin: 10, xMax: 14, yMin: 10, yMax: 15 } // Sala inferior derecha
       ];
-      
+
       const initialObjects = GAME_OBJECTS.map((obj, index) => {
         // Distribuir objetos equitativamente por salas
         const roomIndex = index % rooms.length;
         const room = rooms[roomIndex];
-        
+
         let x, y;
         let attempts = 0;
         do {
@@ -222,7 +223,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
           attempts++;
           if (attempts > 100) break; // Evitar bucle infinito
         } while (!isWalkable(x, y) || isNearAltar(x, y) || (x === 3 && y === 2));
-        
+
         return { ...obj, position: { x, y } };
       });
       setObjects(initialObjects);
@@ -236,19 +237,19 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
 
     const gameLoop = () => {
       const now = Date.now();
-      
+
       setEnemies(prev => prev.map(enemy => {
         if (!enemy.isAlive) return enemy;
-        
+
         let updated = { ...enemy };
-        
+
         // Movimiento independiente
         if (now - enemy.lastMoveTime > enemy.moveDelay) {
           const moves = [{ x: 0, y: -1 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 1, y: 0 }];
           const randomMove = moves[Math.floor(Math.random() * moves.length)];
           const newX = enemy.position.x + randomMove.x;
           const newY = enemy.position.y + randomMove.y;
-          
+
           if (isWalkable(newX, newY)) {
             updated.position = { x: newX, y: newY };
           }
@@ -256,22 +257,22 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
           updated.lastMoveTime = now;
           updated.moveDelay = 600 + Math.random() * 600; // 600-1200ms
         }
-        
+
         // Disparo independiente
         if (enemy.canShoot && now - enemy.lastShootTime > enemy.shootDelay) {
           enemyShoot(enemy);
           updated.lastShootTime = now;
           updated.shootDelay = 2000 + Math.random() * 2000; // 2-4s
         }
-        
+
         return updated;
       }));
-      
+
       animationFrameRef.current = requestAnimationFrame(gameLoop);
     };
-    
+
     animationFrameRef.current = requestAnimationFrame(gameLoop);
-    
+
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -282,63 +283,63 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   // Movimiento de proyectiles
   useEffect(() => {
     if (stage !== 'playing') return;
-    
+
     const projInterval = setInterval(() => {
       setProjectiles(prev => {
         if (prev.length === 0) return prev;
-        
+
         const newProjectiles = prev.map(proj => {
           let newX = proj.position.x;
           let newY = proj.position.y;
-          
+
           switch (proj.direction) {
             case 'up': newY -= 0.5; break;
             case 'down': newY += 0.5; break;
             case 'left': newX -= 0.5; break;
             case 'right': newX += 0.5; break;
           }
-          
+
           // Verificar colisión con pared
           if (!isWalkable(Math.floor(newX), Math.floor(newY))) {
             return null;
           }
-          
+
           return { ...proj, position: { x: newX, y: newY } };
         }).filter(Boolean);
-        
+
         // Verificar colisiones con enemigos y jugador DENTRO del mismo intervalo
         setEnemies(prevEnemies => {
           const updatedEnemies = prevEnemies.map(enemy => {
             if (!enemy.isAlive) return enemy;
-            
-            const hit = newProjectiles.some(proj => 
+
+            const hit = newProjectiles.some(proj =>
               !proj.fromEnemy &&
               Math.abs(proj.position.x - enemy.position.x) < 0.8 &&
               Math.abs(proj.position.y - enemy.position.y) < 0.8
             );
-            
+
             if (hit) {
               const newHp = enemy.hp - 1;
-              
+
               if (newHp <= 0) {
                 setTimeout(() => showTip(), 0);
                 return { ...enemy, hp: 0, isAlive: false };
               }
-              
+
               return { ...enemy, hp: newHp };
             }
             return enemy;
           });
-          
+
           return updatedEnemies;
         });
-        
+
         // Filtrar proyectiles que impactaron
         return newProjectiles.filter(proj => {
           if (proj.fromEnemy) {
             const hitPlayer = Math.abs(proj.position.x - playerPos.x) < 0.8 &&
-                             Math.abs(proj.position.y - playerPos.y) < 0.8;
-            
+              Math.abs(proj.position.y - playerPos.y) < 0.8;
+
             if (hitPlayer && !invulnerable) {
               setPlayerHp(prev => {
                 const newHp = Math.max(0, prev - 1);
@@ -350,29 +351,29 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
               setInvulnerable(true);
               setTimeout(() => setInvulnerable(false), 1000);
             }
-            
+
             return !hitPlayer;
           }
-          
+
           // Verificar si golpeó un enemigo usando enemiesRef
-          const hitEnemy = enemiesRef.current.some(enemy => 
+          const hitEnemy = enemiesRef.current.some(enemy =>
             enemy.isAlive &&
             Math.abs(proj.position.x - enemy.position.x) < 0.8 &&
             Math.abs(proj.position.y - enemy.position.y) < 0.8
           );
-          
+
           return !hitEnemy;
         });
       });
     }, 80);
-    
+
     return () => clearInterval(projInterval);
   }, [stage, playerPos.x, playerPos.y]);
 
   const spawnEnemies = (count) => {
     const newEnemies = [];
     const now = Date.now();
-    
+
     // Definir salas del mapa para distribución equitativa
     const rooms = [
       { name: 'TopLeft', xMin: 1, xMax: 6, yMin: 1, yMax: 7 },
@@ -380,12 +381,12 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       { name: 'BottomLeft', xMin: 1, xMax: 6, yMin: 10, yMax: 15 },
       { name: 'BottomRight', xMin: 10, xMax: 14, yMin: 10, yMax: 15 }
     ];
-    
+
     for (let i = 0; i < count; i++) {
       // Distribuir enemigos equitativamente por salas
       const roomIndex = i % rooms.length;
       const room = rooms[roomIndex];
-      
+
       let x, y;
       let attempts = 0;
       do {
@@ -394,9 +395,9 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
         attempts++;
         if (attempts > 100) break; // Evitar bucle infinito
       } while (!isWalkable(x, y));
-      
+
       const canShoot = Math.random() < 0.4;
-      
+
       newEnemies.push({
         id: `enemy-${Date.now()}-${i}`,
         position: { x, y },
@@ -419,36 +420,36 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     let shootDir = 'down';
     const dx = playerPos.x - enemy.position.x;
     const dy = playerPos.y - enemy.position.y;
-    
+
     if (Math.abs(dx) > Math.abs(dy)) {
       shootDir = dx > 0 ? 'right' : 'left';
     } else {
       shootDir = dy > 0 ? 'down' : 'up';
     }
-    
+
     const newProj = {
       id: `proj-enemy-${Date.now()}-${Math.random()}`,
       position: { ...enemy.position },
       direction: shootDir,
       fromEnemy: true
     };
-    
+
     setProjectiles(prev => [...prev, newProj]);
   };
 
   const showTip = () => {
     let availableTips = WIZARD_TIPS.map((_, idx) => idx).filter(idx => !tipsShown.has(idx));
-    
+
     if (availableTips.length === 0) {
       setTipsShown(new Set());
       availableTips = WIZARD_TIPS.map((_, idx) => idx);
     }
-    
+
     const randomIdx = availableTips[Math.floor(Math.random() * availableTips.length)];
     setCurrentTip(WIZARD_TIPS[randomIdx]);
     setShowTipBanner(true);
     setTipsShown(prev => new Set([...prev, randomIdx]));
-    
+
     setTimeout(() => setShowTipBanner(false), 4000);
   };
 
@@ -456,21 +457,21 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     if (x < 0 || x >= MAP_WIDTH || y < 0 || y >= MAP_HEIGHT) return false;
     const tile = DUNGEON_MAP[y][x];
     if (tile === 1) return false;
-    
+
     if (!ignoringObjects) {
-      const objectAtPos = objects.find(obj => 
+      const objectAtPos = objects.find(obj =>
         Math.abs(obj.position.x - x) < 0.6 && Math.abs(obj.position.y - y) < 0.6
       );
       if (objectAtPos) return false;
     }
-    
+
     return true;
   };
 
   const isNearAltar = (x, y) => {
     return DUNGEON_MAP[y] && (
-      DUNGEON_MAP[y][x] === 2 || 
-      DUNGEON_MAP[y][x] === 3 || 
+      DUNGEON_MAP[y][x] === 2 ||
+      DUNGEON_MAP[y][x] === 3 ||
       DUNGEON_MAP[y][x] === 4
     );
   };
@@ -483,39 +484,39 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       { dx: -1, dy: 0 }, // izquierda
       { dx: 1, dy: 0 },  // derecha
     ];
-    
+
     let wallCount = 0;
-    
+
     for (const dir of directions) {
       const checkX = x + dir.dx;
       const checkY = y + dir.dy;
-      
+
       // Si está fuera del mapa o es una pared, contar
       if (checkX < 0 || checkX >= MAP_WIDTH || checkY < 0 || checkY >= MAP_HEIGHT || DUNGEON_MAP[checkY][checkX] === 1) {
         wallCount++;
       }
     }
-    
+
     // Si tiene 3 o 4 paredes alrededor, es un rincón/borde peligroso
     return wallCount >= 3;
   };
 
   const getObjectAt = (x, y) => {
-    return objects.find(obj => 
+    return objects.find(obj =>
       Math.abs(obj.position.x - x) < 0.8 && Math.abs(obj.position.y - y) < 0.8
     );
   };
 
   const shootFireball = () => {
     if (!canShoot || stage !== 'playing') return;
-    
+
     const newProj = {
       id: `proj-player-${Date.now()}`,
       position: { ...playerPos },
       direction,
       fromEnemy: false
     };
-    
+
     setProjectiles(prev => [...prev, newProj]);
     setCanShoot(false);
     setTimeout(() => setCanShoot(true), 300);
@@ -540,27 +541,27 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     const newY = playerPos.y + move.y;
 
     const objectAhead = getObjectAt(newX, newY);
-    
+
     if (objectAhead) {
       const pushed = pushObject(objectAhead, newDir);
       if (pushed) {
         setIsMoving(true);
         setPlayerPos({ x: newX, y: newY });
-        
+
         // Cambiar frame de animación cuando camina
         stepCountRef.current += 1;
         setWalkFrame(stepCountRef.current % 2);
-        
+
         setTimeout(() => setIsMoving(false), 150);
       }
     } else if (isWalkable(newX, newY)) {
       setIsMoving(true);
       setPlayerPos({ x: newX, y: newY });
-      
+
       // Cambiar frame de animación cuando camina
       stepCountRef.current += 1;
       setWalkFrame(stepCountRef.current % 2);
-      
+
       setTimeout(() => setIsMoving(false), 150);
     }
   }, [playerPos, stage, isMoving, objects]);
@@ -579,12 +580,12 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
 
     // Verificar que la nueva posición sea válida Y que no sea un rincón/borde
     if (isWalkable(newX, newY, true) && !isCornerOrEdge(newX, newY)) {
-      setObjects(prev => prev.map(o => 
-        o.id === obj.id 
+      setObjects(prev => prev.map(o =>
+        o.id === obj.id
           ? { ...o, position: { x: newX, y: newY } }
           : o
       ));
-      
+
       setTimeout(() => checkAltarPlacement(obj.id, newX, newY), 100);
       return true;
     }
@@ -608,7 +609,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     const targetY = playerPos.y + move.y;
 
     const objectAhead = getObjectAt(targetX, targetY);
-    
+
     if (!objectAhead) return false;
 
     // La caja se mueve a la posición actual del jugador
@@ -619,15 +620,15 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     // Verificar que la posición del jugador actual esté libre
     if (isWalkable(playerOldPos.x, playerOldPos.y, true)) {
       // Mover objeto a posición del jugador
-      setObjects(prev => prev.map(o => 
-        o.id === objectAhead.id 
+      setObjects(prev => prev.map(o =>
+        o.id === objectAhead.id
           ? { ...o, position: playerOldPos }
           : o
       ));
 
       // Mover jugador a posición del objeto
       setPlayerPos(objectOldPos);
-      
+
       setTimeout(() => checkAltarPlacement(objectAhead.id, playerOldPos.x, playerOldPos.y), 100);
       return true;
     }
@@ -638,9 +639,9 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   const checkAltarPlacement = (objId, x, y) => {
     const obj = objects.find(o => o.id === objId);
     if (!obj) return;
-    
+
     const tile = DUNGEON_MAP[Math.floor(y)][Math.floor(x)];
-    
+
     if (tile === 2) {
       if (!needsAltar.includes(objId)) setNeedsAltar(prev => [...prev, objId]);
     } else if (tile === 3) {
@@ -652,7 +653,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       setWantsAltar(prev => prev.filter(id => id !== objId));
       setSavingsAltar(prev => prev.filter(id => id !== objId));
     }
-    
+
     setTimeout(checkPuzzleSolution, 200);
   };
 
@@ -660,15 +661,15 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     const needsCorrect = needsAltar.every(id => objects.find(o => o.id === id)?.category === 'needs');
     const wantsCorrect = wantsAltar.every(id => objects.find(o => o.id === id)?.category === 'wants');
     const savingsCorrect = savingsAltar.every(id => objects.find(o => o.id === id)?.category === 'savings');
-    
+
     const allPlaced = needsAltar.length + wantsAltar.length + savingsAltar.length === objects.length;
-    
+
     const needsValue = needsAltar.reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
     const wantsValue = wantsAltar.reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
     const savingsValue = savingsAltar.reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
-    
-    if (allPlaced && needsCorrect && wantsCorrect && savingsCorrect && 
-        needsValue === 50 && wantsValue === 30 && savingsValue === 20) {
+
+    if (allPlaced && needsCorrect && wantsCorrect && savingsCorrect &&
+      needsValue === 50 && wantsValue === 30 && savingsValue === 20) {
       setPuzzleSolved(true);
       setTimeout(() => setStage('complete'), 1500);
     }
@@ -700,25 +701,25 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       setKeysPressed(prev => new Set([...prev, key]));
 
       const currentKeys = Array.from(keysPressed);
-      
+
       // Detectar movimiento diagonal
-      if ((currentKeys.includes('w') || currentKeys.includes('arrowup')) && 
-          (currentKeys.includes('a') || currentKeys.includes('arrowleft'))) {
+      if ((currentKeys.includes('w') || currentKeys.includes('arrowup')) &&
+        (currentKeys.includes('a') || currentKeys.includes('arrowleft'))) {
         e.preventDefault();
         handleMove('up');
         setTimeout(() => handleMove('left'), 50);
-      } else if ((currentKeys.includes('w') || currentKeys.includes('arrowup')) && 
-                 (currentKeys.includes('d') || currentKeys.includes('arrowright'))) {
+      } else if ((currentKeys.includes('w') || currentKeys.includes('arrowup')) &&
+        (currentKeys.includes('d') || currentKeys.includes('arrowright'))) {
         e.preventDefault();
         handleMove('up');
         setTimeout(() => handleMove('right'), 50);
-      } else if ((currentKeys.includes('s') || currentKeys.includes('arrowdown')) && 
-                 (currentKeys.includes('a') || currentKeys.includes('arrowleft'))) {
+      } else if ((currentKeys.includes('s') || currentKeys.includes('arrowdown')) &&
+        (currentKeys.includes('a') || currentKeys.includes('arrowleft'))) {
         e.preventDefault();
         handleMove('down');
         setTimeout(() => handleMove('left'), 50);
-      } else if ((currentKeys.includes('s') || currentKeys.includes('arrowdown')) && 
-                 (currentKeys.includes('d') || currentKeys.includes('arrowright'))) {
+      } else if ((currentKeys.includes('s') || currentKeys.includes('arrowdown')) &&
+        (currentKeys.includes('d') || currentKeys.includes('arrowright'))) {
         e.preventDefault();
         handleMove('down');
         setTimeout(() => handleMove('right'), 50);
@@ -804,7 +805,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
               </div>
             </div>
 
-            <button 
+            <button
               onClick={() => setStage('playing')}
               style={{
                 width: '100%', padding: '16px', fontSize: '18px',
@@ -827,11 +828,11 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     const needsValue = needsAltar
       .filter(id => objects.find(o => o.id === id)?.category === 'needs')
       .reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
-    
+
     const wantsValue = wantsAltar
       .filter(id => objects.find(o => o.id === id)?.category === 'wants')
       .reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
-    
+
     const savingsValue = savingsAltar
       .filter(id => objects.find(o => o.id === id)?.category === 'savings')
       .reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
@@ -842,7 +843,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
 
           {/* Barra de progreso de altares con vidas integradas */}
           <div style={{ padding: '12px', background: '#263238', display: 'flex', gap: '16px', justifyContent: 'space-between', alignItems: 'center', borderRadius: '8px 8px 0 0' }}>
-            
+
             {/* Vidas del jugador */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '140px' }}>
               <div style={{ fontSize: '11px', color: 'white', marginBottom: '4px', fontWeight: 'bold' }}>❤️ VIDA</div>
@@ -906,327 +907,327 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
             </div>
           )}
 
-        <div
-          style={{
-            padding: '16px',
-            display: 'flex',
-            justifyContent: 'center',
-            background: '#1a1a1a',
-          }}
-        >
-          {/* VIEWPORT que recorta la vista y sigue al jugador en móvil */}
           <div
-            ref={viewportRef}
-            style={viewportStyle}
+            style={{
+              padding: '16px',
+              display: 'flex',
+              justifyContent: 'center',
+              background: '#1a1a1a',
+            }}
           >
-            {/* CAPA que realmente se mueve con la cámara */}
+            {/* VIEWPORT que recorta la vista y sigue al jugador en móvil */}
             <div
-              style={{
-                position: 'relative',
-                width: `${MAP_WIDTH * TILE_SIZE}px`,
-                height: `${MAP_HEIGHT * TILE_SIZE}px`,
-                backgroundImage: `url(${dungeonMapImage})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                border: '4px solid #444',
-                borderRadius: '8px',
-                overflow: 'visible',
-                imageRendering: 'pixelated',
-                ...cameraStyle, // 👈 aquí aplicamos la cámara
-              }}
+              ref={viewportRef}
+              style={viewportStyle}
             >
-              {/* Marcadores de altares */}
-              {DUNGEON_MAP.map((row, y) =>
-                row.map((tile, x) => {
-                  if (tile === 2 || tile === 3 || tile === 4) {
-                    const altarColor =
-                      tile === 2 ? '#4CAF50' : tile === 3 ? '#2196F3' : '#FFC107';
-                    const altarGlow =
-                      tile === 2
-                        ? 'rgba(76, 175, 80, 0.6)'
-                        : tile === 3
-                        ? 'rgba(33, 150, 243, 0.6)'
-                        : 'rgba(255, 193, 7, 0.6)';
-                    const altarLabel =
-                      tile === 2 ? 'NECESIDADES' : tile === 3 ? 'GUSTOS' : 'AHORRO';
+              {/* CAPA que realmente se mueve con la cámara */}
+              <div
+                style={{
+                  position: 'relative',
+                  width: `${MAP_WIDTH * TILE_SIZE}px`,
+                  height: `${MAP_HEIGHT * TILE_SIZE}px`,
+                  backgroundImage: `url(${dungeonMapImage})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  border: '4px solid #444',
+                  borderRadius: '8px',
+                  overflow: 'visible',
+                  imageRendering: 'pixelated',
+                  ...cameraStyle, // 👈 aquí aplicamos la cámara
+                }}
+              >
+                {/* Marcadores de altares */}
+                {DUNGEON_MAP.map((row, y) =>
+                  row.map((tile, x) => {
+                    if (tile === 2 || tile === 3 || tile === 4) {
+                      const altarColor =
+                        tile === 2 ? '#4CAF50' : tile === 3 ? '#2196F3' : '#FFC107';
+                      const altarGlow =
+                        tile === 2
+                          ? 'rgba(76, 175, 80, 0.6)'
+                          : tile === 3
+                            ? 'rgba(33, 150, 243, 0.6)'
+                            : 'rgba(255, 193, 7, 0.6)';
+                      const altarLabel =
+                        tile === 2 ? 'NECESIDADES' : tile === 3 ? 'GUSTOS' : 'AHORRO';
 
-                    return (
-                      <div
-                        key={`altar-${x}-${y}`}
-                        style={{
-                          position: 'absolute',
-                          left: `${x * TILE_SIZE}px`,
-                          top: `${y * TILE_SIZE}px`,
-                          width: `${TILE_SIZE}px`,
-                          height: `${TILE_SIZE}px`,
-                          background: `radial-gradient(circle, ${altarGlow} 0%, transparent 70%)`,
-                          boxSizing: 'border-box',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          pointerEvents: 'none',
-                          animation: 'altarPulse 2s ease-in-out infinite',
-                          filter: `drop-shadow(0 0 20px ${altarColor})`,
-                        }}
-                      >
+                      return (
                         <div
+                          key={`altar-${x}-${y}`}
                           style={{
                             position: 'absolute',
-                            top: '-20px',
-                            background: `${altarColor}33`,
-                            color: 'white',
-                            padding: '3px 6px',
-                            borderRadius: '3px',
-                            fontSize: '9px',
-                            fontWeight: 'bold',
-                            whiteSpace: 'nowrap',
-                            boxShadow: `0 2px 6px ${altarGlow}`,
-                            animation: 'altarLabelFloat 3s ease-in-out infinite',
-                            zIndex: 100,
-                            letterSpacing: '0.3px',
-                            textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                            left: `${x * TILE_SIZE}px`,
+                            top: `${y * TILE_SIZE}px`,
+                            width: `${TILE_SIZE}px`,
+                            height: `${TILE_SIZE}px`,
+                            background: `radial-gradient(circle, ${altarGlow} 0%, transparent 70%)`,
+                            boxSizing: 'border-box',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            pointerEvents: 'none',
+                            animation: 'altarPulse 2s ease-in-out infinite',
+                            filter: `drop-shadow(0 0 20px ${altarColor})`,
                           }}
                         >
-                          {altarLabel}
+                          <div
+                            style={{
+                              position: 'absolute',
+                              top: '-20px',
+                              background: `${altarColor}33`,
+                              color: 'white',
+                              padding: '3px 6px',
+                              borderRadius: '3px',
+                              fontSize: '9px',
+                              fontWeight: 'bold',
+                              whiteSpace: 'nowrap',
+                              boxShadow: `0 2px 6px ${altarGlow}`,
+                              animation: 'altarLabelFloat 3s ease-in-out infinite',
+                              zIndex: 100,
+                              letterSpacing: '0.3px',
+                              textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                            }}
+                          >
+                            {altarLabel}
+                          </div>
+
+                          <div
+                            style={{
+                              width: '60%',
+                              height: '60%',
+                              borderRadius: '50%',
+                              background: `radial-gradient(circle, ${altarColor} 0%, transparent 60%)`,
+                              animation: 'altarPulse 2s ease-in-out infinite reverse',
+                            }}
+                          />
                         </div>
+                      );
+                    }
+                    return null;
+                  })
+                )}
 
-                        <div
-                          style={{
-                            width: '60%',
-                            height: '60%',
-                            borderRadius: '50%',
-                            background: `radial-gradient(circle, ${altarColor} 0%, transparent 60%)`,
-                            animation: 'altarPulse 2s ease-in-out infinite reverse',
-                          }}
-                        />
-                      </div>
-                    );
-                  }
-                  return null;
-                })
-              )}
-
-              {/* Objetos (cajas) */}
-              {objects.map((obj) => (
-                <div
-                  key={obj.id}
-                  style={{
-                    position: 'absolute',
-                    left: `${obj.position.x * TILE_SIZE}px`,
-                    top: `${obj.position.y * TILE_SIZE}px`,
-                    width: `${TILE_SIZE - 6}px`,
-                    height: `${TILE_SIZE - 6}px`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.15s ease-out',
-                    zIndex: 10,
-                    margin: '3px',
-                  }}
-                >
-                  <img
-                    src={boxSprite}
-                    alt={obj.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      imageRendering: 'pixelated',
-                      filter: 'brightness(0.85)',
-                    }}
-                  />
-                </div>
-              ))}
-
-              {/* Enemigos */}
-              {enemies
-                .filter((e) => e.isAlive)
-                .map((enemy) => (
+                {/* Objetos (cajas) */}
+                {objects.map((obj) => (
                   <div
-                    key={enemy.id}
+                    key={obj.id}
                     style={{
                       position: 'absolute',
-                      left: `${enemy.position.x * TILE_SIZE}px`,
-                      top: `${enemy.position.y * TILE_SIZE}px`,
-                      width: `${TILE_SIZE}px`,
-                      height: `${TILE_SIZE}px`,
+                      left: `${obj.position.x * TILE_SIZE}px`,
+                      top: `${obj.position.y * TILE_SIZE}px`,
+                      width: `${TILE_SIZE - 6}px`,
+                      height: `${TILE_SIZE - 6}px`,
                       display: 'flex',
-                      flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '32px',
-                      zIndex: 15,
-                      transform:
-                        enemy.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)',
-                      filter: 'drop-shadow(2px 2px 4px rgba(255,0,0,0.6))',
                       transition: 'all 0.15s ease-out',
+                      zIndex: 10,
+                      margin: '3px',
                     }}
                   >
-                    {enemy.sprite}
+                    <img
+                      src={boxSprite}
+                      alt={obj.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        imageRendering: 'pixelated',
+                        filter: 'brightness(0.85)',
+                      }}
+                    />
                   </div>
                 ))}
 
-              {/* Proyectiles */}
-              {projectiles.map((proj) => (
-                <div
-                  key={proj.id}
-                  style={{
-                    position: 'absolute',
-                    left: `${proj.position.x * TILE_SIZE + TILE_SIZE / 2 - 12}px`,
-                    top: `${proj.position.y * TILE_SIZE + TILE_SIZE / 2 - 12}px`,
-                    width: '24px',
-                    height: '24px',
-                    fontSize: '24px',
-                    zIndex: 20,
-                    filter: 'drop-shadow(0 0 8px rgba(255,100,0,0.8))',
-                  }}
-                >
-                  {proj.fromEnemy ? '💀' : '🔥'}
-                </div>
-              ))}
+                {/* Enemigos */}
+                {enemies
+                  .filter((e) => e.isAlive)
+                  .map((enemy) => (
+                    <div
+                      key={enemy.id}
+                      style={{
+                        position: 'absolute',
+                        left: `${enemy.position.x * TILE_SIZE}px`,
+                        top: `${enemy.position.y * TILE_SIZE}px`,
+                        width: `${TILE_SIZE}px`,
+                        height: `${TILE_SIZE}px`,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '32px',
+                        zIndex: 15,
+                        transform:
+                          enemy.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)',
+                        filter: 'drop-shadow(2px 2px 4px rgba(255,0,0,0.6))',
+                        transition: 'all 0.15s ease-out',
+                      }}
+                    >
+                      {enemy.sprite}
+                    </div>
+                  ))}
 
-              {/* Jugador */}
-              <div
-                style={{
-                  position: 'absolute',
-                  left: `${playerPos.x * TILE_SIZE}px`,
-                  top: `${playerPos.y * TILE_SIZE}px`,
-                  width: `${TILE_SIZE}px`,
-                  height: `${TILE_SIZE}px`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '36px',
-                  transition: isMoving ? 'all 0.15s ease-out' : 'none',
-                  zIndex: 25,
-                  filter: invulnerable
-                    ? 'drop-shadow(0 0 8px #ff0)'
-                    : 'drop-shadow(2px 2px 6px rgba(138,43,226,0.8))',
-                }}
-              >
-                {direction === 'down' ? (
-                  <img
-                    src={
-                      isMoving
-                        ? walkFrame === 0
-                          ? wizardBackFrame1
-                          : wizardBackFrame2
-                        : wizardIdleDown
-                    }
-                    alt="Mago"
+                {/* Proyectiles */}
+                {projectiles.map((proj) => (
+                  <div
+                    key={proj.id}
                     style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      imageRendering: 'pixelated',
+                      position: 'absolute',
+                      left: `${proj.position.x * TILE_SIZE + TILE_SIZE / 2 - 12}px`,
+                      top: `${proj.position.y * TILE_SIZE + TILE_SIZE / 2 - 12}px`,
+                      width: '24px',
+                      height: '24px',
+                      fontSize: '24px',
+                      zIndex: 20,
+                      filter: 'drop-shadow(0 0 8px rgba(255,100,0,0.8))',
                     }}
-                  />
-                ) : direction === 'up' ? (
-                  <img
-                    src={
-                      isMoving
-                        ? walkFrame === 0
-                          ? wizardFrontFrame1
-                          : wizardFrontFrame2
-                        : wizardIdleUp
-                    }
-                    alt="Mago"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      imageRendering: 'pixelated',
-                    }}
-                  />
-                ) : direction === 'left' ? (
-                  <img
-                    src={
-                      isMoving
-                        ? walkFrame === 0
-                          ? wizardLeftFrame1
-                          : wizardLeftFrame2
-                        : wizardIdleLeft
-                    }
-                    alt="Mago"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      imageRendering: 'pixelated',
-                    }}
-                  />
-                ) : (
-                  <img
-                    src={
-                      isMoving
-                        ? walkFrame === 0
-                          ? wizardRightFrame1
-                          : wizardRightFrame2
-                        : wizardIdleRight
-                    }
-                    alt="Mago"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      imageRendering: 'pixelated',
-                    }}
-                  />
-                )}
-              </div>
+                  >
+                    {proj.fromEnemy ? '💀' : '🔥'}
+                  </div>
+                ))}
 
-              {/* Banner de consejos */}
-              {showTipBanner && (
+                {/* Jugador */}
                 <div
                   style={{
                     position: 'absolute',
-                    bottom: '50px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    background: 'rgba(26, 35, 48, 0.95)',
-                    color: 'white',
-                    padding: '12px 24px',
-                    borderRadius: '8px',
-                    fontSize: '15px',
-                    fontWeight: 'bold',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                    border: '2px solid #4CAF50',
-                    zIndex: 1000,
-                    maxWidth: '80%',
-                    textAlign: 'center',
-                    animation: 'slideUp 0.3s ease-out',
-                  }}
-                >
-                  🧙 {currentTip}
-                </div>
-              )}
-
-              {/* Overlay de victoria */}
-              {puzzleSolved && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: 'rgba(76, 175, 80, 0.4)',
+                    left: `${playerPos.x * TILE_SIZE}px`,
+                    top: `${playerPos.y * TILE_SIZE}px`,
+                    width: `${TILE_SIZE}px`,
+                    height: `${TILE_SIZE}px`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '48px',
-                    zIndex: 100,
-                    color: 'white',
-                    fontWeight: 'bold',
-                    textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                    fontSize: '36px',
+                    transition: isMoving ? 'all 0.15s ease-out' : 'none',
+                    zIndex: 25,
+                    filter: invulnerable
+                      ? 'drop-shadow(0 0 8px #ff0)'
+                      : 'drop-shadow(2px 2px 6px rgba(138,43,226,0.8))',
                   }}
                 >
-                  ✨ ¡EQUILIBRIO LOGRADO! ✨
+                  {direction === 'down' ? (
+                    <img
+                      src={
+                        isMoving
+                          ? walkFrame === 0
+                            ? wizardBackFrame1
+                            : wizardBackFrame2
+                          : wizardIdleDown
+                      }
+                      alt="Mago"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        imageRendering: 'pixelated',
+                      }}
+                    />
+                  ) : direction === 'up' ? (
+                    <img
+                      src={
+                        isMoving
+                          ? walkFrame === 0
+                            ? wizardFrontFrame1
+                            : wizardFrontFrame2
+                          : wizardIdleUp
+                      }
+                      alt="Mago"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        imageRendering: 'pixelated',
+                      }}
+                    />
+                  ) : direction === 'left' ? (
+                    <img
+                      src={
+                        isMoving
+                          ? walkFrame === 0
+                            ? wizardLeftFrame1
+                            : wizardLeftFrame2
+                          : wizardIdleLeft
+                      }
+                      alt="Mago"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        imageRendering: 'pixelated',
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={
+                        isMoving
+                          ? walkFrame === 0
+                            ? wizardRightFrame1
+                            : wizardRightFrame2
+                          : wizardIdleRight
+                      }
+                      alt="Mago"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        imageRendering: 'pixelated',
+                      }}
+                    />
+                  )}
                 </div>
-              )}
+
+                {/* Banner de consejos */}
+                {showTipBanner && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '50px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      background: 'rgba(26, 35, 48, 0.95)',
+                      color: 'white',
+                      padding: '12px 24px',
+                      borderRadius: '8px',
+                      fontSize: '15px',
+                      fontWeight: 'bold',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                      border: '2px solid #4CAF50',
+                      zIndex: 1000,
+                      maxWidth: '80%',
+                      textAlign: 'center',
+                      animation: 'slideUp 0.3s ease-out',
+                    }}
+                  >
+                    🧙 {currentTip}
+                  </div>
+                )}
+
+                {/* Overlay de victoria */}
+                {puzzleSolved && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: 'rgba(76, 175, 80, 0.4)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '48px',
+                      zIndex: 100,
+                      color: 'white',
+                      fontWeight: 'bold',
+                      textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                    }}
+                  >
+                    ✨ ¡EQUILIBRIO LOGRADO! ✨
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
           {/* Información de objeto cercano (estilo MK-25) - FUERA del mapa */}
           {nearbyObject && (
@@ -1268,8 +1269,8 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 }}>
                   Categoría: {
                     nearbyObject.category === 'needs' ? '🟢 Necesidades' :
-                    nearbyObject.category === 'wants' ? '🔵 Gustos' :
-                    '🟡 Ahorro'
+                      nearbyObject.category === 'wants' ? '🔵 Gustos' :
+                        '🟡 Ahorro'
                   } • Valor: {nearbyObject.value} pts
                 </div>
               </div>
@@ -1280,6 +1281,15 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
             <strong>⚔️ Controles:</strong> WASD/Flechas mover (diagonal: 2 teclas) | ESPACIO lanzar fuego 🔥 | Z jalar caja 📦 | H pista
           </div>
         </div>
+
+
+        {isMobile && (
+          <MobileControls
+            showActionButton={true}  // Acción visible
+            showZButton={true}       // Z visible SOLO aquí
+          />
+        )}
+
 
         <style>
           {`

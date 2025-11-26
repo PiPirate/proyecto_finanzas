@@ -8,7 +8,7 @@ const defaultDirectionKeys = {
   right: 'd',
 };
 
-const defaultActionKeys = ['Enter', ' ']; // 👈 ya no incluimos 'z' aquí
+const defaultActionKeys = ['Enter', ' ']; // ya no incluimos 'z' aquí
 
 function dispatchKeyEvent(type, key) {
   const event = new KeyboardEvent(type, { key, bubbles: true });
@@ -19,6 +19,8 @@ export default function MobileControls({
   directionKeys = defaultDirectionKeys,
   actionKeys = defaultActionKeys,
   onAction,
+  showActionButton = true,   // muestra el botón Acción por defecto
+  showZButton = false,       // por defecto NO se muestra el botón Z
 }) {
   const holdIntervalRef = useRef(null);
   const activeDirectionRef = useRef(null);
@@ -55,6 +57,7 @@ export default function MobileControls({
       onAction();
     }
 
+    // Evento global de "acción principal"
     window.dispatchEvent(new Event('mobile-action'));
 
     actionKeys.forEach((key) => dispatchKeyEvent('keydown', key));
@@ -69,9 +72,8 @@ export default function MobileControls({
       onAction('z'); // opcional, por si el padre quiere saber
     }
 
-    window.dispatchEvent(new Event('mobile-action'));
-
-    // 🔥 Aquí enviamos SOLO la tecla "z"
+    // OJO: aquí ya NO disparamos 'mobile-action'
+    // Solo enviamos la tecla "z"
     dispatchKeyEvent('keydown', 'z');
     setTimeout(() => {
       dispatchKeyEvent('keyup', 'z');
@@ -118,29 +120,33 @@ export default function MobileControls({
         </div>
       </div>
 
-      {/* Contenedor para los dos botones al ladito */}
+      {/* Contenedor para los botones de acción */}
       <div className="mobile-controls__actions">
-        <button
-          className="mobile-controls__action"
-          onPointerDown={(e) => {
-            e.preventDefault();
-            handleAction();
-          }}
-          onPointerUp={(e) => e.preventDefault()}
-        >
-          Acción
-        </button>
+        {showActionButton && (
+          <button
+            className="mobile-controls__action"
+            onPointerDown={(e) => {
+              e.preventDefault();
+              handleAction();
+            }}
+            onPointerUp={(e) => e.preventDefault()}
+          >
+            Acción
+          </button>
+        )}
 
-        <button
-          className="mobile-controls__action mobile-controls__action--z"
-          onPointerDown={(e) => {
-            e.preventDefault();
-            handleActionZ();
-          }}
-          onPointerUp={(e) => e.preventDefault()}
-        >
-          Z
-        </button>
+        {showZButton && (
+          <button
+            className="mobile-controls__action mobile-controls__action--z"
+            onPointerDown={(e) => {
+              e.preventDefault();
+              handleActionZ();
+            }}
+            onPointerUp={(e) => e.preventDefault()}
+          >
+            Z
+          </button>
+        )}
       </div>
     </div>
   );
