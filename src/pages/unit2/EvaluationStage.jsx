@@ -15,7 +15,7 @@ export default function EvaluationStage({ onComplete, unitColor,}) {
   return (
     <GameViewport showControls={true} forceFullscreen>
       <div className="stage-container">
-        <h2 className="evaluation-title">Evaluación</h2>
+        
         {/* Escena del banco UNIT 2 */}
         <GameWorldSimple onComplete={() => {}} />
 
