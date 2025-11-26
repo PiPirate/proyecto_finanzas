@@ -1,25 +1,43 @@
+// src/pages/unit1/EvaluationStage.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/EvaluationStage.css';
+
+// Nuevo GameWorldSimple depurado
 import { GameWorldSimple } from '../../games/unit2/components/GameEvaluation';
 import '../../games/unit2/styles/globals.css';
+
 import GameViewport from '../../components/responsive/GameViewport';
-export default function EvaluationStage({ onComplete, unitColor,}) {
+import { useDeviceMode } from '../../hooks/useDeviceMode';
+
+export default function EvaluationStage({ onComplete }) {
+  const { isMobile } = useDeviceMode();
   const navigate = useNavigate();
 
   const handleFinish = () => {
-    onComplete();   // Marca esta sección como completada en UnitPage
-    navigate('/');  // Regresa a módulos
+    if (typeof onComplete === 'function') {
+      onComplete(); // Marca como completado
+    }
+    navigate('/'); // Volver a módulos
   };
 
   return (
     <GameViewport showControls={true} forceFullscreen>
-      <div className="stage-container">
-        
-        {/* Escena del banco UNIT 2 */}
-        <GameWorldSimple onComplete={() => {}} />
+      <div
+        className={`tutorial-map-container ${
+          isMobile ? 'tutorial-map-container--mobile' : ''
+        }`}
+      >
+        {/* Wrapper del juego, igual al Tutorial */}
+        <div
+          className={`tutorial-game-wrapper ${
+            isMobile ? 'tutorial-game-wrapper--mobile-scale' : ''
+          }`}
+        >
+          <GameWorldSimple onComplete={() => {}} />
+        </div>
 
-        {/* Botón flotante SIEMPRE visible */}
+        {/* Botón flotante siempre visible */}
         <div className="floating-continue-btn" onClick={handleFinish}>
           Continuar →
         </div>
