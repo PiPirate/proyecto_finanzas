@@ -179,6 +179,8 @@ export default function LoanDragGame({ visible, onComplete }) {
     });
 
     const touchItemRef = useRef(null);
+    const touchTargetRef = useRef(null);
+    const activePointerRef = useRef(null);
 
     const handleDragStart = (e, item) => {
         e.dataTransfer.setData("itemId", item.id);
@@ -198,17 +200,24 @@ export default function LoanDragGame({ visible, onComplete }) {
             const text = modules[currentModule].items.find(i => i.id === itemId).hint;
             setFeedback(`✔ ¡Muy bien! ${text}`);
         } else {
+            // Si es incorrecto, lo devolvemos a null en `dropped` para que aparezca de nuevo en las tarjetas.
+            // Esto es crucial para la jugabilidad en el modo estricto.
+            setDropped(prev => ({ ...prev, [itemId]: null })); 
             const text = modules[currentModule].items.find(i => i.id === itemId).hint;
             setFeedback(`🤔 No corresponde aquí.\n💡 Pista: ${text}`);
         }
 
         const allCorrect = Object.keys(correctMap).every(key => {
-            return correctMap[key] === (key === itemId ? zoneId : (dropped[key] || correctMap[key]));
+            // Revisamos el estado actual de `dropped`. El elemento recién movido (`itemId`)
+            // usa el `zoneId` del drop actual. Los demás usan el valor ya guardado en `dropped`.
+            // Opcional: Simplificado para depender solo del estado `locked` (que es el que se usa para validar si están fijos)
+            return locked[key] || (key === itemId && correctMap[key] === zoneId); 
         });
 
         if (allCorrect) {
             setTimeout(() => {
                 setFeedback("🎉 ¡Completaste todas las asociaciones correctamente!");
+                // Aseguramos que todos estén bloqueados/correctos si no lo estaban ya.
                 setLocked({ liquidez: true, rentabilidad: true, endeudamiento: true, eficiencia: true });
             }, 200);
         }
@@ -219,20 +228,47 @@ export default function LoanDragGame({ visible, onComplete }) {
         resolveDrop(itemId, zoneId);
     };
 
-    // Eventos táctiles reutilizan resolveDrop para compartir la misma validación que el drag con mouse.
+    // Lógica táctil (Mejorada con onPointer para dispositivos modernos)
     const handleTouchStart = (e, item) => {
         if (locked[item.id]) return;
+        // Solo para el primer dedo
+        if (activePointerRef.current !== null) return;
+        
         e.preventDefault();
         touchItemRef.current = item.id;
+        activePointerRef.current = e.pointerId; // Guardar el ID del puntero activo
+        touchTargetRef.current = null; // Reiniciar el target de la zona de drop
         setHint(item.hint);
         setFeedback("");
     };
 
-    const handleTouchEnd = (e, zoneId) => {
-        if (!touchItemRef.current) return;
+    const handleTouchMove = (e) => {
+        if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
         e.preventDefault();
+        
+        // Obtener el elemento debajo del puntero/dedo
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        
+        // Si el elemento es una zona de drop, guardar su ID
+        touchTargetRef.current = el?.dataset?.zoneId || null;
+    };
+
+    const handleTouchEnd = (e, fallbackZoneId) => {
+        if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
+        e.preventDefault();
+        
+        // La zona de drop es la que tocó al final (touchTargetRef.current)
+        // o la zona de la que salió el evento (fallbackZoneId, si el drop fue dentro de un dropzone)
+        // Usamos touchTargetRef.current si está definido (ej. el dedo terminó sobre una zona)
+        // Si no está definido, resolveDrop descartará el movimiento si no se arrastró sobre nada.
+        const zoneId = touchTargetRef.current || fallbackZoneId; 
+        
         resolveDrop(touchItemRef.current, zoneId);
+        
+        // Limpiar referencias
         touchItemRef.current = null;
+        touchTargetRef.current = null;
+        activePointerRef.current = null;
     };
 
     const moduleCompleted =
@@ -304,8 +340,10 @@ export default function LoanDragGame({ visible, onComplete }) {
                             className={`loan-card ${locked[item.id] ? "locked" : ""}`}
                             draggable={!locked[item.id]}
                             onDragStart={(e) => !locked[item.id] && handleDragStart(e, item)}
-                            onTouchStart={(e) => handleTouchStart(e, item)}
-                            onTouchMove={(e) => e.preventDefault()}
+                            // Eventos unificados para mouse/stylus/touch
+                            onPointerDown={(e) => e.pointerType === 'touch' && handleTouchStart(e, item)}
+                            onPointerMove={(e) => e.pointerType === 'touch' && handleTouchMove(e)}
+                            onPointerUp={(e) => e.pointerType === 'touch' && handleTouchEnd(e)}
                         >
                             {item.label}
                         </div>
@@ -317,10 +355,12 @@ export default function LoanDragGame({ visible, onComplete }) {
                         <div
                             key={zone.zone}
                             className="dropzone"
+                            data-zone-id={zone.zone}
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => handleDrop(e, zone.zone)}
-                            onTouchStart={(e) => e.preventDefault()}
-                            onTouchEnd={(e) => handleTouchEnd(e, zone.zone)}
+                            // Eventos táctiles para dropzones
+                            onPointerMove={(e) => e.pointerType === 'touch' && handleTouchMove(e)}
+                            onPointerUp={(e) => e.pointerType === 'touch' && handleTouchEnd(e, zone.zone)}
                         >
                             {zone.label}
                         </div>

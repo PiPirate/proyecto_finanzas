@@ -9,6 +9,7 @@ export default function GameViewport({
   showControls = true,
   directionKeys,
   actionKeys,
+  onAction,
 }) {
   const { isMobile } = useDeviceMode();
   const { isLandscape } = useOrientationLock();
@@ -65,7 +66,11 @@ export default function GameViewport({
       <div className="game-viewport__content">{children}</div>
 
       {isMobile && isLandscape && showControls && (
-        <MobileControls directionKeys={directionKeys} actionKeys={actionKeys} />
+        <MobileControls
+          directionKeys={directionKeys}
+          actionKeys={actionKeys}
+          onAction={onAction}
+        />
       )}
     </div>
   );

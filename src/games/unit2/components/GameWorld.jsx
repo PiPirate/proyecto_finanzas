@@ -689,6 +689,19 @@ export function GameWorld({ onComplete } = {}) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleMove, handleInteract, gameState, currentDialogueIndex, currentDialogueQueue]);
 
+  useEffect(() => {
+    const handleMobileAction = () => {
+      if (gameState === 'dialogue') {
+        handleDialogueAdvance();
+      } else {
+        handleInteract();
+      }
+    };
+
+    window.addEventListener('mobile-action', handleMobileAction);
+    return () => window.removeEventListener('mobile-action', handleMobileAction);
+  }, [handleInteract, handleDialogueAdvance, gameState]);
+
   const handleDialogueAdvance = () => {
     if (currentDialogueIndex < currentDialogueQueue.length - 1) {
       // Avanzar al siguiente diálogo
