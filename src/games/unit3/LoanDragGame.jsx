@@ -21,7 +21,6 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
         {
-            title: "Módulo 2 — Interpretación de estados financieros",
             description: "Relaciona cada componente con su función dentro del análisis financiero.",
             zones: [
                 { zone: "zone_liquidez", label: "Elemento que determina si la empresa puede operar sin falta de efectivo" },
@@ -37,7 +36,6 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
         {
-            title: "Módulo 3 — Consecuencias de decisiones financieras",
             description: "Cada decisión afecta los indicadores. Relaciónala con su impacto.",
             zones: [
                 { zone: "zone_liquidez", label: "¿Qué pasa si la empresa acumula inventarios?" },
@@ -53,7 +51,6 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
         {
-            title: "Módulo 4 — Errores frecuentes en análisis financiero",
             description: "Identifica el error según el mal uso de los indicadores.",
             zones: [
                 { zone: "zone_liquidez", label: "Error al interpretar recursos disponibles" },
@@ -69,7 +66,6 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
         {
-            title: "Módulo 5 — Buenas prácticas del analista financiero",
             description: "Relaciona cada buena práctica con su aplicación ideal.",
             zones: [
                 { zone: "zone_liquidez", label: "Para evaluar solvencia a corto plazo…" },
@@ -85,7 +81,6 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
         {
-            title: "Módulo 6 — Tipos de análisis y riesgos",
             description: "Relaciona el tipo de análisis con su impacto financiero.",
             zones: [
                 { zone: "zone_liquidez", label: "Análisis que determina estabilidad a corto plazo" },
@@ -101,7 +96,6 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
         {
-            title: "Módulo 7 — Escenarios reales y análisis inteligente",
             description: "Relaciona cada situación empresarial con el análisis adecuado.",
             zones: [
                 { zone: "zone_liquidez", label: "La empresa enfrenta presión de flujo de caja" },
