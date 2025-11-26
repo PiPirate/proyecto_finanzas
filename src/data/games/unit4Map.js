@@ -31,7 +31,7 @@ export const unit4MapMatrix = [
   [1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
 
   // y = 7: más suelo + base de la planta
-  [1, 0, 2 , 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+  [1, 0, 2 , 2, 2, 0, 2, 2, 2, 2, 2, 2, 0, 1, 0, 1],
 
   // y = 8: mesa superior (zona muy grande de interacción)
   [1, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
