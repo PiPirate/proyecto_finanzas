@@ -17,13 +17,13 @@ import wizardLeftFrame2 from '../../assets/DungeonGame/CaminataIzquierda-2.png'
 import wizardRightFrame1 from '../../assets/DungeonGame/CaminataDerecha-1.png'
 import wizardRightFrame2 from '../../assets/DungeonGame/CaminataDerecha-2.png'
 // Estático mirando hacia arriba (idle up)
-import wizardIdleUp from '../../assets/DungeonGame/traseraEstatica.png'
+import wizardIdleUp from '../../assets/DungeonGame/TraseraEstatica.png'
 // Estático mirando hacia abajo (idle down)
 import wizardIdleDown from '../../assets/DungeonGame/FrontalEstatico.png'
 // Estático mirando hacia la izquierda (idle left)
-import wizardIdleLeft from '../../assets/DungeonGame/izquierdaEstatico.png'
+import wizardIdleLeft from '../../assets/DungeonGame/IzquierdaEstatico.png'
 // Estático mirando hacia la derecha (idle right)
-import wizardIdleRight from '../../assets/DungeonGame/derechaEstatico.png'
+import wizardIdleRight from '../../assets/DungeonGame/DerechaEstatico.png'
 
 const TILE_SIZE = 40;
 const MAP_WIDTH = 16;

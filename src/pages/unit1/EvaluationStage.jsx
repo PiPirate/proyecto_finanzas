@@ -526,6 +526,7 @@ export default function EvaluationStage({ onComplete, unitColor }) {
             )}
           </div>
         </div>
+        </div>
       </div>
     </GameViewport>
   );

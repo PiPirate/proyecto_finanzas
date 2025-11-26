@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, CheckCircle } from 'lucide-react';
 import '../css/VideoStage.css';
 
-import demoVideo from '../../assets/unit4/VideoModulo4.mp4';
+import demoVideo from '../../assets/unit4/Videomodulo4.mp4';
 
 export default function VideoStage({ onComplete, unitColor }) {
   const videoRef = useRef(null);
