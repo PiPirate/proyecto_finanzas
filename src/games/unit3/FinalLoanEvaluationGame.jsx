@@ -205,7 +205,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     if (endScreen) {
         return (
             <div className="final-loan-overlay">
-                <div className={`final-box ${endScreen.type}`}>
+                <div className={`final-box ${endScreen.type} minigame-container`}>
                     <h2>Resultado final</h2>
                     <p>{endScreen.msg}</p>
                     <p className="score">Aciertos: {correctCount} / {rounds.length}</p>
@@ -369,7 +369,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
 
             {/* Tarjeta principal */}
             <div
-                className="loan-card"
+                className="loan-card minigame-container"
                 draggable
                 onDragStart={onDragStart}
                 onDrag={onDrag}
