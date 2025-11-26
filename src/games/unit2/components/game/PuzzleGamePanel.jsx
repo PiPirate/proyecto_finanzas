@@ -25,6 +25,9 @@ import wizardIdleLeft from '../../assets/DungeonGame/IzquierdaEstatico.png'
 // Estático mirando hacia la derecha (idle right)
 import wizardIdleRight from '../../assets/DungeonGame/DerechaEstatico.png'
 
+import useCameraFollow from '../../../core/hooks/useCameraFollow';
+import { useDeviceMode } from '../../../../hooks/useDeviceMode';
+
 const TILE_SIZE = 40;
 const MAP_WIDTH = 16;
 const MAP_HEIGHT = 17;
@@ -69,6 +72,7 @@ const GAME_OBJECTS = [
   { id: 'emergency', name: 'Fondo Emergencia', category: 'savings', sprite: '🏦', value: 5, description: 'Reserva para imprevistos' },
 ];
 
+
 const WIZARD_TIPS = [
   "💡 Las necesidades siempre primero",
   "🔥 El ahorro no es lo que sobra",
@@ -83,6 +87,9 @@ const WIZARD_TIPS = [
 ];
 
 export function PuzzleGamePanel({ onComplete, onClose }) {
+
+  const { isMobile } = useDeviceMode(); 
+
   const [stage, setStage] = useState('intro');
   const [playerPos, setPlayerPos] = useState({ x: 3, y: 2 });
   const [direction, setDirection] = useState('up');
@@ -113,6 +120,47 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   const animationFrameRef = useRef();
   const enemiesRef = useRef([]);
   const stepCountRef = useRef(0);
+
+    // Dimensiones del mapa en píxeles
+  const mapDimensions = {
+    width: MAP_WIDTH * TILE_SIZE,
+    height: MAP_HEIGHT * TILE_SIZE,
+  };
+
+  // Posición del jugador en píxeles (centro del tile)
+  const playerPixelPosition = {
+    x: playerPos.x * TILE_SIZE + TILE_SIZE / 2,
+    y: playerPos.y * TILE_SIZE + TILE_SIZE / 2,
+  };
+
+  // Hook de cámara que sigue al jugador (solo en móvil)
+  const { cameraPosition, viewportRef } = useCameraFollow({
+    playerPixelPosition,
+    mapDimensions,
+    isEnabled: true,
+  });
+
+  // Estilos del viewport y de la capa que se mueve con la cámara
+  const viewportStyle = isMobile
+    ? {
+        width: '100%',
+        maxWidth: '100%',
+        height: '100%',
+        maxHeight: '70vh',      // para que quepa dentro del modal
+        overflow: 'hidden',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }
+    : {
+        display: 'flex',
+        justifyContent: 'center',
+      };
+
+  const cameraStyle = 
+   {  transform: `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)`,
+      };
+
 
   // Sincronizar enemiesRef
   useEffect(() => {
@@ -858,61 +906,99 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
             </div>
           )}
 
-          <div style={{ padding: '16px', display: 'flex', justifyContent: 'center', background: '#1a1a1a' }}>
-            <div style={{ position: 'relative', width: `${MAP_WIDTH * TILE_SIZE}px`, height: `${MAP_HEIGHT * TILE_SIZE}px`, backgroundImage: `url(${dungeonMapImage})`, backgroundSize: 'cover', backgroundPosition: 'center', border: '4px solid #444', borderRadius: '8px', overflow: 'visible', imageRendering: 'pixelated' }}>
-              
-              {/* Marcadores de altares (invisibles pero ayudan a visualizar) */}
-              {DUNGEON_MAP.map((row, y) => 
+        <div
+          style={{
+            padding: '16px',
+            display: 'flex',
+            justifyContent: 'center',
+            background: '#1a1a1a',
+          }}
+        >
+          {/* VIEWPORT que recorta la vista y sigue al jugador en móvil */}
+          <div
+            ref={viewportRef}
+            style={viewportStyle}
+          >
+            {/* CAPA que realmente se mueve con la cámara */}
+            <div
+              style={{
+                position: 'relative',
+                width: `${MAP_WIDTH * TILE_SIZE}px`,
+                height: `${MAP_HEIGHT * TILE_SIZE}px`,
+                backgroundImage: `url(${dungeonMapImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                border: '4px solid #444',
+                borderRadius: '8px',
+                overflow: 'visible',
+                imageRendering: 'pixelated',
+                ...cameraStyle, // 👈 aquí aplicamos la cámara
+              }}
+            >
+              {/* Marcadores de altares */}
+              {DUNGEON_MAP.map((row, y) =>
                 row.map((tile, x) => {
                   if (tile === 2 || tile === 3 || tile === 4) {
-                    // Determinar color según tipo de altar
-                    const altarColor = tile === 2 ? '#4CAF50' : tile === 3 ? '#2196F3' : '#FFC107';
-                    const altarGlow = tile === 2 ? 'rgba(76, 175, 80, 0.6)' : tile === 3 ? 'rgba(33, 150, 243, 0.6)' : 'rgba(255, 193, 7, 0.6)';
-                    const altarLabel = tile === 2 ? 'NECESIDADES' : tile === 3 ? 'GUSTOS' : 'AHORRO';
-                    
+                    const altarColor =
+                      tile === 2 ? '#4CAF50' : tile === 3 ? '#2196F3' : '#FFC107';
+                    const altarGlow =
+                      tile === 2
+                        ? 'rgba(76, 175, 80, 0.6)'
+                        : tile === 3
+                        ? 'rgba(33, 150, 243, 0.6)'
+                        : 'rgba(255, 193, 7, 0.6)';
+                    const altarLabel =
+                      tile === 2 ? 'NECESIDADES' : tile === 3 ? 'GUSTOS' : 'AHORRO';
+
                     return (
-                      <div key={`altar-${x}-${y}`} style={{ 
-                        position: 'absolute', 
-                        left: `${x * TILE_SIZE}px`, 
-                        top: `${y * TILE_SIZE}px`, 
-                        width: `${TILE_SIZE}px`, 
-                        height: `${TILE_SIZE}px`, 
-                        background: `radial-gradient(circle, ${altarGlow} 0%, transparent 70%)`,
-                        boxSizing: 'border-box', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center', 
-                        pointerEvents: 'none',
-                        animation: 'altarPulse 2s ease-in-out infinite',
-                        filter: `drop-shadow(0 0 20px ${altarColor})`
-                      }}>
-                        {/* Etiqueta flotante del altar */}
-                        <div style={{
+                      <div
+                        key={`altar-${x}-${y}`}
+                        style={{
                           position: 'absolute',
-                          top: '-20px',
-                          background: `${altarColor}33`,
-                          color: 'white',
-                          padding: '3px 6px',
-                          borderRadius: '3px',
-                          fontSize: '9px',
-                          fontWeight: 'bold',
-                          whiteSpace: 'nowrap',
-                          boxShadow: `0 2px 6px ${altarGlow}`,
-                          animation: 'altarLabelFloat 3s ease-in-out infinite',
-                          zIndex: 100,
-                          letterSpacing: '0.3px',
-                          textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
-                        }}>
+                          left: `${x * TILE_SIZE}px`,
+                          top: `${y * TILE_SIZE}px`,
+                          width: `${TILE_SIZE}px`,
+                          height: `${TILE_SIZE}px`,
+                          background: `radial-gradient(circle, ${altarGlow} 0%, transparent 70%)`,
+                          boxSizing: 'border-box',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          pointerEvents: 'none',
+                          animation: 'altarPulse 2s ease-in-out infinite',
+                          filter: `drop-shadow(0 0 20px ${altarColor})`,
+                        }}
+                      >
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: '-20px',
+                            background: `${altarColor}33`,
+                            color: 'white',
+                            padding: '3px 6px',
+                            borderRadius: '3px',
+                            fontSize: '9px',
+                            fontWeight: 'bold',
+                            whiteSpace: 'nowrap',
+                            boxShadow: `0 2px 6px ${altarGlow}`,
+                            animation: 'altarLabelFloat 3s ease-in-out infinite',
+                            zIndex: 100,
+                            letterSpacing: '0.3px',
+                            textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                          }}
+                        >
                           {altarLabel}
                         </div>
-                        
-                        <div style={{
-                          width: '60%',
-                          height: '60%',
-                          borderRadius: '50%',
-                          background: `radial-gradient(circle, ${altarColor} 0%, transparent 60%)`,
-                          animation: 'altarPulse 2s ease-in-out infinite reverse'
-                        }} />
+
+                        <div
+                          style={{
+                            width: '60%',
+                            height: '60%',
+                            borderRadius: '50%',
+                            background: `radial-gradient(circle, ${altarColor} 0%, transparent 60%)`,
+                            animation: 'altarPulse 2s ease-in-out infinite reverse',
+                          }}
+                        />
                       </div>
                     );
                   }
@@ -920,115 +1006,227 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 })
               )}
 
-              {objects.map(obj => (
-                <div key={obj.id} style={{ 
-                  position: 'absolute', 
-                  left: `${obj.position.x * TILE_SIZE}px`, 
-                  top: `${obj.position.y * TILE_SIZE}px`, 
-                  width: `${TILE_SIZE - 6}px`, 
-                  height: `${TILE_SIZE - 6}px`, 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  transition: 'all 0.15s ease-out', 
-                  zIndex: 10, 
-                  margin: '3px' 
-                }}>
-                  <img src={boxSprite} alt={obj.name} style={{ width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'pixelated', filter: 'brightness(0.85)' }} />
+              {/* Objetos (cajas) */}
+              {objects.map((obj) => (
+                <div
+                  key={obj.id}
+                  style={{
+                    position: 'absolute',
+                    left: `${obj.position.x * TILE_SIZE}px`,
+                    top: `${obj.position.y * TILE_SIZE}px`,
+                    width: `${TILE_SIZE - 6}px`,
+                    height: `${TILE_SIZE - 6}px`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.15s ease-out',
+                    zIndex: 10,
+                    margin: '3px',
+                  }}
+                >
+                  <img
+                    src={boxSprite}
+                    alt={obj.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      imageRendering: 'pixelated',
+                      filter: 'brightness(0.85)',
+                    }}
+                  />
                 </div>
               ))}
 
-              {enemies.filter(e => e.isAlive).map(enemy => (
-                <div key={enemy.id} style={{ position: 'absolute', left: `${enemy.position.x * TILE_SIZE}px`, top: `${enemy.position.y * TILE_SIZE}px`, width: `${TILE_SIZE}px`, height: `${TILE_SIZE}px`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontSize: '32px', zIndex: 15, transform: enemy.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)', filter: 'drop-shadow(2px 2px 4px rgba(255,0,0,0.6))', transition: 'all 0.15s ease-out' }}>
-                  {enemy.sprite}
-                </div>
-              ))}
+              {/* Enemigos */}
+              {enemies
+                .filter((e) => e.isAlive)
+                .map((enemy) => (
+                  <div
+                    key={enemy.id}
+                    style={{
+                      position: 'absolute',
+                      left: `${enemy.position.x * TILE_SIZE}px`,
+                      top: `${enemy.position.y * TILE_SIZE}px`,
+                      width: `${TILE_SIZE}px`,
+                      height: `${TILE_SIZE}px`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '32px',
+                      zIndex: 15,
+                      transform:
+                        enemy.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)',
+                      filter: 'drop-shadow(2px 2px 4px rgba(255,0,0,0.6))',
+                      transition: 'all 0.15s ease-out',
+                    }}
+                  >
+                    {enemy.sprite}
+                  </div>
+                ))}
 
-              {projectiles.map(proj => (
-                <div key={proj.id} style={{ position: 'absolute', left: `${proj.position.x * TILE_SIZE + TILE_SIZE/2 - 12}px`, top: `${proj.position.y * TILE_SIZE + TILE_SIZE/2 - 12}px`, width: '24px', height: '24px', fontSize: '24px', zIndex: 20, filter: 'drop-shadow(0 0 8px rgba(255,100,0,0.8))' }}>
+              {/* Proyectiles */}
+              {projectiles.map((proj) => (
+                <div
+                  key={proj.id}
+                  style={{
+                    position: 'absolute',
+                    left: `${proj.position.x * TILE_SIZE + TILE_SIZE / 2 - 12}px`,
+                    top: `${proj.position.y * TILE_SIZE + TILE_SIZE / 2 - 12}px`,
+                    width: '24px',
+                    height: '24px',
+                    fontSize: '24px',
+                    zIndex: 20,
+                    filter: 'drop-shadow(0 0 8px rgba(255,100,0,0.8))',
+                  }}
+                >
                   {proj.fromEnemy ? '💀' : '🔥'}
                 </div>
               ))}
 
-              <div style={{ position: 'absolute', left: `${playerPos.x * TILE_SIZE}px`, top: `${playerPos.y * TILE_SIZE}px`, width: `${TILE_SIZE}px`, height: `${TILE_SIZE}px`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '36px', transition: isMoving ? 'all 0.15s ease-out' : 'none', zIndex: 25, filter: invulnerable ? 'drop-shadow(0 0 8px #ff0)' : 'drop-shadow(2px 2px 6px rgba(138,43,226,0.8))' }}>
+              {/* Jugador */}
+              <div
+                style={{
+                  position: 'absolute',
+                  left: `${playerPos.x * TILE_SIZE}px`,
+                  top: `${playerPos.y * TILE_SIZE}px`,
+                  width: `${TILE_SIZE}px`,
+                  height: `${TILE_SIZE}px`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '36px',
+                  transition: isMoving ? 'all 0.15s ease-out' : 'none',
+                  zIndex: 25,
+                  filter: invulnerable
+                    ? 'drop-shadow(0 0 8px #ff0)'
+                    : 'drop-shadow(2px 2px 6px rgba(138,43,226,0.8))',
+                }}
+              >
                 {direction === 'down' ? (
-                  <img 
-                    src={isMoving ? (walkFrame === 0 ? wizardBackFrame1 : wizardBackFrame2) : wizardIdleDown} 
-                    alt="Mago" 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'contain', 
-                      imageRendering: 'pixelated' 
-                    }} 
+                  <img
+                    src={
+                      isMoving
+                        ? walkFrame === 0
+                          ? wizardBackFrame1
+                          : wizardBackFrame2
+                        : wizardIdleDown
+                    }
+                    alt="Mago"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      imageRendering: 'pixelated',
+                    }}
                   />
                 ) : direction === 'up' ? (
-                  <img 
-                    src={isMoving ? (walkFrame === 0 ? wizardFrontFrame1 : wizardFrontFrame2) : wizardIdleUp} 
-                    alt="Mago" 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'contain', 
-                      imageRendering: 'pixelated' 
-                    }} 
+                  <img
+                    src={
+                      isMoving
+                        ? walkFrame === 0
+                          ? wizardFrontFrame1
+                          : wizardFrontFrame2
+                        : wizardIdleUp
+                    }
+                    alt="Mago"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      imageRendering: 'pixelated',
+                    }}
                   />
                 ) : direction === 'left' ? (
-                  <img 
-                    src={isMoving ? (walkFrame === 0 ? wizardLeftFrame1 : wizardLeftFrame2) : wizardIdleLeft} 
-                    alt="Mago" 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'contain', 
-                      imageRendering: 'pixelated' 
-                    }} 
+                  <img
+                    src={
+                      isMoving
+                        ? walkFrame === 0
+                          ? wizardLeftFrame1
+                          : wizardLeftFrame2
+                        : wizardIdleLeft
+                    }
+                    alt="Mago"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      imageRendering: 'pixelated',
+                    }}
                   />
                 ) : (
-                  <img 
-                    src={isMoving ? (walkFrame === 0 ? wizardRightFrame1 : wizardRightFrame2) : wizardIdleRight} 
-                    alt="Mago" 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'contain', 
-                      imageRendering: 'pixelated'
-                    }} 
+                  <img
+                    src={
+                      isMoving
+                        ? walkFrame === 0
+                          ? wizardRightFrame1
+                          : wizardRightFrame2
+                        : wizardIdleRight
+                    }
+                    alt="Mago"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      imageRendering: 'pixelated',
+                    }}
                   />
                 )}
               </div>
 
-              {/* Banner de consejos en la parte inferior */}
+              {/* Banner de consejos */}
               {showTipBanner && (
-                <div style={{
-                  position: 'absolute',
-                  bottom: '50px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  background: 'rgba(26, 35, 48, 0.95)',
-                  color: 'white',
-                  padding: '12px 24px',
-                  borderRadius: '8px',
-                  fontSize: '15px',
-                  fontWeight: 'bold',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                  border: '2px solid #4CAF50',
-                  zIndex: 1000,
-                  maxWidth: '80%',
-                  textAlign: 'center',
-                  animation: 'slideUp 0.3s ease-out'
-                }}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '50px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: 'rgba(26, 35, 48, 0.95)',
+                    color: 'white',
+                    padding: '12px 24px',
+                    borderRadius: '8px',
+                    fontSize: '15px',
+                    fontWeight: 'bold',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                    border: '2px solid #4CAF50',
+                    zIndex: 1000,
+                    maxWidth: '80%',
+                    textAlign: 'center',
+                    animation: 'slideUp 0.3s ease-out',
+                  }}
+                >
                   🧙 {currentTip}
                 </div>
               )}
 
+              {/* Overlay de victoria */}
               {puzzleSolved && (
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(76, 175, 80, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', zIndex: 100, color: 'white', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(76, 175, 80, 0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '48px',
+                    zIndex: 100,
+                    color: 'white',
+                    fontWeight: 'bold',
+                    textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                  }}
+                >
                   ✨ ¡EQUILIBRIO LOGRADO! ✨
                 </div>
               )}
             </div>
           </div>
+        </div>
 
           {/* Información de objeto cercano (estilo MK-25) - FUERA del mapa */}
           {nearbyObject && (
