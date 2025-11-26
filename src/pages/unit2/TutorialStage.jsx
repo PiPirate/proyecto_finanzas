@@ -5,6 +5,7 @@ import '../css/TutorialStage.css';
 // Juego de la unidad 2
 import { GameWorld } from '../../games/unit2/components/GameWorld';
 import '../../games/unit2/styles/globals.css';
+import GameViewport from '../../components/responsive/GameViewport';
 
 export default function TutorialStage({ onComplete }) {
 
@@ -15,16 +16,18 @@ export default function TutorialStage({ onComplete }) {
   };
 
   return (
-    <div className="tutorial-map-container">
+    <GameViewport>
+      <div className="tutorial-map-container">
 
-      {/* Escena del banco UNIT 2 */}
-      <GameWorld onComplete={() => {}} />
+        {/* Escena del banco UNIT 2 */}
+        <GameWorld onComplete={() => {}} />
 
-      {/* Botón flotante SIEMPRE visible */}
-      <div className="floating-continue-btn" onClick={handleContinue}>
-        Continuar →
+        {/* Botón flotante SIEMPRE visible */}
+        <div className="floating-continue-btn" onClick={handleContinue}>
+          Continuar →
+        </div>
+
       </div>
-
-    </div>
+    </GameViewport>
   );
 }
