@@ -60,8 +60,10 @@ export default function UnitPage({
 
   const CurrentComponent = stages[currentStage].component;
   const isTutorialStage = currentStage === 1;
-  const shouldShowProgress = !isMobile || !isTutorialStage;
-  const isMobileFullscreenGame = isMobile && isLandscape && isTutorialStage;
+  const isEvaluationStage = currentStage === 2;
+  const isGameStage = isTutorialStage || isEvaluationStage;
+  const shouldShowProgress = !isMobile || !isGameStage;
+  const isMobileFullscreenGame = isMobile && isLandscape && isGameStage;
 
   if (isMobileFullscreenGame) {
     // En móvil horizontal durante el tutorial, ocultamos todo el layout
