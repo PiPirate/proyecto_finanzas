@@ -6,6 +6,7 @@ import './css/TowerDefensePanel.css';
 import mapSprite from '../../assets/unit4/map.png';
 import playerSprite from '../../assets/unit4/player.png';
 import enemySprite from '../../assets/unit4/enemy.png';
+import { useDeviceMode } from '../../hooks/useDeviceMode';
 
 // ==================== CONFIGURACIÓN DEL JUEGO ====================
 const GAME_CONFIG = {
@@ -423,6 +424,7 @@ export function TowerDefensePanel({ onComplete, onClose }) {
   const questionTimerRef = useRef(null);
   const globalTimerRef = useRef(null);
   const enemyIdCounter = useRef(0);
+  const battlefieldRef = useRef(null);
 
   // ref para saber la fase dentro del intervalo global
   const phaseRef = useRef(gamePhase);
@@ -494,6 +496,27 @@ export function TowerDefensePanel({ onComplete, onClose }) {
     setShowResult(false);
     setGamePhase('question');
     clearInterval(spawnIntervalRef.current); // pausa spawn mientras respondes
+  };
+
+
+  const handleBattlefieldClick = (e) => {
+    // Solo tiene sentido si estamos jugando
+    if (gamePhase !== 'playing') return;
+    if (!battlefieldRef.current) return;
+
+    const rect = battlefieldRef.current.getBoundingClientRect();
+    const clickY = e.clientY - rect.top;
+
+    // Altura real de cada carril según el DOM (respeta el escalado en CSS)
+    const laneHeight = rect.height / GAME_CONFIG.LANES;
+
+    let laneIndex = Math.floor(clickY / laneHeight);
+
+    // Clamp entre 0 y LANES - 1
+    if (laneIndex < 0) laneIndex = 0;
+    if (laneIndex > GAME_CONFIG.LANES - 1) laneIndex = GAME_CONFIG.LANES - 1;
+
+    setPlayerLane(laneIndex);
   };
 
   // ==================== GAME LOOP (colisión por X/Y) ====================
@@ -681,18 +704,20 @@ export function TowerDefensePanel({ onComplete, onClose }) {
 
             {/* CAMPO */}
             <div
-              className={`td-battlefield ${
-                gamePhase === 'question' ? 'td-battlefield-blur' : ''
-              }`}
+              ref={battlefieldRef}                    // 👈 IMPORTANTE
+              className={`td-battlefield ${gamePhase === 'question' ? 'td-battlefield-blur' : ''
+                }`}
               style={{
                 width: GAME_CONFIG.GAME_WIDTH,
                 height: battlefieldHeight,
                 backgroundImage: `url(${mapSprite})`,
                 backgroundSize: '100% 100%',
                 backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center'
+                backgroundPosition: 'center',
               }}
+              onClick={handleBattlefieldClick}
             >
+
               {/* Carriles (solo líneas de referencia) */}
               {[...Array(GAME_CONFIG.LANES)].map((_, i) => (
                 <div
@@ -738,9 +763,8 @@ export function TowerDefensePanel({ onComplete, onClose }) {
                   <div className="td-question-header">
                     <h3 className="td-question-title">❓ Pregunta</h3>
                     <div
-                      className={`td-question-timer ${
-                        questionTime <= 10 ? 'td-timer-warning' : ''
-                      }`}
+                      className={`td-question-timer ${questionTime <= 10 ? 'td-timer-warning' : ''
+                        }`}
                     >
                       ⏰ {questionTime}s
                     </div>
@@ -753,17 +777,16 @@ export function TowerDefensePanel({ onComplete, onClose }) {
                       <button
                         key={idx}
                         disabled={showResult}
-                        className={`td-option ${
-                          showResult
-                            ? idx === currentQuestion.correct
-                              ? 'td-option-correct'
-                              : idx === selectedAnswer
+                        className={`td-option ${showResult
+                          ? idx === currentQuestion.correct
+                            ? 'td-option-correct'
+                            : idx === selectedAnswer
                               ? 'td-option-wrong'
                               : ''
-                            : selectedAnswer === idx
+                          : selectedAnswer === idx
                             ? 'td-option-selected'
                             : ''
-                        }`}
+                          }`}
                         onClick={() => !showResult && setSelectedAnswer(idx)}
                       >
                         {op}

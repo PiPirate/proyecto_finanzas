@@ -376,3 +376,88 @@
 .td-end-button:hover {
   background: #1d4ed8;
 }
+/* ========================= */
+/* EXTRAS: CLICK + MÓVIL / HORIZONTAL */
+/* ========================= */
+
+/* Que el campo acepte clics y se note interactivo */
+.td-battlefield {
+  cursor: pointer;
+}
+
+/* Que los elementos internos no bloqueen el click del contenedor */
+.td-lane,
+.td-player,
+.td-player-img,
+.td-enemy,
+.td-enemy-img {
+  pointer-events: none;
+}
+
+/* ========================= */
+/* RESPONSIVE GENERAL (MÓVIL) */
+/* ========================= */
+@media (max-width: 900px) {
+  .td-panel {
+    border-radius: 18px;
+  }
+
+  .td-header {
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .td-stat {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .td-battlefield {
+    width: 100% !important;   /* ocupar el ancho del contenedor */
+    max-width: 100%;
+    margin: 12px auto 14px;
+  }
+
+  .td-question-panel {
+    width: 90%;
+    padding: 14px 14px 18px;
+  }
+
+  .td-question-text {
+    font-size: 14px;
+  }
+
+  .td-option {
+    font-size: 13px;
+  }
+}
+
+/* ========================= */
+/* MÓVIL EN HORIZONTAL */
+/* ========================= */
+@media (max-width: 900px) and (orientation: landscape) {
+  /* Ocultar la barra de pasos (video / tutorial / evaluación) */
+  .unit-progress-container {
+    display: none;
+  }
+
+  .td-overlay {
+    align-items: stretch;
+  }
+
+  .td-panel {
+    max-width: 100%;
+    border-radius: 0;
+  }
+
+  .td-battlefield {
+    width: 100% !important;
+    height: auto !important;
+    /* Mantener proporción aproximada del campo (1100 x 450) */
+    aspect-ratio: 11 / 4.5;
+  }
+
+  .td-question-panel {
+    max-width: 540px;
+  }
+}

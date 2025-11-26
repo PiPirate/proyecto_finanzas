@@ -50,13 +50,7 @@ export default function TutorialStage({ onComplete }) {
                 Practicaste cómo tomar decisiones más conscientes con tu dinero,
                 identificando cuáles te acercan o te alejan de tus metas
                 financieras.
-                <br />
-                También aprendiste a diferenciar metas de corto plazo (logros
-                que puedes alcanzar pronto) y metas de largo plazo (objetivos
-                que requieren más tiempo y planificación).
-                <br />
-                Ahora pasarás a la prueba evaluativa para poner en práctica lo
-                que aprendiste sobre organizar tu dinero y tus metas.
+                Ahora pasarás a la prueba evaluativa.
               </p>
 
               <button

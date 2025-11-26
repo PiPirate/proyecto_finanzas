@@ -45,3 +45,10 @@ iframe {
   width: 100%;
   border: none;
 }
+
+/* Ocultar la barra de progreso en móviles en horizontal */
+@media (max-width: 900px) and (orientation: landscape) {
+  .unit-progress-container {
+    display: none;
+  }
+}
