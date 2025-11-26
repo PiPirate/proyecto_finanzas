@@ -102,7 +102,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
     const [showIntro, setShowIntro] = useState(true);
 
     const gravity = 1.1;
-    const goalDistance = 5800; // distancia para ganar
+    const goalDistance = 100; // distancia para ganar
 
     // ---------- GENERACIÓN DE ÍTEMS ----------
     const spawnItem = () => {
@@ -378,11 +378,11 @@ export default function InterestRunnerGame({ visible, onComplete }) {
 
 
     return (
-
+<div className="unit3-game-container">  
         <div className="interest-runner-overlay">
 
             {showIntro && (
-                <div className="intro-window minigame-container">
+                <div className="intro-window minigame-containert">
                     <h2>¡Corre para proteger tu rentabilidad!</h2>
 
                     <p>
@@ -400,7 +400,7 @@ export default function InterestRunnerGame({ visible, onComplete }) {
             )}
 
             {!showIntro && (
-                <div className="game-window minigame-container">
+                <div className="game-window minigame-containert">
                     {
                         questionModal && (
                             <div className="question-modal">
@@ -449,5 +449,6 @@ export default function InterestRunnerGame({ visible, onComplete }) {
                 </div>
             )}
         </div>
+        </div> 
     );
 }

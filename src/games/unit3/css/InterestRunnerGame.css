@@ -14,6 +14,24 @@
     border-radius: 12px;
 }
 
+/* SOLO PARA UNIT 4: replica EXACTA del estilo global */
+.unit3-game-container .minigame-containert {
+    width: 60%;
+    max-width: 5300px;
+    animation: minigame-appear 0.3s ease-out;
+    overflow-y: auto;
+    align-items: center;
+}
+
+/* SOLO PARA UNIT 4: media query exclusivo */
+@media (max-height: 900px) and (orientation: landscape) {
+    .unit3-game-container .minigame-containert {
+        width: 150%;
+        transform: scale(0.6);
+        transform-origin: center;
+    }
+}
+
 .intro-window {
     background: #1d1f27;
     color: white;
