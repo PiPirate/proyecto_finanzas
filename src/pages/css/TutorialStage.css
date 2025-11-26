@@ -9,6 +9,28 @@
   width: 100%;
 }
 
+:root {
+  /* Escala ajustable para que el mapa, sprites y cuadros de diálogo ocupen menos espacio en móvil */
+  --tutorial-mobile-scale: 0.85;
+}
+
+.tutorial-game-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.tutorial-map-container--mobile {
+  padding: 0;
+}
+
+.tutorial-game-wrapper--mobile-scale {
+  transform: scale(var(--tutorial-mobile-scale));
+  transform-origin: top center;
+  width: 100%;
+}
+
 /* Overlay cuando se completa el objetivo (mensaje pequeño antiguo) */
 .tutorial-success {
   position: absolute;
@@ -134,3 +156,5 @@
     right: 16px;
   }
 }
+
+

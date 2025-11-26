@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import '../css/TutorialStage.css';
 import Unit4GameScene from '../../games/unit4/Unit4GameScene';
 import GameViewport from '../../components/responsive/GameViewport';
+import { useDeviceMode } from '../../hooks/useDeviceMode';
 
 export default function TutorialStage({ onComplete }) {
   const [completed, setCompleted] = useState(false);
+  const { isMobile } = useDeviceMode();
 
   const handleGoalReached = () => {
     setCompleted((prev) => (prev ? prev : true));
@@ -19,9 +21,19 @@ export default function TutorialStage({ onComplete }) {
 
   return (
     <GameViewport>
-      <div className="tutorial-map-container">
-        {/* Escena de la cafetería + decisiones con el dinero + metas financieras */}
-        <Unit4GameScene onGoalReached={handleGoalReached} />
+      <div
+        className={`tutorial-map-container ${
+          isMobile ? 'tutorial-map-container--mobile' : ''
+        }`}
+      >
+        <div
+          className={`tutorial-game-wrapper ${
+            isMobile ? 'tutorial-game-wrapper--mobile-scale' : ''
+          }`}
+        >
+          {/* Escena de la cafetería + decisiones con el dinero + metas financieras */}
+          <Unit4GameScene onGoalReached={handleGoalReached} />
+        </div>
 
         {/* Modal final cuando termina TODO el recorrido */}
         {completed && (
@@ -40,11 +52,11 @@ export default function TutorialStage({ onComplete }) {
                 financieras.
                 <br />
                 También aprendiste a diferenciar metas de corto plazo (logros
-                que puedes alcanzar pronto) y metas de largo plazo (objetivos que
-                requieren más tiempo y planificación).
+                que puedes alcanzar pronto) y metas de largo plazo (objetivos
+                que requieren más tiempo y planificación).
                 <br />
-                Ahora pasarás a la prueba evaluativa para poner en práctica lo que
-                aprendiste sobre organizar tu dinero y tus metas.
+                Ahora pasarás a la prueba evaluativa para poner en práctica lo
+                que aprendiste sobre organizar tu dinero y tus metas.
               </p>
 
               <button
@@ -61,3 +73,4 @@ export default function TutorialStage({ onComplete }) {
     </GameViewport>
   );
 }
+
