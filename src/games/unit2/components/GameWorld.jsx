@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { TileMap } from '../components/game/TileMap';
 import { Player } from '../components/game/Player';
 import { NPC } from '../components/game/NPC';
 import DialogueBox from '../components/game/DialogueBox';
 import { BudgetPanel } from '../components/game/BudgetPanel';
 import { MemoryGamePanel } from '../components/game/MemoryGamePanel';
+import useCameraFollow from '../../core/hooks/useCameraFollow';
+import { useDeviceMode } from '../../../hooks/useDeviceMode';
 
 import { gameMap, interactiveObjects, mk25Dialogues, zoneDialogues } from '../components/data/gameMap';
 import mk25Sprite from '../assets/mk25sprite.png';
@@ -20,6 +22,7 @@ const TOUR_WAYPOINTS = {
 };
 
 export function GameWorld({ onComplete } = {}) {
+  const { isMobile } = useDeviceMode();
   const [playerPos, setPlayerPos] = useState({ x: 8, y: 10 });
   const [direction, setDirection] = useState('down');
   const [isMoving, setIsMoving] = useState(false);
@@ -66,6 +69,29 @@ export function GameWorld({ onComplete } = {}) {
   const [facingObjectName, setFacingObjectName] = useState(null);
 
   const TILE_SIZE = 64;
+
+  const mapDimensions = useMemo(
+    () => ({
+      width: gameMap[0].length * TILE_SIZE,
+      height: gameMap.length * TILE_SIZE,
+    }),
+    [],
+  );
+
+  const playerPixelPosition = useMemo(
+    () => ({
+      x: playerPos.x * TILE_SIZE + TILE_SIZE / 2,
+      y: playerPos.y * TILE_SIZE + TILE_SIZE / 2,
+    }),
+    [playerPos.x, playerPos.y],
+  );
+
+  const { cameraPosition, viewportRef } = useCameraFollow({
+    playerPixelPosition,
+    mapDimensions,
+    isEnabled: isMobile,
+  });
+  // cameraPosition representa el desplazamiento actual de la cámara (limitado al borde del mapa en el hook).
 
   // Mostrar intro automáticamente al inicio
   useEffect(() => {
@@ -663,6 +689,19 @@ export function GameWorld({ onComplete } = {}) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleMove, handleInteract, gameState, currentDialogueIndex, currentDialogueQueue]);
 
+  useEffect(() => {
+    const handleMobileAction = () => {
+      if (gameState === 'dialogue') {
+        handleDialogueAdvance();
+      } else {
+        handleInteract();
+      }
+    };
+
+    window.addEventListener('mobile-action', handleMobileAction);
+    return () => window.removeEventListener('mobile-action', handleMobileAction);
+  }, [handleInteract, handleDialogueAdvance, gameState]);
+
   const handleDialogueAdvance = () => {
     if (currentDialogueIndex < currentDialogueQueue.length - 1) {
       // Avanzar al siguiente diálogo
@@ -739,6 +778,19 @@ export function GameWorld({ onComplete } = {}) {
 
   const totalBudget = playerBudget.needs + playerBudget.wants + playerBudget.savings;
 
+  const viewportStyle = isMobile
+    ? {
+        width: '100%',
+        height: '100%',
+        minHeight: 'var(--app-vh, 100dvh)',
+        overflow: 'hidden',
+      }
+    : undefined;
+
+  const cameraStyle = isMobile
+    ? { transform: `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)` }
+    : undefined;
+
   return (
     <div className="game-world">
       <div className="game-hud">
@@ -747,10 +799,15 @@ export function GameWorld({ onComplete } = {}) {
         </div>
       </div>
 
-      <div className="game-world-container">
-        <TileMap mapData={gameMap} />
+      <div
+        className="game-world-container"
+        ref={isMobile ? viewportRef : null}
+        style={viewportStyle}
+      >
+        <div className="game-world-layer" style={cameraStyle}>
+          <TileMap mapData={gameMap} />
 
-        {interactiveObjects
+          {interactiveObjects
           .filter(obj => {
             // No mostrar MK-25 como objeto interactivo si está en tour
             if (obj.id === 'mk25_assistant' && isOnTour) return false;
@@ -808,35 +865,36 @@ export function GameWorld({ onComplete } = {}) {
             );
           })}
 
-        <Player position={playerPos} direction={direction} isMoving={isMoving} />
-        <NPC
-          x={mk25Pos.x}
-          y={mk25Pos.y}
-          sprite={mk25Sprite}
-          name="MK-25"
-          direction={mk25Direction}
-          isMoving={mk25Moving}
-          tileSize={TILE_SIZE}
-        />
-        {gameState === 'memory_game' && currentMemoryZone && (
-          <MemoryGamePanel
-            zone={currentMemoryZone}
-            onComplete={() => {
-              // Marcar juego como completado (opcional, no afecta el tour)
-              setStoryProgress(prev => ({
-                ...prev,
-                [`${currentMemoryZone}GameCompleted`]: true
-              }));
-
-              setGameState('exploring');
-              setCurrentMemoryZone(null);
-            }}
-            onClose={() => {
-              setGameState('exploring');
-              setCurrentMemoryZone(null);
-            }}
+          <Player position={playerPos} direction={direction} isMoving={isMoving} />
+          <NPC
+            x={mk25Pos.x}
+            y={mk25Pos.y}
+            sprite={mk25Sprite}
+            name="MK-25"
+            direction={mk25Direction}
+            isMoving={mk25Moving}
+            tileSize={TILE_SIZE}
           />
-        )}
+          {gameState === 'memory_game' && currentMemoryZone && (
+            <MemoryGamePanel
+              zone={currentMemoryZone}
+              onComplete={() => {
+                // Marcar juego como completado (opcional, no afecta el tour)
+                setStoryProgress(prev => ({
+                  ...prev,
+                  [`${currentMemoryZone}GameCompleted`]: true
+                }));
+
+                setGameState('exploring');
+                setCurrentMemoryZone(null);
+              }}
+              onClose={() => {
+                setGameState('exploring');
+                setCurrentMemoryZone(null);
+              }}
+            />
+          )}
+        </div>
 
       </div>
 
