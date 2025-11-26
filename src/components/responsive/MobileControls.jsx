@@ -8,6 +8,8 @@ const defaultDirectionKeys = {
   right: 'd',
 };
 
+const defaultActionKeys = ['Enter', ' ']; // 👈 ya no incluimos 'z' aquí
+
 function dispatchKeyEvent(type, key) {
   const event = new KeyboardEvent(type, { key, bubbles: true });
   window.dispatchEvent(event);
@@ -15,7 +17,7 @@ function dispatchKeyEvent(type, key) {
 
 export default function MobileControls({
   directionKeys = defaultDirectionKeys,
-  actionKeys = ['Enter', ' ', 'z'],
+  actionKeys = defaultActionKeys,
   onAction,
 }) {
   const holdIntervalRef = useRef(null);
@@ -47,6 +49,7 @@ export default function MobileControls({
     activeDirectionRef.current = null;
   };
 
+  // Botón ACCIÓN (Enter / espacio)
   const handleAction = () => {
     if (typeof onAction === 'function') {
       onAction();
@@ -57,6 +60,21 @@ export default function MobileControls({
     actionKeys.forEach((key) => dispatchKeyEvent('keydown', key));
     setTimeout(() => {
       actionKeys.forEach((key) => dispatchKeyEvent('keyup', key));
+    }, 80);
+  };
+
+  // Botón Z (simula tecla "z")
+  const handleActionZ = () => {
+    if (typeof onAction === 'function') {
+      onAction('z'); // opcional, por si el padre quiere saber
+    }
+
+    window.dispatchEvent(new Event('mobile-action'));
+
+    // 🔥 Aquí enviamos SOLO la tecla "z"
+    dispatchKeyEvent('keydown', 'z');
+    setTimeout(() => {
+      dispatchKeyEvent('keyup', 'z');
     }, 80);
   };
 
@@ -76,8 +94,15 @@ export default function MobileControls({
 
   return (
     <div className="mobile-controls">
-      <div className="mobile-controls__dpad" role="group" aria-label="Controles de movimiento">
-        <button className="mobile-controls__btn mobile-controls__btn--up" {...bindPress('up')}>
+      <div
+        className="mobile-controls__dpad"
+        role="group"
+        aria-label="Controles de movimiento"
+      >
+        <button
+          className="mobile-controls__btn mobile-controls__btn--up"
+          {...bindPress('up')}
+        >
           ▲
         </button>
         <div className="mobile-controls__row">
@@ -93,16 +118,30 @@ export default function MobileControls({
         </div>
       </div>
 
-      <button
-        className="mobile-controls__action"
-        onPointerDown={(e) => {
-          e.preventDefault();
-          handleAction();
-        }}
-        onPointerUp={(e) => e.preventDefault()}
-      >
-        Acción
-      </button>
+      {/* Contenedor para los dos botones al ladito */}
+      <div className="mobile-controls__actions">
+        <button
+          className="mobile-controls__action"
+          onPointerDown={(e) => {
+            e.preventDefault();
+            handleAction();
+          }}
+          onPointerUp={(e) => e.preventDefault()}
+        >
+          Acción
+        </button>
+
+        <button
+          className="mobile-controls__action mobile-controls__action--z"
+          onPointerDown={(e) => {
+            e.preventDefault();
+            handleActionZ();
+          }}
+          onPointerUp={(e) => e.preventDefault()}
+        >
+          Z
+        </button>
+      </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import '../css/EvaluationStage.css';
 import { GameWorldSimple } from '../../games/unit2/components/GameEvaluation';
 import '../../games/unit2/styles/globals.css';
 import GameViewport from '../../components/responsive/GameViewport';
-export default function EvaluationStage({ onComplete, unitColor }) {
+export default function EvaluationStage({ onComplete, unitColor,}) {
   const navigate = useNavigate();
 
   const handleFinish = () => {
