@@ -23,9 +23,15 @@ export default function TutorialStage({ onComplete }) {
   return (
     <GameViewport>
       <div
-        className={`tutorial-map-container ${isMobile ? 'tutorial-map-container--mobile' : ''}`}
+        className={`tutorial-map-container ${
+          isMobile ? 'tutorial-map-container--mobile' : ''
+        }`}
       >
-        <div className={`tutorial-game-wrapper ${isMobile ? 'tutorial-game-wrapper--mobile-scale' : ''}`}>
+        <div
+          className={`tutorial-game-wrapper ${
+            isMobile ? 'tutorial-game-wrapper--mobile-scale' : ''
+          }`}
+        >
           {/* Escena del banco + MK25 + alcancía */}
           <Unit1GameScene onGoalReached={handleGoalReached} />
         </div>

@@ -18,8 +18,12 @@ export default function GameViewport({
   useEffect(() => {
     if (!isMobile) return;
     const updateVh = () => {
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      document.documentElement.style.setProperty('--app-vh', `${viewportHeight}px`);
+      const viewportHeight =
+        window.visualViewport?.height || window.innerHeight;
+      document.documentElement.style.setProperty(
+        '--app-vh',
+        `${viewportHeight}px`,
+      );
     };
 
     updateVh();
