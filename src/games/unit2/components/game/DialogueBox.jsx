@@ -40,10 +40,11 @@ export default function DialogueBox({
   // sprite que se usa
   let spriteToUse = '';
   
-  if (isAdvisor) {
-    // MK-25 cambia entre dos imágenes: hablando (ojos abiertos) vs idle (ojos cerrados)
-    spriteToUse = isSpeaking ? protagonistSpeaking : protagonistIdle;
-  } else if (isSystem) {
+    if (isAdvisor) {
+      spriteToUse = isSpeaking
+        ? (speakingSprite || protagonistSpeaking)
+        : (idleSprite || protagonistIdle);
+    } else if (isSystem) {
     // Sistema usa el robot MK-25
     spriteToUse = mk25Robot;
   } else {

@@ -1002,8 +1002,10 @@ export function GameWorld({ onComplete } = {}) {
         return (
           <DialogueBox
             text={dialogue.text}
-            speaker={speakerName}
-            onAdvance={handleDialogueAdvance}
+            speakerName={speakerName}
+            speakingSprite={mk25Sprite}
+            idleSprite={mk25Sprite}
+            onNext={handleDialogueAdvance}
           />
         );
       })()}
