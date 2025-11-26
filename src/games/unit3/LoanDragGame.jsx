@@ -5,12 +5,10 @@ export default function LoanDragGame({ visible, onComplete }) {
     if (!visible) return null;
 
     // ----------------------------------------------------------
-    // 📘 NUEVOS MÓDULOS, MÁS CLAROS Y PEDAGÓGICOS
+    // 📘 MÓDULOS DE ANÁLISIS FINANCIERO
     // ----------------------------------------------------------
     const modules = [
-        // ----------------------------------------------------
-        // MÓDULO 1 — CONCEPTOS ESENCIALES DEL ANÁLISIS FINANCIERO
-        // ----------------------------------------------------
+        // MÓDULO 1
         {
             title: "Módulo 1 — Conceptos esenciales del análisis financiero",
             description: "Relaciona cada indicador financiero con su definición técnica.",
@@ -28,9 +26,7 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
 
-        // ----------------------------------------------------
-        // MÓDULO 2 — INTERPRETACIÓN DE ESTADOS FINANCIEROS
-        // ----------------------------------------------------
+        // MÓDULO 2
         {
             title: "Módulo 2 — Interpretación de estados financieros",
             description: "Relaciona cada componente con su función dentro del análisis financiero.",
@@ -47,10 +43,8 @@ export default function LoanDragGame({ visible, onComplete }) {
                 { id: "eficiencia", label: "Rotaciones y ciclos operativos", hint: "Evalúan velocidad de conversión de recursos." }
             ]
         },
-
-        // ----------------------------------------------------
-        // MÓDULO 3 — EFECTO DE LAS DECISIONES FINANCIERAS
-        // ----------------------------------------------------
+        
+        // MÓDULO 3
         {
             title: "Módulo 3 — Consecuencias de decisiones financieras",
             description: "Cada decisión afecta los indicadores. Relaciónala con su impacto.",
@@ -68,9 +62,7 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
 
-        // ----------------------------------------------------
-        // MÓDULO 4 — ERRORES FRECUENTES EN ANÁLISIS FINANCIERO
-        // ----------------------------------------------------
+        // MÓDULO 4
         {
             title: "Módulo 4 — Errores frecuentes en análisis financiero",
             description: "Identifica el error según el mal uso de los indicadores.",
@@ -88,9 +80,7 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
 
-        // ----------------------------------------------------
-        // MÓDULO 5 — BUENAS PRÁCTICAS DE ANÁLISIS FINANCIERO
-        // ----------------------------------------------------
+        // MÓDULO 5
         {
             title: "Módulo 5 — Buenas prácticas del analista financiero",
             description: "Relaciona cada buena práctica con su aplicación ideal.",
@@ -108,9 +98,7 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
 
-        // ----------------------------------------------------
-        // MÓDULO 6 — TIPOS DE ANÁLISIS FINANCIERO
-        // ----------------------------------------------------
+        // MÓDULO 6
         {
             title: "Módulo 6 — Tipos de análisis y riesgos",
             description: "Relaciona el tipo de análisis con su impacto financiero.",
@@ -128,9 +116,7 @@ export default function LoanDragGame({ visible, onComplete }) {
             ]
         },
 
-        // ----------------------------------------------------
-        // MÓDULO 7 — ESCENARIOS REALES Y DECISIONES FINANCIERAS
-        // ----------------------------------------------------
+        // MÓDULO 7
         {
             title: "Módulo 7 — Escenarios reales y análisis inteligente",
             description: "Relaciona cada situación empresarial con el análisis adecuado.",
@@ -178,11 +164,12 @@ export default function LoanDragGame({ visible, onComplete }) {
         eficiencia: false,
     });
 
+    // Refs para manejar eventos táctiles/pointer
     const touchItemRef = useRef(null);
     const touchTargetRef = useRef(null);
-    const activePointerRef = useRef(null);
-    const activePointerTypeRef = useRef(null);
-    const activeTouchIdRef = useRef(null);
+    const activePointerRef = useRef(null); // ID del puntero activo (para PointerEvent)
+    const activePointerTypeRef = useRef(null); // Tipo de puntero ('pointer' o 'touch' para Legacy)
+    const activeTouchIdRef = useRef(null); // ID del toque activo (para TouchEvent Legacy)
 
     const handleDragStart = (e, item) => {
         e.dataTransfer.setData("itemId", item.id);
@@ -190,6 +177,7 @@ export default function LoanDragGame({ visible, onComplete }) {
         setFeedback("");
     };
 
+    // Función principal de resolución de drop (usada para Drag and Drop y Touch)
     const resolveDrop = useCallback(
         (itemId, zoneId) => {
             if (!itemId || !zoneId) return;
@@ -198,18 +186,22 @@ export default function LoanDragGame({ visible, onComplete }) {
             const moduleItems = modules[currentModule]?.items ?? [];
             const hintText = moduleItems.find((i) => i.id === itemId)?.hint ?? "";
 
+            setDropped((prev) => ({ ...prev, [itemId]: zoneId }));
+
             if (correct) {
                 setFeedback(`✔ ¡Muy bien! ${hintText}`);
-                setDropped((prev) => ({ ...prev, [itemId]: zoneId }));
+                
+                // Usamos la función de actualización de setLocked para verificar si el módulo terminó
                 setLocked((prev) => {
                     const updated = { ...prev, [itemId]: true };
-                    const allCorrect = Object.keys(correctMap).every((key) =>
-                        key === itemId ? true : updated[key]
-                    );
+                    
+                    // Comprueba si todos los ítems están bloqueados (incluyendo el actual)
+                    const allCorrect = Object.keys(correctMap).every((key) => updated[key]);
 
                     if (allCorrect) {
                         setTimeout(() => {
                             setFeedback("🎉 ¡Completaste todas las asociaciones correctamente!");
+                            // Doble seguridad para el bloqueo visual
                             setLocked({
                                 liquidez: true,
                                 rentabilidad: true,
@@ -221,10 +213,12 @@ export default function LoanDragGame({ visible, onComplete }) {
 
                     return updated;
                 });
+
             } else {
                 setFeedback(`🤔 No corresponde aquí.\n💡 Pista: ${hintText}`);
                 setDropped((prev) => ({ ...prev, [itemId]: null }));
             }
+            setHint(""); // Limpiar pista después del intento
         },
         [correctMap, currentModule, modules]
     );
@@ -236,14 +230,16 @@ export default function LoanDragGame({ visible, onComplete }) {
 
     const getZoneIdFromPoint = useCallback((clientX, clientY) => {
         const el = document.elementFromPoint(clientX, clientY);
+        // Busca el dropzone más cercano
         const zoneEl = el?.closest?.('[data-zone-id]');
         return zoneEl?.dataset?.zoneId || null;
     }, []);
 
+    // --- Manejo de Puntero (Moderno: PointerEvent) ---
     const handleTouchStart = (e, item) => {
         if (e.pointerType !== 'touch') return;
         if (locked[item.id]) return;
-        if (activePointerRef.current !== null) return;
+        if (activePointerRef.current !== null) return; // Solo un toque a la vez
 
         e.preventDefault();
         touchItemRef.current = item.id;
@@ -255,28 +251,9 @@ export default function LoanDragGame({ visible, onComplete }) {
             try {
                 e.target.setPointerCapture(e.pointerId);
             } catch (err) {
-                // ignore capture errors
+                // Si falla el capture, se ignora
             }
         }
-
-        setHint(item.hint);
-        setFeedback("");
-    };
-
-    const handleLegacyTouchStart = (e, item) => {
-        if ("PointerEvent" in window) return;
-        if (locked[item.id]) return;
-        if (activePointerRef.current !== null) return;
-
-        const touch = e.touches?.[0];
-        if (!touch) return;
-        e.preventDefault();
-
-        touchItemRef.current = item.id;
-        activePointerRef.current = touch.identifier;
-        activePointerTypeRef.current = 'touch';
-        activeTouchIdRef.current = touch.identifier;
-        touchTargetRef.current = null;
 
         setHint(item.hint);
         setFeedback("");
@@ -287,7 +264,7 @@ export default function LoanDragGame({ visible, onComplete }) {
             if (e.pointerType !== 'touch') return;
             if (activePointerTypeRef.current !== 'pointer') return;
             if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
-            e.preventDefault();
+            e.preventDefault(); // Previene el scroll
 
             touchTargetRef.current = getZoneIdFromPoint(e.clientX, e.clientY);
         },
@@ -301,11 +278,15 @@ export default function LoanDragGame({ visible, onComplete }) {
             if (activePointerRef.current !== e.pointerId || !touchItemRef.current) return;
             e.preventDefault();
 
+            // Resuelve la caída usando la zona actual (si existe) o la última conocida (touchTargetRef)
             const zoneId = getZoneIdFromPoint(e.clientX, e.clientY) || touchTargetRef.current;
+            
+            // Si hay una zona válida, resuelve el drop
             if (zoneId) {
                 resolveDrop(touchItemRef.current, zoneId);
             }
 
+            // Restablece el estado
             touchItemRef.current = null;
             touchTargetRef.current = null;
             activePointerRef.current = null;
@@ -315,17 +296,31 @@ export default function LoanDragGame({ visible, onComplete }) {
         [getZoneIdFromPoint, resolveDrop]
     );
 
-    const handlePointerCancel = useCallback(() => {
-        touchItemRef.current = null;
+    // --- Manejo de Toque (Legacy: TouchEvent) ---
+
+    const handleLegacyTouchStart = (e, item) => {
+        if ("PointerEvent" in window) return; // Si soporta PointerEvent, ignora Legacy
+        if (locked[item.id]) return;
+        if (activePointerRef.current !== null) return; // Solo un toque a la vez
+
+        const touch = e.touches?.[0];
+        if (!touch) return;
+        e.preventDefault();
+
+        touchItemRef.current = item.id;
+        activePointerRef.current = touch.identifier; // Usamos identifier como ID del puntero
+        activePointerTypeRef.current = 'touch';
+        activeTouchIdRef.current = touch.identifier;
         touchTargetRef.current = null;
-        activePointerRef.current = null;
-        activePointerTypeRef.current = null;
-        activeTouchIdRef.current = null;
-    }, []);
+
+        setHint(item.hint);
+        setFeedback("");
+    };
 
     const handleGlobalTouchMove = useCallback(
         (e) => {
             if (activePointerTypeRef.current !== 'touch') return;
+            // Busca el toque activo por ID
             const touch = Array.from(e.touches || []).find((t) => t.identifier === activeTouchIdRef.current);
             if (!touch || !touchItemRef.current) return;
             e.preventDefault();
@@ -338,6 +333,7 @@ export default function LoanDragGame({ visible, onComplete }) {
     const handleGlobalTouchEnd = useCallback(
         (e) => {
             if (activePointerTypeRef.current !== 'touch') return;
+            // Busca el toque que terminó
             const touch = Array.from(e.changedTouches || []).find((t) => t.identifier === activeTouchIdRef.current);
             if (!touch || !touchItemRef.current) return;
             e.preventDefault();
@@ -347,6 +343,7 @@ export default function LoanDragGame({ visible, onComplete }) {
                 resolveDrop(touchItemRef.current, zoneId);
             }
 
+            // Restablece el estado
             touchItemRef.current = null;
             touchTargetRef.current = null;
             activePointerRef.current = null;
@@ -356,11 +353,23 @@ export default function LoanDragGame({ visible, onComplete }) {
         [getZoneIdFromPoint, resolveDrop]
     );
 
+    const handlePointerCancel = useCallback(() => {
+        // Restablece todo el estado en caso de interrupción (ej. llamada entrante)
+        touchItemRef.current = null;
+        touchTargetRef.current = null;
+        activePointerRef.current = null;
+        activePointerTypeRef.current = null;
+        activeTouchIdRef.current = null;
+    }, []);
+
+    // --- Efecto de Escucha Global ---
     useEffect(() => {
+        // Pointer Events (Moderno)
         window.addEventListener('pointermove', handleGlobalPointerMove, { passive: false });
         window.addEventListener('pointerup', handleGlobalPointerEnd, { passive: false });
         window.addEventListener('pointercancel', handlePointerCancel);
 
+        // Touch Events (Legacy)
         window.addEventListener('touchmove', handleGlobalTouchMove, { passive: false });
         window.addEventListener('touchend', handleGlobalTouchEnd, { passive: false });
         window.addEventListener('touchcancel', handlePointerCancel, { passive: false });
@@ -375,6 +384,8 @@ export default function LoanDragGame({ visible, onComplete }) {
             window.removeEventListener('touchcancel', handlePointerCancel);
         };
     }, [handleGlobalPointerEnd, handleGlobalPointerMove, handleGlobalTouchEnd, handleGlobalTouchMove, handlePointerCancel]);
+
+    // --- Lógica del Flujo del Juego ---
 
     const moduleCompleted =
         locked.liquidez &&
@@ -393,11 +404,17 @@ export default function LoanDragGame({ visible, onComplete }) {
         } else setShowEnding(true);
     };
 
+    function shuffle(array) {
+        return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    // --- Renderizado ---
+
     if (showIntro) {
         return (
             <div className="loan-game-overlay">
                 <div className="loan-game-window intro">
-                    <h2>Aprende sobre analisís financieros</h2>
+                    <h2>Aprende sobre análisis financieros</h2>
                     <p>No necesitas saber nada. Aquí aprenderás paso a paso, arrastrando ideas claras y entendibles.</p>
                     <button className="loan-finish-btn" onClick={() => {
                         setShowIntro(false);
@@ -415,7 +432,7 @@ export default function LoanDragGame({ visible, onComplete }) {
             <div className="loan-game-overlay">
                 <div className="loan-game-window intro">
                     <h2> ¡Muy bien!</h2>
-                    <p>Ahora tienes una comprensión completa y práctica sobre cómo funcionan el analisi financiero.</p>
+                    <p>Ahora tienes una comprensión completa y práctica sobre cómo funciona el análisis financiero.</p>
                     <button className="loan-finish-btn" onClick={onComplete}>Finalizar</button>
                 </div>
             </div>
@@ -423,10 +440,6 @@ export default function LoanDragGame({ visible, onComplete }) {
     }
 
     const module = modules[currentModule];
-
-    function shuffle(array) {
-        return [...array].sort(() => Math.random() - 0.5);
-    }
 
     return (
         <div className="loan-game-overlay">
@@ -445,8 +458,10 @@ export default function LoanDragGame({ visible, onComplete }) {
                             className={`loan-card ${locked[item.id] ? "locked" : ""}`}
                             draggable={!locked[item.id]}
                             onDragStart={(e) => !locked[item.id] && handleDragStart(e, item)}
+                            
+                            // Eventos de inicio de arrastre para móvil
                             onPointerDown={(e) => e.pointerType === 'touch' && handleTouchStart(e, item)}
-                            onTouchStart={(e) => handleLegacyTouchStart(e, item)}
+                            onTouchStart={(e) => handleLegacyTouchStart(e, item)} 
                         >
                             {item.label}
                         </div>
