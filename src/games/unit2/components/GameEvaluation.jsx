@@ -1,76 +1,89 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+// src/games/unit2/components/GameEvaluation.jsx
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef
+} from 'react';
+
 import { TileMap } from '../components/game/TileMap';
 import { Player } from '../components/game/Player';
 import DialogueBox from '../components/game/DialogueBox';
 import { PuzzleGamePanel } from './game/PuzzleGamePanel';
-import { gameMap} from '../components/data/gameMap';
+
+import { gameMap } from '../components/data/gameMap';
 import useCameraFollow from '../../core/hooks/useCameraFollow';
 import { useDeviceMode } from '../../../hooks/useDeviceMode';
 
 export function GameWorldSimple({ onComplete }) {
+  const { isMobile } = useDeviceMode();
+
+  // Estado base
   const [playerPos, setPlayerPos] = useState({ x: 8, y: 10 });
   const [direction, setDirection] = useState('down');
   const [isMoving, setIsMoving] = useState(false);
   const [gameState, setGameState] = useState('exploring');
+
   const [currentDialogueQueue, setCurrentDialogueQueue] = useState([]);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const [facingObjectName, setFacingObjectName] = useState(null);
-  const [canMove, setCanMove] = useState(true);
+
   const [introShown, setIntroShown] = useState(false);
-  const { isMobile } = useDeviceMode();
-
   const TILE_SIZE = 64;
-  const MOVE_COOLDOWN = 200;
 
+  const touchStartRef = useRef({ x: 0, y: 0 });
+
+  // Cámara responsiva EXACTA a GameWorld
   const mapDimensions = useMemo(
     () => ({
       width: gameMap[0].length * TILE_SIZE,
-      height: gameMap.length * TILE_SIZE,
+      height: gameMap.length * TILE_SIZE
     }),
-    [TILE_SIZE],
+    []
   );
 
   const playerPixelPosition = useMemo(
     () => ({
       x: playerPos.x * TILE_SIZE + TILE_SIZE / 2,
-      y: playerPos.y * TILE_SIZE + TILE_SIZE / 2,
+      y: playerPos.y * TILE_SIZE + TILE_SIZE / 2
     }),
-    [TILE_SIZE, playerPos.x, playerPos.y],
+    [playerPos]
   );
 
   const { cameraPosition, viewportRef } = useCameraFollow({
     playerPixelPosition,
     mapDimensions,
-    isEnabled: isMobile,
+    isEnabled: isMobile
   });
-  const touchStartRef = useRef({ x: 0, y: 0 });
 
-  // Objeto interactivo simplificado - solo la computadora
+  // Objeto interactivo único
   const computerObject = {
     id: 'management_pc',
     name: '💻 Computadora',
     x: 10,
-    y: 1,
+    y: 1
   };
 
-  // Diálogo inicial
   const introDialogue = [
     {
       speaker: 'system',
-      text: 'Dirígete a la computadora en tu habitación para poner a prueba tu conocimiento',
-      emotion: 'neutral',
+      text: 'Dirígete a la computadora para realizar la evaluación.',
+      emotion: 'neutral'
     }
   ];
 
-  // Mostrar intro automáticamente al inicio
+  // Mostrar intro
   useEffect(() => {
     if (!introShown) {
       setTimeout(() => {
         startDialogueSequence(introDialogue);
         setIntroShown(true);
-      }, 500);
+      }, 600);
     }
   }, []);
+
+  // Funciones base
 
   const startDialogueSequence = (dialogues) => {
     setCurrentDialogueQueue(dialogues);
@@ -86,227 +99,171 @@ export function GameWorldSimple({ onComplete }) {
   };
 
   const getObjectAt = (x, y) => {
-    if (Math.abs(computerObject.x - x) < 0.6 && Math.abs(computerObject.y - y) < 0.6) {
+    if (
+      Math.abs(x - computerObject.x) < 0.6 &&
+      Math.abs(y - computerObject.y) < 0.6
+    ) {
       return computerObject;
     }
     return null;
   };
 
-  const handleMove = useCallback((newDir) => {
-    if (gameState !== 'exploring' || !canMove) return;
-
-    setDirection(newDir);
-
-    let newX = playerPos.x;
-    let newY = playerPos.y;
-
-    switch (newDir) {
-      case 'up':
-        newY -= 1;
-        break;
-      case 'down':
-        newY += 1;
-        break;
-      case 'left':
-        newX -= 1;
-        break;
-      case 'right':
-        newX += 1;
-        break;
-    }
-
-    if (isWalkable(newX, newY)) {
-      setIsMoving(true);
-      setPlayerPos({ x: newX, y: newY });
-      setTimeout(() => setIsMoving(false), 200);
-      setCanMove(false);
-      setTimeout(() => setCanMove(true), MOVE_COOLDOWN);
-    }
-    
-    // Detectar objeto enfrentado después del movimiento
-    updateFacingObject(newX, newY, newDir);
-  }, [playerPos, gameState, canMove]);
-  
   const updateFacingObject = (x, y, dir) => {
     let targetX = x;
     let targetY = y;
-    
-    switch (dir) {
-      case 'up':
-        targetY -= 1;
-        break;
-      case 'down':
-        targetY += 1;
-        break;
-      case 'left':
-        targetX -= 1;
-        break;
-      case 'right':
-        targetX += 1;
-        break;
-    }
-    
+
+    if (dir === 'up') targetY -= 1;
+    if (dir === 'down') targetY += 1;
+    if (dir === 'left') targetX -= 1;
+    if (dir === 'right') targetX += 1;
+
     const obj = getObjectAt(targetX, targetY);
-    const isNearby = obj ? Math.abs(x - obj.x) <= 1 && Math.abs(y - obj.y) <= 1 : false;
-    
-    if (obj && isNearby) {
-      setFacingObjectName(obj.name);
-    } else {
-      setFacingObjectName(null);
-    }
+    const nearby =
+      obj &&
+      Math.abs(x - obj.x) <= 1 &&
+      Math.abs(y - obj.y) <= 1;
+
+    setFacingObjectName(nearby ? obj.name : null);
   };
+
+  const handleMove = useCallback(
+    (dir) => {
+      if (gameState !== 'exploring') return;
+
+      setDirection(dir);
+
+      const moves = {
+        up: { x: 0, y: -1 },
+        down: { x: 0, y: 1 },
+        left: { x: -1, y: 0 },
+        right: { x: 1, y: 0 }
+      };
+
+      const next = {
+        x: playerPos.x + moves[dir].x,
+        y: playerPos.y + moves[dir].y
+      };
+
+      if (isWalkable(next.x, next.y)) {
+        setIsMoving(true);
+        setPlayerPos(next);
+        setTimeout(() => setIsMoving(false), 200);
+      }
+
+      updateFacingObject(next.x, next.y, dir);
+    },
+    [playerPos, gameState]
+  );
 
   const handleInteract = useCallback(() => {
     if (gameState !== 'exploring') return;
 
-    let interactX = playerPos.x;
-    let interactY = playerPos.y;
+    let tx = playerPos.x;
+    let ty = playerPos.y;
 
-    switch (direction) {
-      case 'up':
-        interactY -= 1;
-        break;
-      case 'down':
-        interactY += 1;
-        break;
-      case 'left':
-        interactX -= 1;
-        break;
-      case 'right':
-        interactX += 1;
-        break;
-    }
+    if (direction === 'up') ty -= 1;
+    if (direction === 'down') ty += 1;
+    if (direction === 'left') tx -= 1;
+    if (direction === 'right') tx += 1;
 
-    const obj = getObjectAt(interactX, interactY);
+    const obj = getObjectAt(tx, ty);
 
     if (obj && obj.id === 'management_pc') {
-      // Abrir directamente el puzzle game
       setGameState('puzzle_game');
     }
   }, [playerPos, direction, gameState]);
 
-  const handleTouchStart = (event) => {
-    if (!isMobile) return;
-    if (gameState !== 'exploring' && gameState !== 'dialogue') return;
-
-    const touch = event.touches?.[0];
-    if (!touch) return;
-
-    event.preventDefault();
-    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-  };
-
-  const handleTouchEnd = (event) => {
-    if (!isMobile) return;
-    if (gameState !== 'exploring' && gameState !== 'dialogue') return;
-
-    const touch = event.changedTouches?.[0];
-    if (!touch) return;
-
-    event.preventDefault();
-
-    const dx = touch.clientX - touchStartRef.current.x;
-    const dy = touch.clientY - touchStartRef.current.y;
-    const absX = Math.abs(dx);
-    const absY = Math.abs(dy);
-    const threshold = 24;
-
-    if (absX < threshold && absY < threshold) {
-      if (gameState === 'dialogue') {
-        handleDialogueAdvance();
-      } else {
-        handleInteract();
-      }
+  const handleDialogueAdvance = () => {
+    if (currentDialogueIndex < currentDialogueQueue.length - 1) {
+      setCurrentDialogueIndex((p) => p + 1);
       return;
     }
 
-    if (absX > absY) {
-      handleMove(dx > 0 ? 'right' : 'left');
-    } else {
-      handleMove(dy > 0 ? 'down' : 'up');
-    }
+    setCurrentDialogueQueue([]);
+    setCurrentDialogueIndex(0);
+    setGameState('exploring');
   };
 
+  // Controles teclado
   useEffect(() => {
     const handleKeyDown = (e) => {
-      const key = e.key.toLowerCase();
+      const k = e.key.toLowerCase();
 
-      if (key === 'enter' || key === ' ' || key === 'z') {
+      if (k === 'enter' || k === ' ' || k === 'z') {
         e.preventDefault();
-        if (gameState === 'dialogue') {
-          handleDialogueAdvance();
-        } else {
-          handleInteract();
-        }
+        if (gameState === 'dialogue') handleDialogueAdvance();
+        else handleInteract();
         return;
       }
 
       if (gameState !== 'exploring') return;
 
-      switch (key) {
-        case 'arrowup':
-        case 'w':
-          e.preventDefault();
-          handleMove('up');
-          break;
-        case 'arrowdown':
-        case 's':
-          e.preventDefault();
-          handleMove('down');
-          break;
-        case 'arrowleft':
-        case 'a':
-          e.preventDefault();
-          handleMove('left');
-          break;
-        case 'arrowright':
-        case 'd':
-          e.preventDefault();
-          handleMove('right');
-          break;
-      }
+      if (k === 'arrowup' || k === 'w') handleMove('up');
+      if (k === 'arrowdown' || k === 's') handleMove('down');
+      if (k === 'arrowleft' || k === 'a') handleMove('left');
+      if (k === 'arrowright' || k === 'd') handleMove('right');
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleMove, handleInteract, gameState, currentDialogueIndex, currentDialogueQueue]);
+  }, [handleMove, handleInteract, gameState]);
 
-  const handleDialogueAdvance = () => {
-    if (currentDialogueIndex < currentDialogueQueue.length - 1) {
-      setCurrentDialogueIndex(currentDialogueIndex + 1);
-    } else {
-      setGameState('exploring');
-      setCurrentDialogueQueue([]);
-      setCurrentDialogueIndex(0);
-    }
+  // Touch Controls
+  const handleTouchStart = (e) => {
+    if (!isMobile) return;
+    touchStartRef.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY
+    };
   };
+
+  const handleTouchEnd = (e) => {
+    if (!isMobile) return;
+
+    const dx =
+      e.changedTouches[0].clientX - touchStartRef.current.x;
+    const dy =
+      e.changedTouches[0].clientY - touchStartRef.current.y;
+
+    const ax = Math.abs(dx);
+    const ay = Math.abs(dy);
+
+    const threshold = 24;
+
+    if (ax < threshold && ay < threshold) {
+      if (gameState === 'dialogue') handleDialogueAdvance();
+      else handleInteract();
+      return;
+    }
+
+    if (ax > ay) handleMove(dx > 0 ? 'right' : 'left');
+    else handleMove(dy > 0 ? 'down' : 'up');
+  };
+
+  // Render
 
   const viewportStyle = isMobile
     ? {
-      width: '100%',
-      height: '100%',
-      minHeight: 'var(--app-vh, 100dvh)',
-      overflow: 'hidden',
-    }
+        width: '100%',
+        height: '100%',
+        minHeight: 'var(--app-vh, 100dvh)',
+        overflow: 'hidden'
+      }
     : undefined;
 
   const cameraStyle = isMobile
     ? {
-      transform: `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)`,
-    }
+        transform: `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)`
+      }
     : undefined;
 
   return (
     <div
       className="game-world"
-      style={{ position: 'relative' }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      onTouchMove={(e) => {
-        if (isMobile && gameState === 'exploring') e.preventDefault();
-      }}
+      style={{ position: 'relative' }}
     >
-
       <div
         className="game-world-container"
         ref={isMobile ? viewportRef : null}
@@ -315,90 +272,55 @@ export function GameWorldSimple({ onComplete }) {
         <div className="game-world-layer" style={cameraStyle}>
           <TileMap mapData={gameMap} />
 
-          {/* Objeto interactivo - Computadora */}
-          {(() => {
-            const obj = computerObject;
-            const isNearby = Math.abs(playerPos.x - obj.x) <= 1 && Math.abs(playerPos.y - obj.y) <= 1;
+          {/* Computadora Interactiva */}
+          <div
+            className="interactive-object"
+            style={{
+              position: 'absolute',
+              left: `${computerObject.x * TILE_SIZE}px`,
+              top: `${computerObject.y * TILE_SIZE}px`,
+              width: TILE_SIZE,
+              height: TILE_SIZE,
+              zIndex: 5,
+              pointerEvents: 'none'
+            }}
+          >
+            <div className="object-glow" />
+            {facingObjectName && (
+              <div className="object-label">{facingObjectName}</div>
+            )}
+          </div>
 
-            let targetX = playerPos.x;
-            let targetY = playerPos.y;
-
-            switch (direction) {
-              case 'up':
-                targetY -= 1;
-                break;
-              case 'down':
-                targetY += 1;
-                break;
-              case 'left':
-                targetX -= 1;
-                break;
-              case 'right':
-                targetX += 1;
-                break;
-            }
-
-            const facingObject = Math.abs(targetX - obj.x) < 0.6 && Math.abs(targetY - obj.y) < 0.6;
-
-            return (
-              <div
-                key={obj.id}
-                className={`interactive-object ${isNearby && facingObject ? 'interactive-object--highlighted' : ''}`}
-                style={{
-                  position: 'absolute',
-                  left: `${obj.x * TILE_SIZE}px`,
-                  top: `${obj.y * TILE_SIZE}px`,
-                  width: `${TILE_SIZE}px`,
-                  height: `${TILE_SIZE}px`,
-                  pointerEvents: 'none',
-                  zIndex: 5,
-                }}
-              >
-                <div className="object-glow"></div>
-
-                {isNearby && facingObject && (
-                  <div className="object-label">{obj.name}</div>
-                )}
-              </div>
-            );
-          })()}
-
-          <Player position={playerPos} direction={direction} isMoving={isMoving} />
-
-          {/* Puzzle Game */}
-          {gameState === 'puzzle_game' && (
-            <PuzzleGamePanel
-              onComplete={() => {
-                setGameState('exploring');
-                if (onComplete) {
-                  onComplete();
-                }
-              }}
-              onClose={() => {
-                setGameState('exploring');
-              }}
-            />
-          )}
+          {/* Jugador */}
+          <Player
+            position={playerPos}
+            direction={direction}
+            isMoving={isMoving}
+          />
         </div>
+
+        {gameState === 'puzzle_game' && (
+          <PuzzleGamePanel
+            onComplete={() => {
+              setGameState('exploring');
+              if (onComplete) onComplete();
+            }}
+            onClose={() => setGameState('exploring')}
+          />
+        )}
       </div>
 
-      {/* Diálogos */}
-      {gameState === 'dialogue' && currentDialogueQueue && currentDialogueQueue[currentDialogueIndex] && (() => {
-        const dialogue = currentDialogueQueue[currentDialogueIndex];
-        const speakerName = dialogue.speaker === 'system' ? 'Sistema' : 'Instructor';
-        
-        return (
-          <DialogueBox 
-            text={dialogue.text}
-            speakerName={speakerName}
+      {/* Diálogo */}
+      {gameState === 'dialogue' &&
+        currentDialogueQueue[currentDialogueIndex] && (
+          <DialogueBox
+            text={currentDialogueQueue[currentDialogueIndex].text}
+            speakerName="Sistema"
             onNext={handleDialogueAdvance}
-            speakingSprite={undefined}
-            idleSprite={undefined}
           />
-        );
-      })()}
+        )}
 
-      {/* Barra de instrucciones inferior */}
+      {/* Hint inferior */}
       {gameState === 'exploring' && facingObjectName && (
         <div className="interaction-bar">
           <div className="interaction-bar-content">

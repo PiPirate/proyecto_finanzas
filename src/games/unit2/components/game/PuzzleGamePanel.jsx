@@ -715,7 +715,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
 
   if (stage === 'intro') {
     return (
-      <div className="game-panel-overlay" style={{ zIndex: 1000 }}>
+      <div className="game-panel-overlay" style={{ transform: "scale(0.75)", zIndex: 1000 }}>
         <div className="game-panel puzzle-game-panel" style={{ maxWidth: '700px' }}>
           <div className="panel-header">
             <h2>🔥 El Dungeon del Equilibrio Financiero</h2>
@@ -789,7 +789,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       .reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
 
     return (
-      <div className="game-panel-overlay" style={{ zIndex: 1000 }}>
+      <div className="game-panel-overlay" style={{ transform: "scale(0.6)", zIndex: 1000 }}>
         <div className="game-panel puzzle-game-panel" style={{ maxWidth: '1000px', maxHeight: 'none', overflow: 'visible', position: 'relative' }}>
 
           {/* Barra de progreso de altares con vidas integradas */}
