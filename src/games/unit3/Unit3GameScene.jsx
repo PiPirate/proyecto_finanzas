@@ -1,6 +1,6 @@
 // src/games/unit3/Unit3GameScene.jsx
 // -------------------------------------------------------------
-// Escena completa para la Unidad 3
+// Escena completa para la Unidad 3: Análisis Financiero
 // -------------------------------------------------------------
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
@@ -28,9 +28,9 @@ import girlFaceNeutral from '../../assets/general/player_face_neutral.png';
 
 // Componentes de minijuegos
 import LoanDragGame from './LoanDragGame';
-import SnakeFinancialGame from './SnakeFinancialGame';
-import NeedsPriorityGame from "./NeedsPriorityGame";
-import InterestRunnerGame from "./InterestRunnerGame";
+import SnakeFinancialGame from './SnakeFinancialGame'; // Riesgo / Crédito
+import NeedsPriorityGame from "./NeedsPriorityGame"; // Priorización de Indicadores
+import InterestRunnerGame from "./InterestRunnerGame"; // Rentabilidad
 
 // Cuadro de diálogo
 import DialogueBox from '../core/dialogue/DialogueBox';
@@ -141,7 +141,9 @@ function Unit3GameScene({ onGoalReached }) {
     const [isCreditGameOpen, setIsCreditGameOpen] = useState(false);
     const [isPaymentGameOpen, setIsPaymentGameOpen] = useState(false);
 
-    const allDone = loanDone && needsDone && interestDone && creditDone && paymentDone;
+    // Determina si todas las actividades principales están completadas (sin incluir el juego oculto, si se desea)
+    const allMainDone = loanDone && needsDone && interestDone; 
+    const allDone = loanDone && needsDone && interestDone && paymentDone; // Agregando paymentDone si es el final
 
     const isDialogueVisible =
         dialogueMode !== null ||
@@ -201,13 +203,14 @@ function Unit3GameScene({ onGoalReached }) {
     });
 
     // -------------------------------------------------------------
-    // CLICK EN ZONAS INTERACTIVAS / BLOQUEO DE ZONAS
+    // BLOQUEO DE ZONAS E INTERACCIÓN POR CLICK (Desktop)
     // -------------------------------------------------------------
 
     const handleTileClick = ({ x, y, value }) => {
         if (isDialogueVisible) return;
         if (value !== 2) return;
 
+        // Debe estar cerca (1 tile de distancia)
         const near =
             Math.abs(x - tilePosition.x) <= 1 &&
             Math.abs(y - tilePosition.y) <= 1;
@@ -216,14 +219,14 @@ function Unit3GameScene({ onGoalReached }) {
         const zone = unit3InteractiveZones.find((z) => z.x === x && z.y === y);
         if (!zone) return;
 
-        // Orden de actividades
+        // Lógica de secuencia
         switch (zone.id) {
             // 1️⃣ PRÉSTAMO (siempre primero)
             case "poster_prestamo":
                 if (!loanDone) {
                     setDialogueMode("loanIntro");
                 } else {
-                    setDialogueMode("locked");
+                    setDialogueMode("locked"); // Ya completado
                 }
                 break;
 
@@ -235,7 +238,7 @@ function Unit3GameScene({ onGoalReached }) {
                 } else if (!needsDone) {
                     setDialogueMode("needs");
                 } else {
-                    setDialogueMode("locked");
+                    setDialogueMode("locked"); // Ya completado
                 }
                 break;
 
@@ -246,11 +249,23 @@ function Unit3GameScene({ onGoalReached }) {
                 } else if (!interestDone) {
                     setDialogueMode("interest");
                 } else {
+                    setDialogueMode("locked"); // Ya completado
+                }
+                break;
+            
+            // 4️⃣ PUZZLE FINAL (requiere interés, si existe)
+            // Asumiendo que el puzzle final está en una zona de tile 2
+            case "puzzle_final": 
+                if (!interestDone) {
                     setDialogueMode("locked");
+                } else if (!paymentDone) {
+                    setDialogueMode("payment");
+                } else {
+                    setDialogueMode("locked"); // Ya completado
                 }
                 break;
 
-            // Simulador de riesgo en computador
+            // Simulador de riesgo en computador (opcional, siempre accesible después de la intro)
             case "computer":
                 setDialogueMode("credit");
                 break;
@@ -262,6 +277,7 @@ function Unit3GameScene({ onGoalReached }) {
         setDialogueIndex(0);
     };
 
+    // Encuentra la zona interactiva más cercana (para móvil)
     const findNearestInteractive = useCallback(() => {
         const MAX_DISTANCE = 1.25;
         let closest = null;
@@ -285,7 +301,7 @@ function Unit3GameScene({ onGoalReached }) {
     // CONTROL DEL BOTÓN "SIGUIENTE" EN LOS DIÁLOGOS
     // -------------------------------------------------------------
 
-    const handleDialogueNext = () => {
+    const handleDialogueNext = useCallback(() => {
         const getArray = () => {
             switch (dialogueMode) {
                 case "intro": return introDialogue;
@@ -319,44 +335,59 @@ function Unit3GameScene({ onGoalReached }) {
         }
 
         // Si se terminó el diálogo
+        setDialogueIndex(0); // Reiniciar el índice para el próximo diálogo
+
         switch (dialogueMode) {
             case "intro":
-                setDialogueMode(null);
-                break;
-
             case "locked":
                 setDialogueMode(null);
                 break;
 
-            // 1️⃣ PRÉSTAMO
+            // 1️⃣ PRÉSTAMO: Inicia juego Drag and Drop
             case "loan":
             case "loanIntro":
                 setDialogueMode(null);
                 setIsLoanGameOpen(true);
                 break;
 
-            // 2️⃣ NECESIDADES
+            // 2️⃣ NECESIDADES: Inicia juego de Prioridades
             case "needs":
                 setDialogueMode(null);
                 setIsNeedsGameOpen(true);
                 break;
 
-            // 3️⃣ INTERÉS
+            // 3️⃣ INTERÉS: Inicia juego Runner
             case "interest":
                 setDialogueMode(null);
                 setIsInterestGameOpen(true);
                 break;
 
-            // 4️⃣ CRÉDITO / COMPUTADOR (SNAKE)
+            // 4️⃣ CRÉDITO / COMPUTADOR: Inicia juego Snake
             case "credit":
                 setDialogueMode(null);
                 setIsCreditGameOpen(true);
                 break;
 
-            // 5️⃣ PUZZLE FINAL
+            // 5️⃣ PUZZLE FINAL: Inicia juego Puzzle
             case "payment":
                 setDialogueMode(null);
                 setIsPaymentGameOpen(true);
+                break;
+            
+            // Diálogos post-juego
+            case "postLoan":
+                setDialogueMode(null);
+                break;
+            case "postNeeds":
+                setDialogueMode(null);
+                break;
+            case "postInterest":
+                // Tras el post-juego de interés, si todo lo principal está hecho, ir al final
+                if (allDone) {
+                    setDialogueMode("final");
+                } else {
+                    setDialogueMode(null);
+                }
                 break;
 
             // FINAL GENERAL
@@ -368,26 +399,75 @@ function Unit3GameScene({ onGoalReached }) {
             default:
                 setDialogueMode(null);
         }
+    }, [dialogueMode, dialogueIndex, allDone, onGoalReached]);
 
+    // -------------------------------------------------------------
+    // LÓGICA DE COMPLETADO DE MINIJUEGOS
+    // -------------------------------------------------------------
+    
+    // Función para manejar el completado del juego de Préstamo (Loan)
+    const handleLoanGameComplete = useCallback(() => {
+        setIsLoanGameOpen(false);
+        setLoanDone(true);
+        setDialogueMode("postLoan");
         setDialogueIndex(0);
-    };
+    }, []);
+
+    // Función para manejar el completado del juego de Prioridades (Needs)
+    const handleNeedsGameComplete = useCallback(() => {
+        setIsNeedsGameOpen(false);
+        setNeedsDone(true);
+        setDialogueMode("postNeeds");
+        setDialogueIndex(0);
+    }, []);
+
+    // Función para manejar el completado del juego Runner (Interest)
+    const handleInterestGameComplete = useCallback(() => {
+        setIsInterestGameOpen(false);
+        setInterestDone(true);
+        setDialogueMode("postInterest"); // Esto lleva al switch de handleDialogueNext
+        setDialogueIndex(0);
+    }, []);
+    
+    // Función para manejar el completado del juego Snake (Credit/Riesgo)
+    const handleCreditGameComplete = useCallback(() => {
+        setIsCreditGameOpen(false);
+        setCreditDone(true);
+    }, []);
+    
+    // Función para manejar el completado del juego Puzzle (Payment/Estrategia)
+    const handlePaymentGameComplete = useCallback(() => {
+        setIsPaymentGameOpen(false);
+        setPaymentDone(true);
+        // Aquí puedes encadenar a otro diálogo o directamente al final
+        if (allMainDone) { 
+             setDialogueMode("final");
+             setDialogueIndex(0);
+        } else {
+             setDialogueMode(null);
+        }
+    }, [allMainDone]);
+    
 
     // -------------------------------------------------------------
-    // INPUT EN MÓVIL: EVENTO 'mobile-action'
+    // INPUT EN MÓVIL: EVENTO 'mobile-action' UNIFICADO
     // -------------------------------------------------------------
 
+    // Usa 'mobile-action' para avanzar diálogos o interactuar con la zona más cercana.
     useEffect(() => {
-        if (!isMobile) return;
+        if (!isMobile) return undefined;
 
         const handleMobileAction = () => {
             if (isDialogueVisible) {
-                // En móvil, "acción" avanza el diálogo si hay uno abierto
+                // Si hay diálogo o minijuego, la acción avanza/cierra el diálogo
                 handleDialogueNext();
                 return;
             }
 
+            // Si no hay diálogo, la acción activa la interacción más cercana
             const nearest = findNearestInteractive();
             if (nearest) {
+                // Simulamos el click en la baldosa interactiva más cercana
                 const value = unit3MapMatrix?.[nearest.y]?.[nearest.x] ?? 2;
                 handleTileClick({ x: nearest.x, y: nearest.y, value });
             }
@@ -422,7 +502,7 @@ function Unit3GameScene({ onGoalReached }) {
 
             {/* DIÁLOGO */}
             <DialogueBox
-                visible={dialogueMode !== null}
+                visible={dialogueMode !== null && !isLoanGameOpen && !isNeedsGameOpen && !isInterestGameOpen && !isCreditGameOpen && !isPaymentGameOpen}
                 text={currentDialogueText}
                 speakingSprite={currentSpeakingSprite}
                 idleSprite={currentIdleSprite}
@@ -430,59 +510,35 @@ function Unit3GameScene({ onGoalReached }) {
                 onNext={handleDialogueNext}
             />
 
-            {/* MINIJUEGO 1 — PRÉSTAMO */}
+            {/* MINIJUEGO 1 — CONCEPTOS ESENCIALES (LoanDragGame) */}
             <LoanDragGame
                 visible={isLoanGameOpen}
-                onComplete={() => {
-                    setIsLoanGameOpen(false);
-                    setLoanDone(true);
-                    setDialogueMode("postLoan");
-                    setDialogueIndex(0);
-                }}
+                onComplete={handleLoanGameComplete}
             />
 
-            {/* SNAKE FINANCIERO / RIESGO */}
+            {/* SNAKE FINANCIERO / RIESGO (SnakeFinancialGame) */}
             <SnakeFinancialGame
                 visible={isCreditGameOpen}
-                onComplete={() => {
-                    setIsCreditGameOpen(false);
-                    setCreditDone(true);
-                }}
+                onComplete={handleCreditGameComplete}
             />
 
-            {/* NECESIDADES / PRIORIDADES */}
+            {/* PRIORIDADES (NeedsPriorityGame) */}
             <NeedsPriorityGame
                 visible={isNeedsGameOpen}
-                onComplete={() => {
-                    setIsNeedsGameOpen(false);
-                    setNeedsDone(true);
-                    setDialogueMode("postNeeds");
-                    setDialogueIndex(0);
-                }}
+                onComplete={handleNeedsGameComplete}
             />
 
-            {/* RENTABILIDAD / INTERÉS */}
+            {/* RENTABILIDAD (InterestRunnerGame) */}
             <InterestRunnerGame
                 visible={isInterestGameOpen}
-                onComplete={() => {
-                    setIsInterestGameOpen(false);
-                    setInterestDone(true);
-
-                    // Primero post-juego de rentabilidad…
-                    setDialogueMode("postInterest");
-                    setDialogueIndex(0);
-
-                    // Si quieres que después de ese diálogo vaya al final,
-                    // puedes disparar "final" cuando se termine "postInterest"
-                    // en el switch de handleDialogueNext, en vez de aquí.
-                    if (allDone) {
-                        setDialogueMode("final");
-                        setDialogueIndex(0);
-                    }
-                }}
+                onComplete={handleInterestGameComplete}
             />
 
-            {/* Si implementas puzzle final, usarías isPaymentGameOpen, etc. */}
+            {/* PUZZLE FINAL (PaymentPuzzleDialogue - No se usa un componente real aquí, solo el placeholder) */}
+            {/* <PaymentPuzzleGame 
+                visible={isPaymentGameOpen} 
+                onComplete={handlePaymentGameComplete} 
+            /> */}
         </div>
     );
 }
