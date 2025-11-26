@@ -265,7 +265,6 @@
 @media (max-height: 500px) and (orientation: landscape) {
   .minigame-container {
     transform: scale(0.5);
-    transform-origin: top;
   }
 
   .minigame-header {

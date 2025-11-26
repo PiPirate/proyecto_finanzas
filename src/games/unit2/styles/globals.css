@@ -27,14 +27,19 @@
    MUNDO DEL JUEGO (POKÉMON STYLE)
    ============================================ */
 .game-world {
-  width: fit-content;
-  height: fit-content;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+
   display: flex;
   flex-direction: column;
+
   background: transparent;
   margin: 0 auto;
+  overflow: hidden; /* evita que overlays gigantes se salgan */
 }
-
 .game-hud {
   display: flex;
   justify-content: space-between;
@@ -150,7 +155,7 @@
 
 /* ============================================
    OBJETOS INTERACTIVOS
-   ============================================ */
+   ===============================  ============= */
 .interactive-object {
   display: flex;
   flex-direction: column;
