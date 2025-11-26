@@ -493,6 +493,12 @@
   text-shadow: 1px 1px 0 #020617;
 }
 
+.evaluation-question-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 /* Feedback debajo del enunciado */
 
 .evaluation-feedback {
@@ -728,6 +734,12 @@
     bottom: 82px;
   }
 
+  .evaluation-question-content--mobile {
+    max-height: 180px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+
   .controls-bar {
     height: 68px;
   }
@@ -758,6 +770,10 @@
     font-size: 12px;
   }
 
+  .evaluation-question-content--mobile {
+    max-height: 160px;
+  }
+
   .question-text {
     font-size: 15px;
   }
@@ -777,6 +793,12 @@
   justify-content: center;  /* centra horizontal */
   background: rgba(15, 23, 42, 0.6); /* leve oscurecido del fondo */
   z-index: 30;              /* por encima del juego */
+}
+
+.evaluation-tutorial-overlay--mobile {
+  align-items: flex-start;
+  padding: 16px 12px 0;
+  z-index: 120;
 }
 
 .evaluation-tutorial-dialog {

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import '../css/EvaluationStage.css';
 import useTypewriterText from '../../games/core/hooks/useTypewriterText';
 import GameViewport from '../../components/responsive/GameViewport';
+import { useDeviceMode } from '../../hooks/useDeviceMode';
 
 // Ajusta estos nombres/rutas a tus archivos reales
 import pigFighter from '../../assets/unit1/pig.png';
@@ -39,6 +40,7 @@ const evaluationTutorialScript = [
 ];
 
 function EvaluationTutorial({ visible, onFinished }) {
+  const { isMobile } = useDeviceMode();
   const [index, setIndex] = useState(0);
 
   // Siempre calculamos la línea y usamos el hook,
@@ -70,7 +72,10 @@ function EvaluationTutorial({ visible, onFinished }) {
   if (!visible) return null;
 
   return (
-    <div className="evaluation-tutorial-overlay" onClick={handleClick}>
+    <div
+      className={`evaluation-tutorial-overlay ${isMobile ? 'evaluation-tutorial-overlay--mobile' : ''}`}
+      onClick={handleClick}
+    >
       <div className="evaluation-tutorial-dialog">
         <div className="evaluation-tutorial-header">
           <span className="evaluation-tutorial-speaker">
@@ -176,6 +181,7 @@ const evaluationQuestions = [
 
 export default function EvaluationStage({ onComplete, unitColor }) {
   const navigate = useNavigate();
+  const { isMobile } = useDeviceMode();
 
   const [showTutorial, setShowTutorial] = useState(true);
 
@@ -432,13 +438,17 @@ export default function EvaluationStage({ onComplete, unitColor }) {
                 <p className="question-step">
                   Pregunta {currentIndex + 1} de {totalQuestions}
                 </p>
-                <p className="question-context">
-                  {question.context}
-                </p>
-                <p className="question-text">
-                  {question.question}
-                </p>
-                <p className={feedbackClass}>{feedback}</p>
+                <div
+                  className={`evaluation-question-content ${isMobile ? 'evaluation-question-content--mobile' : ''}`}
+                >
+                  <p className="question-context">
+                    {question.context}
+                  </p>
+                  <p className="question-text">
+                    {question.question}
+                  </p>
+                  <p className={feedbackClass}>{feedback}</p>
+                </div>
               </>
             )}
 

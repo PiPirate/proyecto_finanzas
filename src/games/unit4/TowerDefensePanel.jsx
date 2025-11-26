@@ -419,6 +419,9 @@ export function TowerDefensePanel({ onComplete, onClose }) {
   const [enemiesKilledCount, setEnemiesKilledCount] = useState(0);
   const [gameTime, setGameTime] = useState(GAME_CONFIG.TOTAL_GAME_TIME);
 
+  const { isMobile } = useDeviceMode();
+  const battlefieldScale = isMobile ? 1.08 : 1;
+
   const gameLoopRef = useRef(null);
   const spawnIntervalRef = useRef(null);
   const questionTimerRef = useRef(null);
@@ -504,13 +507,22 @@ export function TowerDefensePanel({ onComplete, onClose }) {
     if (gamePhase !== 'playing') return;
     if (!battlefieldRef.current) return;
 
+    const pointer =
+      'touches' in e && e.touches?.length
+        ? e.touches[0]
+        : e;
+
+    if (isMobile && 'touches' in e) {
+      e.preventDefault();
+    }
+
     const rect = battlefieldRef.current.getBoundingClientRect();
-    const clickY = e.clientY - rect.top;
+    const relativeY = (pointer.clientY - rect.top) / battlefieldScale;
 
     // Altura real de cada carril según el DOM (respeta el escalado en CSS)
-    const laneHeight = rect.height / GAME_CONFIG.LANES;
+    const laneHeight = (rect.height / battlefieldScale) / GAME_CONFIG.LANES;
 
-    let laneIndex = Math.floor(clickY / laneHeight);
+    let laneIndex = Math.floor(relativeY / laneHeight);
 
     // Clamp entre 0 y LANES - 1
     if (laneIndex < 0) laneIndex = 0;
@@ -705,8 +717,9 @@ export function TowerDefensePanel({ onComplete, onClose }) {
             {/* CAMPO */}
             <div
               ref={battlefieldRef}                    // 👈 IMPORTANTE
-              className={`td-battlefield ${gamePhase === 'question' ? 'td-battlefield-blur' : ''
-                }`}
+              className={`td-battlefield ${
+                gamePhase === 'question' ? 'td-battlefield-blur' : ''
+              } ${isMobile ? 'td-battlefield--mobile' : ''}`}
               style={{
                 width: GAME_CONFIG.GAME_WIDTH,
                 height: battlefieldHeight,
@@ -714,8 +727,11 @@ export function TowerDefensePanel({ onComplete, onClose }) {
                 backgroundSize: '100% 100%',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
+                transform: battlefieldScale !== 1 ? `scale(${battlefieldScale})` : 'none',
+                transformOrigin: 'center top',
               }}
               onClick={handleBattlefieldClick}
+              onTouchStart={handleBattlefieldClick}
             >
 
               {/* Carriles (solo líneas de referencia) */}
@@ -759,7 +775,7 @@ export function TowerDefensePanel({ onComplete, onClose }) {
             {/* PREGUNTA (MODAL) */}
             {gamePhase === 'question' && currentQuestion && (
               <div className="td-question-overlay">
-                <div className="td-question-panel">
+                <div className={`td-question-panel ${isMobile ? 'td-question-panel--mobile' : ''}`}>
                   <div className="td-question-header">
                     <h3 className="td-question-title">❓ Pregunta</h3>
                     <div
@@ -770,28 +786,38 @@ export function TowerDefensePanel({ onComplete, onClose }) {
                     </div>
                   </div>
 
-                  <div className="td-question-text">{currentQuestion.question}</div>
+                  <div className={`td-question-body ${isMobile ? 'td-question-body--mobile' : ''}`}>
+                    <div className="td-question-text">{currentQuestion.question}</div>
 
-                  <div className="td-options">
-                    {currentQuestion.options.map((op, idx) => (
-                      <button
-                        key={idx}
-                        disabled={showResult}
-                        className={`td-option ${showResult
-                          ? idx === currentQuestion.correct
-                            ? 'td-option-correct'
-                            : idx === selectedAnswer
-                              ? 'td-option-wrong'
+                    <div className="td-options">
+                      {currentQuestion.options.map((op, idx) => (
+                        <button
+                          key={idx}
+                          disabled={showResult}
+                          className={`td-option ${showResult
+                            ? idx === currentQuestion.correct
+                              ? 'td-option-correct'
+                              : idx === selectedAnswer
+                                ? 'td-option-wrong'
+                                : ''
+                            : selectedAnswer === idx
+                              ? 'td-option-selected'
                               : ''
-                          : selectedAnswer === idx
-                            ? 'td-option-selected'
-                            : ''
-                          }`}
-                        onClick={() => !showResult && setSelectedAnswer(idx)}
-                      >
-                        {op}
-                      </button>
-                    ))}
+                            }`}
+                          onClick={() => !showResult && setSelectedAnswer(idx)}
+                        >
+                          {op}
+                        </button>
+                      ))}
+                    </div>
+
+                    {showResult && (
+                      <div className="td-result-message">
+                        {selectedAnswer === currentQuestion.correct
+                          ? '✅ ¡Correcto!'
+                          : '❌ Incorrecto. Se te restan 10 segundos.'}
+                      </div>
+                    )}
                   </div>
 
                   {!showResult && (
@@ -802,14 +828,6 @@ export function TowerDefensePanel({ onComplete, onClose }) {
                     >
                       Confirmar Respuesta
                     </button>
-                  )}
-
-                  {showResult && (
-                    <div className="td-result-message">
-                      {selectedAnswer === currentQuestion.correct
-                        ? '✅ ¡Correcto!'
-                        : '❌ Incorrecto. Se te restan 10 segundos.'}
-                    </div>
                   )}
                 </div>
               </div>
