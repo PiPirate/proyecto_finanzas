@@ -1821,16 +1821,6 @@
   flex-shrink: 0;
 }
 
-/* BASE: configuración general para cualquier sprite de cara */
-.dialogue-face {
-  width: 100%;
-  height: 100%;
-  background-repeat: no-repeat;
-  background-position: center top;
-  background-size: cover;
-  image-rendering: pixelated;
-}
-
 /* ========================================================= */
 /*     TAMAÑO + ANIMACIÓN PARA CARMINA (JUGADOR)            */
 /* ========================================================= */
@@ -1869,23 +1859,6 @@
   to {
     background-position-y: 137.1%;
   }
-}
-
-/* ========================================================= */
-/*     TAMAÑO + ANIMACIÓN PARA ASESOR (MK-25)               */
-/* ========================================================= */
-
-/* Asesor: imagen estática del protagonista (sin animación) */
-.dialogue-face--talking-advisor,
-.dialogue-face--idle-advisor {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  animation: none;
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
 }
 
 /* ========================================================= */

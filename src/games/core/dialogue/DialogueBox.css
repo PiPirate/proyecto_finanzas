@@ -87,8 +87,8 @@
 /* AQUÍ PUEDES CAMBIAR INDEPENDIENTEMENTE LOS VALORES */
 .dialogue-face--talking-advisor,
 .dialogue-face--idle-advisor {
-  width: 119%;          /* por ejemplo, un poco más grande que Carmina */
-  height: 119%;
+  width: 118%;          /* por ejemplo, un poco más grande que Carmina */
+  height: 118%;
   background-size: 115% auto;
 }
 
