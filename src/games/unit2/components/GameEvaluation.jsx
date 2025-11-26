@@ -216,15 +216,6 @@ export function GameWorldSimple({ onComplete }) {
 
   return (
     <div className="game-world" style={{ position: 'relative' }}>
-      <div className="game-hud">
-        <div className="hud-info">
-          <span>🎓 Evaluación de Conocimientos</span>
-        </div>
-        
-        <div className="hud-controls">
-          <span>WASD/Flechas: Mover | ENTER/Z: Interactuar</span>
-        </div>
-      </div>
 
       <div className="game-world-container">
         <TileMap mapData={gameMap} />

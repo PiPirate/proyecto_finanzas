@@ -889,11 +889,6 @@ export function GameWorld({ onComplete } = {}) {
 
   return (
     <div className="game-world">
-      <div className="game-hud">
-        <div className="hud-controls">
-          <span>WASD/Flechas: Mover | ENTER/Z: Interactuar</span>
-        </div>
-      </div>
 
       <div
         className="game-world-container"
