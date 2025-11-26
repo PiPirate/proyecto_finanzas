@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import '../css/TutorialStage.css';
 import Unit3GameScene from '../../games/unit3/Unit3GameScene';
+import GameViewport from '../../components/responsive/GameViewport';
 
 export default function TutorialStage({ onComplete }) {
   const [completed, setCompleted] = useState(false);
@@ -18,33 +19,35 @@ export default function TutorialStage({ onComplete }) {
   };
 
   return (
-    <div className="tutorial-map-container">
-      {/* Escena interactiva de la Unidad 3 */}
-      <Unit3GameScene onGoalReached={handleGoalReached} />
+    <GameViewport>
+      <div className="tutorial-map-container">
+        {/* Escena interactiva de la Unidad 3 */}
+        <Unit3GameScene onGoalReached={handleGoalReached} />
 
-      {/* Modal de éxito al terminar TODO el tutorial */}
-      {completed && (
-        <div className="tutorial-overlay">
-          <div className="tutorial-success" onClick={(e) => e.stopPropagation()}>
-            <h2 className="tutorial-success-title">¡Has finalizado el tutorial!</h2>
+        {/* Modal de éxito al terminar TODO el tutorial */}
+        {completed && (
+          <div className="tutorial-overlay">
+            <div className="tutorial-success" onClick={(e) => e.stopPropagation()}>
+              <h2 className="tutorial-success-title">¡Has finalizado el tutorial!</h2>
 
-            <p className="tutorial-success-text">
-              Completaste correctamente el recorrido interactivo de esta unidad.
-              <br />
-              Ahora continuarás con la prueba evaluativa para poner en práctica
-              lo aprendido.
-            </p>
+              <p className="tutorial-success-text">
+                Completaste correctamente el recorrido interactivo de esta unidad.
+                <br />
+                Ahora continuarás con la prueba evaluativa para poner en práctica
+                lo aprendido.
+              </p>
 
-            <button
-              type="button"
-              className="tutorial-continue-btn"
-              onClick={handleContinue}
-            >
-              Ir a la prueba evaluativa
-            </button>
+              <button
+                type="button"
+                className="tutorial-continue-btn"
+                onClick={handleContinue}
+              >
+                Ir a la prueba evaluativa
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </GameViewport>
   );
 }
