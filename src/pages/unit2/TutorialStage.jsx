@@ -20,11 +20,17 @@ export default function TutorialStage({ onComplete }) {
   return (
     <GameViewport>
       <div
-        className={`tutorial-map-container ${isMobile ? 'tutorial-map-container--mobile' : ''}`}
+        className={`tutorial-map-container ${
+          isMobile ? 'tutorial-map-container--mobile' : ''
+        }`}
       >
 
         {/* Escena del banco UNIT 2 */}
-        <div className={`tutorial-game-wrapper ${isMobile ? 'tutorial-game-wrapper--mobile-scale' : ''}`}>
+        <div
+          className={`tutorial-game-wrapper ${
+            isMobile ? 'tutorial-game-wrapper--mobile-scale' : ''
+          }`}
+        >
           <GameWorld onComplete={() => {}} />
         </div>
 
