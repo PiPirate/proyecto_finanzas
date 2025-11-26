@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/EvaluationStage.css';
 import { TowerDefensePanel } from '../../games/unit4/TowerDefensePanel';
+import GameViewport from '../../components/responsive/GameViewport';
 
 export default function EvaluationStage({ onComplete, unitColor }) {
   const navigate = useNavigate();
@@ -17,11 +18,13 @@ export default function EvaluationStage({ onComplete, unitColor }) {
   };
 
   return (
-    <div className="stage-container" style={{ borderColor: unitColor }}>
-      <TowerDefensePanel
-        onComplete={handleGameComplete}
-        onClose={handleGameClose}
-      />
-    </div>
+    <GameViewport showControls={false} forceFullscreen>
+      <div className="stage-container" style={{ borderColor: unitColor }}>
+        <TowerDefensePanel
+          onComplete={handleGameComplete}
+          onClose={handleGameClose}
+        />
+      </div>
+    </GameViewport>
   );
 }

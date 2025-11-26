@@ -8,6 +8,7 @@ import React, {
 import { useNavigate } from 'react-router-dom';
 import '../css/EvaluationStage.css';
 import useTypewriterText from '../../games/core/hooks/useTypewriterText';
+import GameViewport from '../../components/responsive/GameViewport';
 
 // Ajusta estos nombres/rutas a tus archivos reales
 import pigFighter from '../../assets/unit1/pig.png';
@@ -310,13 +311,14 @@ export default function EvaluationStage({ onComplete, unitColor }) {
       : 'evaluation-feedback';
 
   return (
-    <div className="stage-container evaluation-stage">
-      <EvaluationTutorial
-        visible={showTutorial}
-        onFinished={() => setShowTutorial(false)}
-      />
+    <GameViewport showControls={false} forceFullscreen>
+      <div className="stage-container evaluation-stage">
+        <EvaluationTutorial
+          visible={showTutorial}
+          onFinished={() => setShowTutorial(false)}
+        />
 
-      <div className="fighting-game-container">
+        <div className="fighting-game-container">
         {/* HUD superior */}
         <div className="hud-top">
           <div className="hud-section player1-hud">
@@ -525,6 +527,6 @@ export default function EvaluationStage({ onComplete, unitColor }) {
           </div>
         </div>
       </div>
-    </div>
+    </GameViewport>
   );
 }

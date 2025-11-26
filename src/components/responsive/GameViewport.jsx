@@ -7,6 +7,7 @@ import './GameViewport.css';
 export default function GameViewport({
   children,
   showControls = true,
+  forceFullscreen = false,
   directionKeys,
   actionKeys,
   onAction,
@@ -14,7 +15,8 @@ export default function GameViewport({
   const { isMobile } = useDeviceMode();
   const { isLandscape } = useOrientationLock();
   const isMobileLandscape = isMobile && isLandscape;
-  const isMobileFullscreen = isMobileLandscape && showControls;
+  const shouldFullscreen = showControls || forceFullscreen;
+  const isMobileFullscreen = isMobileLandscape && shouldFullscreen;
 
   useEffect(() => {
     if (!isMobile) return;
