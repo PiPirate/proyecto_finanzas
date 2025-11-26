@@ -16,6 +16,7 @@ function dispatchKeyEvent(type, key) {
 export default function MobileControls({
   directionKeys = defaultDirectionKeys,
   actionKeys = ['Enter', ' ', 'z'],
+  onAction,
 }) {
   const holdIntervalRef = useRef(null);
   const activeDirectionRef = useRef(null);
@@ -47,6 +48,12 @@ export default function MobileControls({
   };
 
   const handleAction = () => {
+    if (typeof onAction === 'function') {
+      onAction();
+    }
+
+    window.dispatchEvent(new Event('mobile-action'));
+
     actionKeys.forEach((key) => dispatchKeyEvent('keydown', key));
     setTimeout(() => {
       actionKeys.forEach((key) => dispatchKeyEvent('keyup', key));
