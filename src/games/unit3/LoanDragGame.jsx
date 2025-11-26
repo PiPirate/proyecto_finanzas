@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./css/LoanDragGame.css";
 
 export default function LoanDragGame({ visible, onComplete }) {
@@ -178,14 +178,17 @@ export default function LoanDragGame({ visible, onComplete }) {
         eficiencia: false,
     });
 
+    const touchItemRef = useRef(null);
+
     const handleDragStart = (e, item) => {
         e.dataTransfer.setData("itemId", item.id);
         setHint(item.hint);
         setFeedback("");
     };
 
-    const handleDrop = (e, zoneId) => {
-        const itemId = e.dataTransfer.getData("itemId");
+    const resolveDrop = (itemId, zoneId) => {
+        if (!itemId) return;
+
         const correct = correctMap[itemId] === zoneId;
 
         setDropped(prev => ({ ...prev, [itemId]: zoneId }));
@@ -198,6 +201,38 @@ export default function LoanDragGame({ visible, onComplete }) {
             const text = modules[currentModule].items.find(i => i.id === itemId).hint;
             setFeedback(`🤔 No corresponde aquí.\n💡 Pista: ${text}`);
         }
+
+        const allCorrect = Object.keys(correctMap).every(key => {
+            return correctMap[key] === (key === itemId ? zoneId : (dropped[key] || correctMap[key]));
+        });
+
+        if (allCorrect) {
+            setTimeout(() => {
+                setFeedback("🎉 ¡Completaste todas las asociaciones correctamente!");
+                setLocked({ liquidez: true, rentabilidad: true, endeudamiento: true, eficiencia: true });
+            }, 200);
+        }
+    };
+
+    const handleDrop = (e, zoneId) => {
+        const itemId = e.dataTransfer.getData("itemId");
+        resolveDrop(itemId, zoneId);
+    };
+
+    // Eventos táctiles reutilizan resolveDrop para compartir la misma validación que el drag con mouse.
+    const handleTouchStart = (e, item) => {
+        if (locked[item.id]) return;
+        e.preventDefault();
+        touchItemRef.current = item.id;
+        setHint(item.hint);
+        setFeedback("");
+    };
+
+    const handleTouchEnd = (e, zoneId) => {
+        if (!touchItemRef.current) return;
+        e.preventDefault();
+        resolveDrop(touchItemRef.current, zoneId);
+        touchItemRef.current = null;
     };
 
     const moduleCompleted =
@@ -269,6 +304,8 @@ export default function LoanDragGame({ visible, onComplete }) {
                             className={`loan-card ${locked[item.id] ? "locked" : ""}`}
                             draggable={!locked[item.id]}
                             onDragStart={(e) => !locked[item.id] && handleDragStart(e, item)}
+                            onTouchStart={(e) => handleTouchStart(e, item)}
+                            onTouchMove={(e) => e.preventDefault()}
                         >
                             {item.label}
                         </div>
@@ -282,6 +319,8 @@ export default function LoanDragGame({ visible, onComplete }) {
                             className="dropzone"
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => handleDrop(e, zone.zone)}
+                            onTouchStart={(e) => e.preventDefault()}
+                            onTouchEnd={(e) => handleTouchEnd(e, zone.zone)}
                         >
                             {zone.label}
                         </div>

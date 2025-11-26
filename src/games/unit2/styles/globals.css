@@ -142,6 +142,12 @@
   height: fit-content;
 }
 
+.game-world-layer {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+}
+
 /* ============================================
    OBJETOS INTERACTIVOS
    ============================================ */

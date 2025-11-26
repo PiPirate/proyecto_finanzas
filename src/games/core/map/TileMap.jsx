@@ -8,7 +8,15 @@ import './TileMap.css';
 // - mapImage
 // - onTileClick({ x, y, value })
 // - children
-function TileMap({ mapMatrix, tileSize, mapImage, onTileClick, children }) {
+function TileMap({
+  mapMatrix,
+  tileSize,
+  mapImage,
+  onTileClick,
+  children,
+  cameraPosition,
+  viewportRef,
+}) {
   const rows = mapMatrix.length;
   const cols = mapMatrix[0].length;
 
@@ -45,9 +53,36 @@ function TileMap({ mapMatrix, tileSize, mapImage, onTileClick, children }) {
     onTileClick({ x: tileX, y: tileY, value });
   }
 
-  return (
-    <div className="tile-map" style={style} onClick={handleClick}>
+  const isCameraActive = Boolean(cameraPosition && viewportRef);
+
+  const wrapperStyle = isCameraActive
+    ? {
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        minHeight: 'var(--app-vh, 100dvh)',
+        overflow: 'hidden',
+      }
+    : {};
+
+  const cameraStyle = isCameraActive
+    ? {
+        ...style,
+        transform: `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)`,
+      }
+    : style;
+
+  const content = (
+    <div className="tile-map" style={cameraStyle} onClick={handleClick}>
       {children}
+    </div>
+  );
+
+  if (!isCameraActive) return content;
+
+  return (
+    <div className="tile-map-viewport" ref={viewportRef} style={wrapperStyle}>
+      {content}
     </div>
   );
 }

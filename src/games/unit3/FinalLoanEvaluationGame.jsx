@@ -236,16 +236,32 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     // ------------------------------------------------------
     // 3. SWIPE (drag)
     // ------------------------------------------------------
+    const getClientPoint = (event) => {
+        if (event.touches?.length) {
+            const touch = event.touches[0];
+            return { x: touch.clientX, y: touch.clientY };
+        }
+
+        if (event.changedTouches?.length) {
+            const touch = event.changedTouches[0];
+            return { x: touch.clientX, y: touch.clientY };
+        }
+
+        return { x: event.clientX, y: event.clientY };
+    };
+
     function onDragStart(e) {
-        startPos.current = { x: e.clientX, y: e.clientY };
+        const { x, y } = getClientPoint(e);
+        startPos.current = { x, y };
         setHoverDirection(null);
     }
 
     function onDragEnd(e) {
         setHoverDirection(null); // limpiar highlight
 
-        const dx = e.clientX - startPos.current.x;
-        const dy = e.clientY - startPos.current.y;
+        const { x, y } = getClientPoint(e);
+        const dx = x - startPos.current.x;
+        const dy = y - startPos.current.y;
 
         let direction = null;
 
@@ -269,10 +285,11 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
 
 
     function onDrag(e) {
-        if (!startPos.current.x) return;
+        if (!startPos.current.x && !startPos.current.y) return;
 
-        const dx = e.clientX - startPos.current.x;
-        const dy = e.clientY - startPos.current.y;
+        const { x, y } = getClientPoint(e);
+        const dx = x - startPos.current.x;
+        const dy = y - startPos.current.y;
 
         if (Math.abs(dx) > Math.abs(dy)) {
             if (dx > 40) setHoverDirection("right");
@@ -357,6 +374,9 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
                 onDragStart={onDragStart}
                 onDrag={onDrag}
                 onDragEnd={onDragEnd}
+                onTouchStart={(e) => { e.preventDefault(); onDragStart(e); }}
+                onTouchMove={(e) => { e.preventDefault(); onDrag(e); }}
+                onTouchEnd={(e) => { e.preventDefault(); onDragEnd(e); }}
             >
 
                 <h2>Ronda {index + 1} / {rounds.length}</h2>
