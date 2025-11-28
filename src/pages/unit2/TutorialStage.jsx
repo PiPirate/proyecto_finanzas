@@ -30,7 +30,7 @@ export default function TutorialStage({ onComplete }) {
             isMobile ? 'tutorial-game-wrapper--mobile-scale' : ''
           }`}
         >
-          <GameWorld onComplete={() => {}} />
+          <GameWorld onComplete={handleContinue} />
         </div>
 
         {/* Botón flotante SIEMPRE visible */}

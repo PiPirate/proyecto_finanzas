@@ -68,7 +68,31 @@ export function GameWorld({ onComplete } = {}) {
   const [showObjective, setShowObjective] = useState(true);
   const [facingObjectName, setFacingObjectName] = useState(null);
 
+  // Nuevo efecto: cuando se completen los 3 minijuegos, llamamos a onComplete
+  useEffect(() => {
+    const {
+      needsGameCompleted,
+      wantsGameCompleted,
+      savingsGameCompleted,
+    } = storyProgress;
+
+    if (
+      needsGameCompleted &&
+      wantsGameCompleted &&
+      savingsGameCompleted &&
+      typeof onComplete === 'function'
+    ) {
+      onComplete();
+    }
+  }, [
+    storyProgress.needsGameCompleted,
+    storyProgress.wantsGameCompleted,
+    storyProgress.savingsGameCompleted,
+    onComplete,
+  ]);
+
   const TILE_SIZE = 64;
+
 
   const mapDimensions = useMemo(
     () => ({
@@ -559,7 +583,6 @@ export function GameWorld({ onComplete } = {}) {
       ]);
     });
   };
-
   const returnToBase = () => {
     setGameState('tour');
     setCurrentTourStep(4);
@@ -584,13 +607,11 @@ export function GameWorld({ onComplete } = {}) {
         },
       ]);
 
-      if (onComplete) {
-        setTimeout(() => {
-          onComplete();
-        }, 2000);
-      }
+      // Ya no llamamos a onComplete aquí.
+      // La transición se hace solo cuando los 3 minijuegos de memoria estén completos.
     });
   };
+
 
   const moveToWaypoint = (target, onCompleteMove) => {
     // Algoritmo BFS para encontrar camino evitando paredes
