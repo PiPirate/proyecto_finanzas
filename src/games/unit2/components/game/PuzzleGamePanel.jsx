@@ -114,6 +114,14 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   const animationFrameRef = useRef();
   const enemiesRef = useRef([]);
   const stepCountRef = useRef(0);
+  const projectileIdRef = useRef(0); // 👈 NUEVO
+
+  const getNextProjectileId = () => {
+    projectileIdRef.current += 1;
+    return `proj-${projectileIdRef.current}`;
+  };
+
+
 
   // Sincronizar enemiesRef
   useEffect(() => {
@@ -238,9 +246,13 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
 
     const projInterval = setInterval(() => {
       setProjectiles(prev => {
-        if (prev.length === 0) return prev;
+        if (prev.length === 0) return [];
 
-        const newProjectiles = prev.map(proj => {
+        const currentEnemies = enemiesRef.current; // 👈 snapshot de enemigos
+        const updatedProjectiles = [];
+
+        // Mover proyectiles uno a uno
+        prev.forEach(proj => {
           let newX = proj.position.x;
           let newY = proj.position.y;
 
@@ -249,52 +261,34 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
             case 'down': newY += 0.5; break;
             case 'left': newX -= 0.5; break;
             case 'right': newX += 0.5; break;
+            default: break;
           }
 
-          // Verificar colisión con pared
+          // Si choca con pared o sale del mapa → se destruye
           if (!isWalkable(Math.floor(newX), Math.floor(newY))) {
-            return null;
+            return; // no se agrega a updatedProjectiles
           }
 
-          return { ...proj, position: { x: newX, y: newY } };
-        }).filter(Boolean);
+          const nextLife = (proj.life ?? 50) - 1;
+          if (nextLife <= 0) {
+            return; // muere por tiempo
+          }
 
-        // Verificar colisiones con enemigos y jugador DENTRO del mismo intervalo
-        setEnemies(prevEnemies => {
-          const updatedEnemies = prevEnemies.map(enemy => {
-            if (!enemy.isAlive) return enemy;
+          const movedProj = {
+            ...proj,
+            position: { x: newX, y: newY },
+            life: nextLife,
+          };
 
-            const hit = newProjectiles.some(proj =>
-              !proj.fromEnemy &&
-              Math.abs(proj.position.x - enemy.position.x) < 0.8 &&
-              Math.abs(proj.position.y - enemy.position.y) < 0.8
-            );
-
-            if (hit) {
-              const newHp = enemy.hp - 1;
-
-              if (newHp <= 0) {
-                setTimeout(() => showTip(), 0);
-                return { ...enemy, hp: 0, isAlive: false };
-              }
-
-              return { ...enemy, hp: newHp };
-            }
-            return enemy;
-          });
-
-          return updatedEnemies;
-        });
-
-        // Filtrar proyectiles que impactaron
-        return newProjectiles.filter(proj => {
-          if (proj.fromEnemy) {
-            const hitPlayer = Math.abs(proj.position.x - playerPos.x) < 0.8 &&
-              Math.abs(proj.position.y - playerPos.y) < 0.8;
+          // Colisión con jugador (si viene del enemigo)
+          if (movedProj.fromEnemy) {
+            const hitPlayer =
+              Math.abs(movedProj.position.x - playerPos.x) < 0.8 &&
+              Math.abs(movedProj.position.y - playerPos.y) < 0.8;
 
             if (hitPlayer && !invulnerable) {
-              setPlayerHp(prev => {
-                const newHp = Math.max(0, prev - 1);
+              setPlayerHp(prevHp => {
+                const newHp = Math.max(0, prevHp - 1);
                 if (newHp <= 0) {
                   setTimeout(() => setStage('gameover'), 500);
                 }
@@ -304,23 +298,47 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
               setTimeout(() => setInvulnerable(false), 1000);
             }
 
-            return !hitPlayer;
+            if (hitPlayer) {
+              return; // no se conserva el proyectil
+            }
+          } else {
+            // Colisión con enemigos (si viene del jugador)
+            const enemyHit = currentEnemies.find(enemy =>
+              enemy.isAlive &&
+              Math.abs(movedProj.position.x - enemy.position.x) < 0.8 &&
+              Math.abs(movedProj.position.y - enemy.position.y) < 0.8
+            );
+
+            if (enemyHit) {
+              // Aplicar daño con un solo setEnemies por tick
+              setEnemies(prevEnemies =>
+                prevEnemies.map(enemy => {
+                  if (enemy.id !== enemyHit.id || !enemy.isAlive) return enemy;
+
+                  const newHp = enemy.hp - 1;
+                  if (newHp <= 0) {
+                    setTimeout(() => showTip(), 0);
+                    return { ...enemy, hp: 0, isAlive: false };
+                  }
+                  return { ...enemy, hp: newHp };
+                })
+              );
+
+              return; // no se conserva el proyectil
+            }
           }
 
-          // Verificar si golpeó un enemigo usando enemiesRef
-          const hitEnemy = enemiesRef.current.some(enemy =>
-            enemy.isAlive &&
-            Math.abs(proj.position.x - enemy.position.x) < 0.8 &&
-            Math.abs(proj.position.y - enemy.position.y) < 0.8
-          );
-
-          return !hitEnemy;
+          // Si no chocó con nada y aún tiene vida, lo mantenemos
+          updatedProjectiles.push(movedProj);
         });
+
+        return updatedProjectiles;
       });
     }, 80);
 
     return () => clearInterval(projInterval);
-  }, [stage, playerPos.x, playerPos.y]);
+  }, [stage, playerPos.x, playerPos.y, invulnerable]);
+
 
   const spawnEnemies = (count) => {
     const newEnemies = [];
@@ -380,14 +398,17 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     }
 
     const newProj = {
-      id: `proj-enemy-${Date.now()}-${Math.random()}`,
+      id: getNextProjectileId(),        // 👈 antes: `proj-enemy-${Date.now()}-${Math.random()}`
       position: { ...enemy.position },
       direction: shootDir,
-      fromEnemy: true
+      fromEnemy: true,
+      life: 50,
     };
 
     setProjectiles(prev => [...prev, newProj]);
   };
+
+
 
   const showTip = () => {
     let availableTips = WIZARD_TIPS.map((_, idx) => idx).filter(idx => !tipsShown.has(idx));
@@ -463,16 +484,19 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     if (!canShoot || stage !== 'playing') return;
 
     const newProj = {
-      id: `proj-player-${Date.now()}`,
+      id: getNextProjectileId(),        // 👈 antes: `proj-player-${Date.now()}`
       position: { ...playerPos },
       direction,
-      fromEnemy: false
+      fromEnemy: false,
+      life: 50,
     };
 
     setProjectiles(prev => [...prev, newProj]);
     setCanShoot(false);
     setTimeout(() => setCanShoot(true), 300);
   };
+
+
 
   const handleMove = useCallback((newDir) => {
     if (stage !== 'playing' || isMoving) return;
@@ -821,130 +845,106 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       .reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
 
     return (
-      <div className="game-panel-overlay" style={{ transform: "scale(0.6)", zIndex: 1000 }}>
-        <div className="game-panel puzzle-game-panel" style={{ maxWidth: '1000px', maxHeight: 'none', overflow: 'visible', position: 'relative' }}>
-
-          {/* Barra de progreso de altares con vidas integradas */}
-          <div style={{ background: '#263238', display: 'flex', gap: '16px', justifyContent: 'space-between', alignItems: 'center', borderRadius: '8px 8px 0 0' }}>
-            
-            {/* Vidas del jugador */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '140px' }}>
-              <div style={{ fontSize: '11px', color: 'white', marginBottom: '4px', fontWeight: 'bold' }}>❤️ VIDA</div>
-              <div style={{ display: 'flex', gap: '4px', background: '#1a1a1a', padding: '6px 10px', borderRadius: '4px', border: '2px solid #f44336' }}>
-                {Array.from({ length: maxPlayerHp }).map((_, i) => (
-                  <div key={i} style={{ fontSize: '18px', opacity: i < playerHp ? 1 : 0.2, filter: invulnerable && i < playerHp ? 'drop-shadow(0 0 4px #ff0)' : 'none', transition: 'all 0.2s' }}>
-                    ❤️
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Altar Necesidades */}
-            <div style={{ flex: 1, maxWidth: '180px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '13px', color: 'white' }}>
-                <span style={{ fontWeight: 'bold' }}>🏛️ Necesidades</span>
-                <span style={{ color: needsValue === 50 ? '#4CAF50' : '#fff' }}>{needsValue}/50 {needsValue === 50 && '✓'}</span>
-              </div>
-              <div style={{ width: '100%', height: '8px', background: '#37474f', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ width: `${(needsValue / 50) * 100}%`, height: '100%', background: needsValue === 50 ? '#4CAF50' : '#FFC107', transition: 'all 0.3s ease' }} />
-              </div>
-            </div>
-
-            {/* Altar Gustos */}
-            <div style={{ flex: 1, maxWidth: '180px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '13px', color: 'white' }}>
-                <span style={{ fontWeight: 'bold' }}>🏛️ Gustos</span>
-                <span style={{ color: wantsValue === 30 ? '#4CAF50' : '#fff' }}>{wantsValue}/30 {wantsValue === 30 && '✓'}</span>
-              </div>
-              <div style={{ width: '100%', height: '8px', background: '#37474f', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ width: `${(wantsValue / 30) * 100}%`, height: '100%', background: wantsValue === 30 ? '#4CAF50' : '#FFC107', transition: 'all 0.3s ease' }} />
-              </div>
-            </div>
-
-            {/* Altar Ahorro */}
-            <div style={{ flex: 1, maxWidth: '180px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '13px', color: 'white' }}>
-                <span style={{ fontWeight: 'bold' }}>🏛️ Ahorro</span>
-                <span style={{ color: savingsValue === 20 ? '#4CAF50' : '#fff' }}>{savingsValue}/20 {savingsValue === 20 && '✓'}</span>
-              </div>
-              <div style={{ width: '100%', height: '8px', background: '#37474f', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ width: `${(savingsValue / 20) * 100}%`, height: '100%', background: savingsValue === 20 ? '#4CAF50' : '#FFC107', transition: 'all 0.3s ease' }} />
-              </div>
-            </div>
-
-            {/* Botones de control */}
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <div style={{ fontSize: '13px', background: '#f44336', color: 'white', padding: '4px 10px', borderRadius: '4px', fontWeight: 'bold' }}>
-                👾 {enemies.filter(e => e.isAlive).length}
-              </div>
-              <button onClick={() => setShowHint(!showHint)} style={{ background: '#FFC107', border: 'none', fontSize: '13px', cursor: 'pointer', padding: '5px 10px', borderRadius: '4px', fontWeight: 'bold' }}>
-                {showHint ? '🔍' : '💡'}
-              </button>
-              <button onClick={onClose} style={{ background: '#f44336', color: 'white', border: 'none', fontSize: '16px', cursor: 'pointer', padding: '4px 10px', borderRadius: '4px', fontWeight: 'bold' }}>✕</button>
-            </div>
-          </div>
-
-          {showHint && (
-            <div style={{ padding: '12px', background: '#FFF9C4', borderBottom: '2px solid #FFC107', fontSize: '13px' }}>
-              <strong>💡 Recuerda:</strong> Necesidades = esenciales para vivir | Gustos = disfrutas pero no necesitas | Ahorro = inversión en tu futuro
-            </div>
-          )}
-
-          <div style={{ display: 'flex', justifyContent: 'center', background: '#1a1a1a' }}>
-            <div style={{ position: 'relative', width: `${MAP_WIDTH * TILE_SIZE}px`, height: `${MAP_HEIGHT * TILE_SIZE}px`, backgroundImage: `url(${dungeonMapImage})`, backgroundSize: 'cover', backgroundPosition: 'center', border: '4px solid #444', borderRadius: '8px', overflow: 'visible', imageRendering: 'pixelated' }}>
-
-              {/* Marcadores de altares (invisibles pero ayudan a visualizar) */}
+      <div className="game-panel-overlay" style={{ transform: 'scale(0.6)', zIndex: 1000 }}>
+        <div
+          className="game-panel puzzle-game-panel"
+          style={{
+            maxWidth: '1100px',
+            maxHeight: 'none',
+            overflow: 'visible',
+            position: 'relative',
+          }}
+        >
+          {/* CONTENEDOR PRINCIPAL: MAPA + HUD LATERAL */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '12px',
+              background: '#1a1a1a',
+              padding: '8px',
+              borderRadius: '12px',
+            }}
+          >
+            {/* MAPA */}
+            <div
+              style={{
+                position: 'relative',
+                width: `${MAP_WIDTH * TILE_SIZE}px`,
+                height: `${MAP_HEIGHT * TILE_SIZE}px`,
+                backgroundImage: `url(${dungeonMapImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                border: '4px solid #444',
+                borderRadius: '8px',
+                overflow: 'visible',
+                imageRendering: 'pixelated',
+              }}
+            >
+              {/* Marcadores de altares */}
               {DUNGEON_MAP.map((row, y) =>
                 row.map((tile, x) => {
                   if (tile === 2 || tile === 3 || tile === 4) {
-                    // Determinar color según tipo de altar
-                    const altarColor = tile === 2 ? '#4CAF50' : tile === 3 ? '#2196F3' : '#FFC107';
-                    const altarGlow = tile === 2 ? 'rgba(76, 175, 80, 0.6)' : tile === 3 ? 'rgba(33, 150, 243, 0.6)' : 'rgba(255, 193, 7, 0.6)';
-                    const altarLabel = tile === 2 ? 'NECESIDADES' : tile === 3 ? 'GUSTOS' : 'AHORRO';
+                    const altarColor =
+                      tile === 2 ? '#4CAF50' : tile === 3 ? '#2196F3' : '#FFC107';
+                    const altarGlow =
+                      tile === 2
+                        ? 'rgba(76, 175, 80, 0.6)'
+                        : tile === 3
+                          ? 'rgba(33, 150, 243, 0.6)'
+                          : 'rgba(255, 193, 7, 0.6)';
+                    const altarLabel =
+                      tile === 2 ? 'NECESIDADES' : tile === 3 ? 'GUSTOS' : 'AHORRO';
 
                     return (
-                      <div key={`altar-${x}-${y}`} style={{
-                        position: 'absolute',
-                        left: `${x * TILE_SIZE}px`,
-                        top: `${y * TILE_SIZE}px`,
-                        width: `${TILE_SIZE}px`,
-                        height: `${TILE_SIZE}px`,
-                        background: `radial-gradient(circle, ${altarGlow} 0%, transparent 70%)`,
-                        boxSizing: 'border-box',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        pointerEvents: 'none',
-                        animation: 'altarPulse 2s ease-in-out infinite',
-                        filter: `drop-shadow(0 0 20px ${altarColor})`
-                      }}>
-                        {/* Etiqueta flotante del altar */}
-                        <div style={{
+                      <div
+                        key={`altar-${x}-${y}`}
+                        style={{
                           position: 'absolute',
-                          top: '-20px',
-                          background: `${altarColor}33`,
-                          color: 'white',
-                          padding: '3px 6px',
-                          borderRadius: '3px',
-                          fontSize: '9px',
-                          fontWeight: 'bold',
-                          whiteSpace: 'nowrap',
-                          boxShadow: `0 2px 6px ${altarGlow}`,
-                          animation: 'altarLabelFloat 3s ease-in-out infinite',
-                          zIndex: 100,
-                          letterSpacing: '0.3px',
-                          textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
-                        }}>
+                          left: `${x * TILE_SIZE}px`,
+                          top: `${y * TILE_SIZE}px`,
+                          width: `${TILE_SIZE}px`,
+                          height: `${TILE_SIZE}px`,
+                          background: `radial-gradient(circle, ${altarGlow} 0%, transparent 70%)`,
+                          boxSizing: 'border-box',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          pointerEvents: 'none',
+                          animation: 'altarPulse 2s ease-in-out infinite',
+                          filter: `drop-shadow(0 0 20px ${altarColor})`,
+                        }}
+                      >
+                        {/* Etiqueta flotante del altar */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: '-20px',
+                            background: `${altarColor}33`,
+                            color: 'white',
+                            padding: '3px 6px',
+                            borderRadius: '3px',
+                            fontSize: '9px',
+                            fontWeight: 'bold',
+                            whiteSpace: 'nowrap',
+                            boxShadow: `0 2px 6px ${altarGlow}`,
+                            animation: 'altarLabelFloat 3s ease-in-out infinite',
+                            zIndex: 100,
+                            letterSpacing: '0.3px',
+                            textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                          }}
+                        >
                           {altarLabel}
                         </div>
 
-                        <div style={{
-                          width: '60%',
-                          height: '60%',
-                          borderRadius: '50%',
-                          background: `radial-gradient(circle, ${altarColor} 0%, transparent 60%)`,
-                          animation: 'altarPulse 2s ease-in-out infinite reverse'
-                        }} />
+                        <div
+                          style={{
+                            width: '60%',
+                            height: '60%',
+                            borderRadius: '50%',
+                            background: `radial-gradient(circle, ${altarColor} 0%, transparent 60%)`,
+                            animation: 'altarPulse 2s ease-in-out infinite reverse',
+                          }}
+                        />
                       </div>
                     );
                   }
@@ -952,115 +952,226 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 })
               )}
 
+              {/* Objetos (cajas) */}
               {objects.map(obj => (
-                <div key={obj.id} style={{
-                  position: 'absolute',
-                  left: `${obj.position.x * TILE_SIZE}px`,
-                  top: `${obj.position.y * TILE_SIZE}px`,
-                  width: `${TILE_SIZE - 6}px`,
-                  height: `${TILE_SIZE - 6}px`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'all 0.15s ease-out',
-                  zIndex: 10,
-                  margin: '3px'
-                }}>
-                  <img src={boxSprite} alt={obj.name} style={{ width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'pixelated', filter: 'brightness(0.85)' }} />
+                <div
+                  key={obj.id}
+                  style={{
+                    position: 'absolute',
+                    left: `${obj.position.x * TILE_SIZE}px`,
+                    top: `${obj.position.y * TILE_SIZE}px`,
+                    width: `${TILE_SIZE - 6}px`,
+                    height: `${TILE_SIZE - 6}px`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.15s ease-out',
+                    zIndex: 10,
+                    margin: '3px',
+                  }}
+                >
+                  <img
+                    src={boxSprite}
+                    alt={obj.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      imageRendering: 'pixelated',
+                      filter: 'brightness(0.85)',
+                    }}
+                  />
                 </div>
               ))}
 
-              {enemies.filter(e => e.isAlive).map(enemy => (
-                <div key={enemy.id} style={{ position: 'absolute', left: `${enemy.position.x * TILE_SIZE}px`, top: `${enemy.position.y * TILE_SIZE}px`, width: `${TILE_SIZE}px`, height: `${TILE_SIZE}px`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontSize: '32px', zIndex: 15, transform: enemy.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)', filter: 'drop-shadow(2px 2px 4px rgba(255,0,0,0.6))', transition: 'all 0.15s ease-out' }}>
-                  {enemy.sprite}
-                </div>
-              ))}
+              {/* Enemigos */}
+              {enemies
+                .filter(e => e.isAlive)
+                .map(enemy => (
+                  <div
+                    key={enemy.id}
+                    style={{
+                      position: 'absolute',
+                      left: `${enemy.position.x * TILE_SIZE}px`,
+                      top: `${enemy.position.y * TILE_SIZE}px`,
+                      width: `${TILE_SIZE}px`,
+                      height: `${TILE_SIZE}px`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '32px',
+                      zIndex: 15,
+                      transform:
+                        enemy.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)',
+                      filter: 'drop-shadow(2px 2px 4px rgba(255,0,0,0.6))',
+                      transition: 'all 0.15s ease-out',
+                    }}
+                  >
+                    {enemy.sprite}
+                  </div>
+                ))}
 
+              {/* Proyectiles */}
               {projectiles.map(proj => (
-                <div key={proj.id} style={{ position: 'absolute', left: `${proj.position.x * TILE_SIZE + TILE_SIZE / 2 - 12}px`, top: `${proj.position.y * TILE_SIZE + TILE_SIZE / 2 - 12}px`, width: '24px', height: '24px', fontSize: '24px', zIndex: 20, filter: 'drop-shadow(0 0 8px rgba(255,100,0,0.8))' }}>
+                <div
+                  key={proj.id}
+                  style={{
+                    position: 'absolute',
+                    left: `${proj.position.x * TILE_SIZE + TILE_SIZE / 2 - 12}px`,
+                    top: `${proj.position.y * TILE_SIZE + TILE_SIZE / 2 - 12}px`,
+                    width: '24px',
+                    height: '24px',
+                    fontSize: '24px',
+                    zIndex: 20,
+                    filter: 'drop-shadow(0 0 8px rgba(255,100,0,0.8))',
+                  }}
+                >
                   {proj.fromEnemy ? '💀' : '🔥'}
                 </div>
               ))}
 
-              <div style={{ position: 'absolute', left: `${playerPos.x * TILE_SIZE}px`, top: `${playerPos.y * TILE_SIZE}px`, width: `${TILE_SIZE}px`, height: `${TILE_SIZE}px`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '36px', transition: isMoving ? 'all 0.15s ease-out' : 'none', zIndex: 25, filter: invulnerable ? 'drop-shadow(0 0 8px #ff0)' : 'drop-shadow(2px 2px 6px rgba(138,43,226,0.8))' }}>
+              {/* Jugador */}
+              <div
+                style={{
+                  position: 'absolute',
+                  left: `${playerPos.x * TILE_SIZE}px`,
+                  top: `${playerPos.y * TILE_SIZE}px`,
+                  width: `${TILE_SIZE}px`,
+                  height: `${TILE_SIZE}px`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '36px',
+                  transition: isMoving ? 'all 0.15s ease-out' : 'none',
+                  zIndex: 25,
+                  filter: invulnerable
+                    ? 'drop-shadow(0 0 8px #ff0)'
+                    : 'drop-shadow(2px 2px 6px rgba(138,43,226,0.8))',
+                }}
+              >
                 {direction === 'down' ? (
                   <img
-                    src={isMoving ? (walkFrame === 0 ? wizardBackFrame1 : wizardBackFrame2) : wizardIdleDown}
+                    src={
+                      isMoving
+                        ? walkFrame === 0
+                          ? wizardBackFrame1
+                          : wizardBackFrame2
+                        : wizardIdleDown
+                    }
                     alt="Mago"
                     style={{
                       width: '100%',
                       height: '100%',
                       objectFit: 'contain',
-                      imageRendering: 'pixelated'
+                      imageRendering: 'pixelated',
                     }}
                   />
                 ) : direction === 'up' ? (
                   <img
-                    src={isMoving ? (walkFrame === 0 ? wizardFrontFrame1 : wizardFrontFrame2) : wizardIdleUp}
+                    src={
+                      isMoving
+                        ? walkFrame === 0
+                          ? wizardFrontFrame1
+                          : wizardFrontFrame2
+                        : wizardIdleUp
+                    }
                     alt="Mago"
                     style={{
                       width: '100%',
                       height: '100%',
                       objectFit: 'contain',
-                      imageRendering: 'pixelated'
+                      imageRendering: 'pixelated',
                     }}
                   />
                 ) : direction === 'left' ? (
                   <img
-                    src={isMoving ? (walkFrame === 0 ? wizardLeftFrame1 : wizardLeftFrame2) : wizardIdleLeft}
+                    src={
+                      isMoving
+                        ? walkFrame === 0
+                          ? wizardLeftFrame1
+                          : wizardLeftFrame2
+                        : wizardIdleLeft
+                    }
                     alt="Mago"
                     style={{
                       width: '100%',
                       height: '100%',
                       objectFit: 'contain',
-                      imageRendering: 'pixelated'
+                      imageRendering: 'pixelated',
                     }}
                   />
                 ) : (
                   <img
-                    src={isMoving ? (walkFrame === 0 ? wizardRightFrame1 : wizardRightFrame2) : wizardIdleRight}
+                    src={
+                      isMoving
+                        ? walkFrame === 0
+                          ? wizardRightFrame1
+                          : wizardRightFrame2
+                        : wizardIdleRight
+                    }
                     alt="Mago"
                     style={{
                       width: '100%',
                       height: '100%',
                       objectFit: 'contain',
-                      imageRendering: 'pixelated'
+                      imageRendering: 'pixelated',
                     }}
                   />
                 )}
               </div>
 
-              {/* Banner de consejos en la parte inferior */}
+              {/* Banner de consejos */}
               {showTipBanner && (
-                <div style={{
-                  position: 'absolute',
-                  bottom: '50px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  background: 'rgba(26, 35, 48, 0.95)',
-                  color: 'white',
-                  padding: '12px 24px',
-                  borderRadius: '8px',
-                  fontSize: '15px',
-                  fontWeight: 'bold',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                  border: '2px solid #4CAF50',
-                  zIndex: 1000,
-                  maxWidth: '80%',
-                  textAlign: 'center',
-                  animation: 'slideUp 0.3s ease-out'
-                }}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '50px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: 'rgba(26, 35, 48, 0.95)',
+                    color: 'white',
+                    padding: '12px 24px',
+                    borderRadius: '8px',
+                    fontSize: '15px',
+                    fontWeight: 'bold',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                    border: '2px solid #4CAF50',
+                    zIndex: 1000,
+                    maxWidth: '80%',
+                    textAlign: 'center',
+                    animation: 'slideUp 0.3s ease-out',
+                  }}
+                >
                   🧙 {currentTip}
                 </div>
               )}
 
+              {/* Overlay éxito */}
               {puzzleSolved && (
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(76, 175, 80, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', zIndex: 100, color: 'white', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(76, 175, 80, 0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '48px',
+                    zIndex: 100,
+                    color: 'white',
+                    fontWeight: 'bold',
+                    textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                  }}
+                >
                   ✨ ¡EQUILIBRIO LOGRADO! ✨
                 </div>
               )}
 
-              {/* NUEVO: Información de objeto cercano flotando dentro del mapa */}
+              {/* Info de objeto cercano */}
               {nearbyObject && (
                 <div
                   style={{
@@ -1131,23 +1242,283 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 </div>
               )}
             </div>
-          </div>
-          <div
-            style={{
-              padding: '12px',
-              background: '#263238',
-              textAlign: 'center',
-              fontSize: '13px',
-              borderTop: '2px solid #37474f',
-              color: 'white',
-            }}
-          >
-            <strong>⚔️ Controles:</strong> WASD/Flechas mover (diagonal: 2 teclas) | ESPACIO lanzar fuego 🔥 | Z jalar caja 📦 | H pista
+
+            {/* HUD LATERAL (VIDA + ALTARES + CONTROLES) */}
+            <div
+              style={{
+                width: '260px',
+                background: '#263238',
+                borderRadius: '8px',
+                padding: '10px 12px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                color: 'white',
+                boxSizing: 'border-box',
+              }}
+            >
+              {/* Header + botón cerrar */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '4px',
+                }}
+              >
+                <div style={{ fontSize: '13px', fontWeight: 'bold' }}>
+                  🧙 Estado del Dungeon
+                </div>
+                <button
+                  onClick={onClose}
+                  style={{
+                    background: '#f44336',
+                    color: 'white',
+                    border: 'none',
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Vidas */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div
+                  style={{
+                    fontSize: '11px',
+                    color: 'white',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  ❤️ VIDA
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '4px',
+                    background: '#1a1a1a',
+                    padding: '6px 10px',
+                    borderRadius: '4px',
+                    border: '2px solid #f44336',
+                  }}
+                >
+                  {Array.from({ length: maxPlayerHp }).map((_, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        fontSize: '18px',
+                        opacity: i < playerHp ? 1 : 0.2,
+                        filter:
+                          invulnerable && i < playerHp
+                            ? 'drop-shadow(0 0 4px #ff0)'
+                            : 'none',
+                        transition: 'all 0.2s',
+                      }}
+                    >
+                      ❤️
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Altar Necesidades */}
+              <div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '4px',
+                    fontSize: '12px',
+                  }}
+                >
+                  <span style={{ fontWeight: 'bold' }}>🏛️ Necesidades</span>
+                  <span
+                    style={{ color: needsValue === 50 ? '#4CAF50' : '#fff' }}
+                  >
+                    {needsValue}/50 {needsValue === 50 && '✓'}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    width: '100%',
+                    height: '8px',
+                    background: '#37474f',
+                    borderRadius: '4px',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${(needsValue / 50) * 100}%`,
+                      height: '100%',
+                      background: needsValue === 50 ? '#4CAF50' : '#FFC107',
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Altar Gustos */}
+              <div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '4px',
+                    fontSize: '12px',
+                  }}
+                >
+                  <span style={{ fontWeight: 'bold' }}>🏛️ Gustos</span>
+                  <span
+                    style={{ color: wantsValue === 30 ? '#4CAF50' : '#fff' }}
+                  >
+                    {wantsValue}/30 {wantsValue === 30 && '✓'}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    width: '100%',
+                    height: '8px',
+                    background: '#37474f',
+                    borderRadius: '4px',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${(wantsValue / 30) * 100}%`,
+                      height: '100%',
+                      background: wantsValue === 30 ? '#4CAF50' : '#FFC107',
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Altar Ahorro */}
+              <div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '4px',
+                    fontSize: '12px',
+                  }}
+                >
+                  <span style={{ fontWeight: 'bold' }}>🏛️ Ahorro</span>
+                  <span
+                    style={{ color: savingsValue === 20 ? '#4CAF50' : '#fff' }}
+                  >
+                    {savingsValue}/20 {savingsValue === 20 && '✓'}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    width: '100%',
+                    height: '8px',
+                    background: '#37474f',
+                    borderRadius: '4px',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${(savingsValue / 20) * 100}%`,
+                      height: '100%',
+                      background: savingsValue === 20 ? '#4CAF50' : '#FFC107',
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Enemigos + botón pista */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '8px',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: '13px',
+                    background: '#f44336',
+                    color: 'white',
+                    padding: '4px 10px',
+                    borderRadius: '4px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  👾 {enemies.filter(e => e.isAlive).length}
+                </div>
+                <button
+                  onClick={() => setShowHint(!showHint)}
+                  style={{
+                    background: '#FFC107',
+                    border: 'none',
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    padding: '5px 10px',
+                    borderRadius: '4px',
+                    fontWeight: 'bold',
+                    flex: 1,
+                  }}
+                >
+                  {showHint ? 'Ocultar pista 🔍' : 'Ver pista 💡'}
+                </button>
+              </div>
+
+              {/* Texto pista */}
+              {showHint && (
+                <div
+                  style={{
+                    padding: '8px',
+                    background: '#FFF9C4',
+                    borderRadius: '6px',
+                    border: '1px solid #FFC107',
+                    fontSize: '11px',
+                    color: '#263238',
+                  }}
+                >
+                  <strong>💡 Recuerda:</strong> Necesidades = esenciales para vivir | Gustos = lo que
+                  disfrutas pero no necesitas | Ahorro = inversión en tu futuro.
+                </div>
+              )}
+
+              {/* Controles */}
+              <div
+                style={{
+                  marginTop: 'auto',
+                  paddingTop: '8px',
+                  borderTop: '1px solid #37474f',
+                  fontSize: '11px',
+                  lineHeight: '1.4',
+                }}
+              >
+                <strong>⚔️ Controles:</strong>
+                <br />
+                WASD / Flechas → mover (diagonal con 2 teclas)
+                <br />
+                ESPACIO → lanzar fuego 🔥
+                <br />
+                Z → jalar caja 📦
+                <br />
+                H → mostrar/ocultar pista
+              </div>
+            </div>
           </div>
         </div>
       </div>
     );
   }
+
 
 
   if (stage === 'complete') {
