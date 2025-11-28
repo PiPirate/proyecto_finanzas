@@ -879,12 +879,12 @@ export function GameWorld({ onComplete } = {}) {
       overflow: 'hidden',
     }
     : undefined;
-
-  const cameraStyle = isMobile
-    ? {
-      transform: `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)`,
-    }
-    : undefined;
+    const CAMERA_OFFSET= 80; 
+    const cameraStyle = isMobile
+      ? {
+          transform: `translate(${-cameraPosition.x + CAMERA_OFFSET}px, ${-cameraPosition.y+CAMERA_OFFSET}px)`,
+        }
+      : undefined;
 
 
   return (
@@ -1021,6 +1021,18 @@ export function GameWorld({ onComplete } = {}) {
           onClose={() => setGameState('exploring')}
         />
       )}
+      {gameState === 'exploring' && facingObjectName && (
+        <div className="interaction-bar">
+          <div className="interaction-bar-content">
+            <span className="interaction-bar-object">
+              {facingObjectName}
+            </span>
+            <span className="interaction-bar-key">▼ Presiona ENTER</span>
+          </div>
+        </div>
+      )}
     </div>
+
+
   );
 }
