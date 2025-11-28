@@ -24,7 +24,6 @@ import wizardIdleDown from '../../assets/DungeonGame/FrontalEstatico.png'
 import wizardIdleLeft from '../../assets/DungeonGame/IzquierdaEstatico.png'
 // Estático mirando hacia la derecha (idle right)
 import wizardIdleRight from '../../assets/DungeonGame/DerechaEstatico.png'
-import MobileControls from '../../../../components/responsive/MobileControls'; // ajusta la ruta real
 
 
 const TILE_SIZE = 40;
@@ -589,19 +588,36 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     return false;
   };
 
-  const handleMobileAction = () => {
+    const handleMobileAction = useCallback(() => {
+    if (stage !== 'playing') return;
+
     // Si hay una caja cerca, intentamos comportarnos como "Z" (jalar caja)
     if (nearbyObject) {
       const pulled = pullObject();   // intenta hacer la lógica de Z
       if (!pulled) {
-        // Si no se pudo jalar (no estaba bien alineado, etc.), disparamos fuego
+        // Si no se pudo jalar, disparamos fuego
         shootFireball();
       }
     } else {
       // Si no hay caja cerca, siempre dispara bola de fuego
       shootFireball();
     }
-  };
+  }, [stage, nearbyObject, pullObject, shootFireball]);
+
+
+    useEffect(() => {
+    // Esta función se llamará cuando los botones generales disparen "mobile-action"
+    const onMobileAction = () => {
+      handleMobileAction();
+    };
+
+    window.addEventListener('mobile-action', onMobileAction);
+    return () => {
+      window.removeEventListener('mobile-action', onMobileAction);
+    };
+  }, [handleMobileAction]);
+
+
 
   const checkAltarPlacement = (objId, x, y) => {
     const obj = objects.find(o => o.id === objId);
@@ -1106,15 +1122,6 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
           >
             <strong>⚔️ Controles:</strong> WASD/Flechas mover (diagonal: 2 teclas) | ESPACIO lanzar fuego 🔥 | Z jalar caja 📦 | H pista
           </div>
-
-          {/* 👇 NUEVO: Controles móviles SOLO para este juego */}
-          {/* Si tienes isMobile, puedes envolverlo en {isMobile && (...)} */}
-          <MobileControls
-            onAction={handleMobileAction}
-            actionKeys={[]}        // ⟵ importante: NO enviar teclas (Enter/Espacio)
-            showActionButton={true}
-            showZButton={false}    // no mostramos un botón Z separado
-          />
         </div>
           
 
