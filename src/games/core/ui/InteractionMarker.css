@@ -1,0 +1,86 @@
+/* src/games/core/ui/InteractionMarker.css */
+
+/* Contenedor anclado al centro del tile */
+.interaction-marker {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  transform: translate(-50%, -70%); /* un pelín hacia arriba */
+}
+
+/* 🔆 Halo dorado suave, horizontal */
+.interaction-marker::before {
+  content: "";
+  position: absolute;
+
+  /* ancho y alto del halo (ajusta para tu mesa) */
+  width: 110px;
+  height: 32px;
+  border-radius: 999px;
+
+  /* degradé dorado/ámbar, sin centro blanco */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 215, 0, 0.0) 0%,
+    rgba(255, 215, 0, 0.55) 40%,
+    rgba(255, 184, 77, 0.0) 80%
+  );
+
+  filter: blur(4px);
+  opacity: 0;
+  transform: scale(0.85);
+
+  animation: interaction-glow 1.3s ease-out infinite;
+}
+
+/* ✨ Brillo que barre de izquierda a derecha */
+.interaction-marker::after {
+  content: "";
+  position: absolute;
+
+  width: 38px;
+  height: 18px;
+  border-radius: 999px;
+
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 244, 191, 0.95) 0%,
+    rgba(255, 223, 128, 0.0) 70%
+  );
+
+  filter: blur(1px);
+  opacity: 0;
+
+  animation: interaction-spark 1.3s ease-out infinite;
+}
+
+/* Halo que aparece, brilla y se agranda un poco */
+@keyframes interaction-glow {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+
+/* Chispa que se mueve de izquierda a derecha */
+@keyframes interaction-spark {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.6);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(40px) scale(1);
+  }
+}

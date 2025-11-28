@@ -26,6 +26,9 @@ import girlFaceNeutral from '../../assets/general/player_face_neutral.png';
 import advisorFaceTalking from '../../assets/unit1/asesor_player_talking.png';
 import advisorFaceNeutral from '../../assets/unit1/asesor_player_neutral.png';
 
+import InteractionMarker from '../core/ui/InteractionMarker';
+
+
 import './css/Unit4GameScene.css';
 
 /* ======= DIÁLOGOS (versión finanzas y metas) ======= */
@@ -353,6 +356,33 @@ function Unit4GameScene({ onGoalReached }) {
     }
   };
 
+  const currentHintType = useMemo(() => {
+    // Si la unidad ya terminó, no mostramos nada
+    if (unitFinished) return null;
+
+    // 1) Aún no hemos hablado con el barista -> resaltar barista
+    if (!vendorIntroDone) return 'vendor';
+
+    // 2) Ya hablamos con el barista, pero NO hemos hecho el minijuego del celular
+    if (vendorIntroDone && !phoneTrainingFinished) return 'phone-table';
+
+    // 3) Minijuego del celular hecho, falta el de metas -> resaltar barista otra vez
+    if (phoneTrainingFinished && !qrTrainingFinished) return 'vendor';
+
+    // 4) Minijuego QR hecho, falta cerrar diálogo final -> resaltar barista
+    if (qrTrainingFinished && !vendorQrDone) return 'vendor';
+
+    // 5) Todo listo -> sin destello
+    return null;
+  }, [
+    vendorIntroDone,
+    phoneTrainingFinished,
+    qrTrainingFinished,
+    vendorQrDone,
+    unitFinished,
+  ]);
+
+
   const findNearestInteractive = useCallback(() => {
     const MAX_DISTANCE = 2.1;
     let closest = null;
@@ -489,12 +519,25 @@ function Unit4GameScene({ onGoalReached }) {
             isMobile && cameraPosition
               ? {
                 x: 0,
-                y: cameraPosition.y + 150,   // 👈 offset inicial de ~400px hacia arriba/abajo
+                y: cameraPosition.y + 150,
               }
               : null
           }
           viewportRef={isMobile ? viewportRef : null}
         >
+          {/* 🔆 Destello SOLO en la zona que toca según currentHintType */}
+          {currentHintType &&
+            unit4InteractiveZones
+              .filter((zone) => zone.type === currentHintType)
+              .map((zone) => (
+                <InteractionMarker
+                  key={`${zone.x}-${zone.y}-${zone.type}`}
+                  tileX={zone.x}
+                  tileY={zone.y}
+                  tileSize={unit4TileSize}
+                />
+              ))}
+
           <Player
             pixelPosition={pixelPosition}
             tileSize={unit4TileSize}
