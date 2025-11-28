@@ -48,9 +48,8 @@ export default function TutorialStage({ onComplete }) {
 
               <p className="tutorial-success-text">
                 Practicaste cómo tomar decisiones más conscientes con tu dinero,
-                identificando cuáles te acercan o te alejan de tus metas
-                financieras.
-                Ahora pasarás a la prueba evaluativa.
+                identificando las metas financieras adecuadas.
+                Ahora toca la prueba evaluativa.
               </p>
 
               <button

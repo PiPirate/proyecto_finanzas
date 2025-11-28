@@ -30,20 +30,3 @@
     transform: scale(0.8);
   }
 }
-
-/* NUEVO: subir el cuadro de diálogo para que quede pegado al mapa escalado */
-.unit4-game-container .dialogue-overlay {
-  bottom: 160px;   /* ajusta este valor si ves todavía mucho espacio */
-}
-
-/* Solo móviles */
-@media (max-width: 768px) {
-  /* Ajusta la posición vertical del diálogo para que quede más centrado */
-  .unit4-game-container .dialogue-overlay {
-    bottom: 220px;   /* súbelo o bájalo a tu gusto: más grande = más arriba */
-  }
-
-  .unit4-game-container .dialogue-root {
-    bottom: 350px;   /* que siga la misma lógica del overlay */
-  }
-}
