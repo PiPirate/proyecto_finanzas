@@ -489,6 +489,13 @@
   }
 }
 
+@media (max-height: 500px) and (orientation: landscape) {
+  .td-tower-defense-container .td-tower-defense-panel {
+    transform: scale(0.66);
+    transform-origin: center;
+  }
+}
+
 /* ========================= */
 /* MÓVIL EN HORIZONTAL */
 /* ========================= */
