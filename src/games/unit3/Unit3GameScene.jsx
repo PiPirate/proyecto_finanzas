@@ -32,6 +32,9 @@ import SnakeFinancialGame from './SnakeFinancialGame'; // Riesgo / Crédito
 import NeedsPriorityGame from "./NeedsPriorityGame"; // Priorización de Indicadores
 import InterestRunnerGame from "./InterestRunnerGame"; // Rentabilidad
 
+import InteractionMarker from '../core/ui/InteractionMarker';
+
+
 // Cuadro de diálogo
 import DialogueBox from '../core/dialogue/DialogueBox';
 
@@ -199,6 +202,17 @@ function Unit3GameScene({ onGoalReached }) {
         mapDimensions,
         isEnabled: isMobile,
     });
+
+
+
+    const currentHintId = useMemo(() => {
+        if (!loanDone) return 'poster_prestamo';
+        if (loanDone && !needsDone) return 'poster_necesidades';
+        if (needsDone && !interestDone) return 'poster_interes';
+        if (interestDone && !paymentDone) return 'puzzle_final';
+        return null;
+    }, [loanDone, needsDone, interestDone, paymentDone]);
+
 
     // -------------------------------------------------------------
     // BLOQUEO DE ZONAS E INTERACCIÓN POR CLICK (Desktop)
@@ -483,6 +497,19 @@ function Unit3GameScene({ onGoalReached }) {
                 cameraPosition={isMobile ? cameraPosition : null}
                 viewportRef={isMobile ? viewportRef : null}
             >
+                {/* Destello SOLO en la zona interactiva que toca según el progreso */}
+                {currentHintId &&
+                    unit3InteractiveZones
+                        .filter((zone) => zone.id === currentHintId)
+                        .map((zone) => (
+                            <InteractionMarker
+                                key={`${zone.x}-${zone.y}-${zone.id}`}
+                                tileX={zone.x}
+                                tileY={zone.y}
+                                tileSize={unit3TileSize}
+                            />
+                        ))}
+
                 <Player
                     pixelPosition={pixelPosition}
                     tileSize={unit3TileSize}
@@ -491,6 +518,8 @@ function Unit3GameScene({ onGoalReached }) {
                     direction={direction}
                 />
             </TileMap>
+
+
 
             {/* DIÁLOGO */}
             <DialogueBox
