@@ -825,7 +825,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
         <div className="game-panel puzzle-game-panel" style={{ maxWidth: '1000px', maxHeight: 'none', overflow: 'visible', position: 'relative' }}>
 
           {/* Barra de progreso de altares con vidas integradas */}
-          <div style={{ padding: '12px', background: '#263238', display: 'flex', gap: '16px', justifyContent: 'space-between', alignItems: 'center', borderRadius: '8px 8px 0 0' }}>
+          <div style={{ background: '#263238', display: 'flex', gap: '16px', justifyContent: 'space-between', alignItems: 'center', borderRadius: '8px 8px 0 0' }}>
             
             {/* Vidas del jugador */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '140px' }}>
@@ -890,7 +890,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
             </div>
           )}
 
-          <div style={{ padding: '16px', display: 'flex', justifyContent: 'center', background: '#1a1a1a' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', background: '#1a1a1a' }}>
             <div style={{ position: 'relative', width: `${MAP_WIDTH * TILE_SIZE}px`, height: `${MAP_HEIGHT * TILE_SIZE}px`, backgroundImage: `url(${dungeonMapImage})`, backgroundSize: 'cover', backgroundPosition: 'center', border: '4px solid #444', borderRadius: '8px', overflow: 'visible', imageRendering: 'pixelated' }}>
               
               {/* Marcadores de altares (invisibles pero ayudan a visualizar) */}
