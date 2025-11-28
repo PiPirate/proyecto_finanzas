@@ -24,6 +24,8 @@ import wizardIdleDown from '../../assets/DungeonGame/FrontalEstatico.png'
 import wizardIdleLeft from '../../assets/DungeonGame/IzquierdaEstatico.png'
 // Estático mirando hacia la derecha (idle right)
 import wizardIdleRight from '../../assets/DungeonGame/DerechaEstatico.png'
+import MobileControls from '../../../../components/responsive/MobileControls'; // ajusta la ruta real
+
 
 const TILE_SIZE = 40;
 const MAP_WIDTH = 16;
@@ -587,6 +589,20 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     return false;
   };
 
+  const handleMobileAction = () => {
+    // Si hay una caja cerca, intentamos comportarnos como "Z" (jalar caja)
+    if (nearbyObject) {
+      const pulled = pullObject();   // intenta hacer la lógica de Z
+      if (!pulled) {
+        // Si no se pudo jalar (no estaba bien alineado, etc.), disparamos fuego
+        shootFireball();
+      }
+    } else {
+      // Si no hay caja cerca, siempre dispara bola de fuego
+      shootFireball();
+    }
+  };
+
   const checkAltarPlacement = (objId, x, y) => {
     const obj = objects.find(o => o.id === objId);
     if (!obj) return;
@@ -1078,10 +1094,31 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
             </div>
           )}
 
-          <div style={{ padding: '12px', background: '#263238', textAlign: 'center', fontSize: '13px', borderTop: '2px solid #37474f', color: 'white' }}>
+          <div
+            style={{
+              padding: '12px',
+              background: '#263238',
+              textAlign: 'center',
+              fontSize: '13px',
+              borderTop: '2px solid #37474f',
+              color: 'white',
+            }}
+          >
             <strong>⚔️ Controles:</strong> WASD/Flechas mover (diagonal: 2 teclas) | ESPACIO lanzar fuego 🔥 | Z jalar caja 📦 | H pista
           </div>
+
+          {/* 👇 NUEVO: Controles móviles SOLO para este juego */}
+          {/* Si tienes isMobile, puedes envolverlo en {isMobile && (...)} */}
+          <MobileControls
+            onAction={handleMobileAction}
+            actionKeys={[]}        // ⟵ importante: NO enviar teclas (Enter/Espacio)
+            showActionButton={true}
+            showZButton={false}    // no mostramos un botón Z separado
+          />
         </div>
+          
+
+        
 
         <style>
           {`
