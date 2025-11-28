@@ -485,7 +485,14 @@ function Unit4GameScene({ onGoalReached }) {
           tileSize={unit4TileSize}
           mapImage={cafeImage}
           onTileClick={handleTileClick}
-          cameraPosition={isMobile ? cameraPosition : null}
+          cameraPosition={
+            isMobile && cameraPosition
+              ? {
+                x: 0,
+                y: cameraPosition.y + 150,   // 👈 offset inicial de ~400px hacia arriba/abajo
+              }
+              : null
+          }
           viewportRef={isMobile ? viewportRef : null}
         >
           <Player
