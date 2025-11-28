@@ -24,6 +24,7 @@
   height: 100%;
 }
 
+
 .tutorial-map-container--mobile {
   padding: 0;
   min-height: var(--app-vh, 100dvh);
@@ -52,6 +53,14 @@
   max-width: 280px;
   font-size: 0.95rem;
   z-index: 900;
+
+  /* Scroll */
+  max-height: 70vh;
+  /* límite de alto del cuadro */
+  overflow-y: auto;
+  /* activa scrollbar vertical */
+  -webkit-overflow-scrolling: touch;
+  /* scroll suave en móvil */
 }
 
 .tutorial-continue-btn {
@@ -75,7 +84,8 @@
 /* Fondo oscuro tipo modal, ocupa todo el contenedor del mapa */
 .tutorial-endcard-overlay {
   position: absolute;
-  inset: 0; /* top:0; right:0; bottom:0; left:0 */
+  inset: 0;
+  /* top:0; right:0; bottom:0; left:0 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,7 +93,8 @@
   background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  z-index: 9999; /* por encima del mapa, HUD, diálogos, etc. */
+  z-index: 9999;
+  /* por encima del mapa, HUD, diálogos, etc. */
 }
 
 /* Tarjeta de contenido del modal */
@@ -142,24 +153,32 @@
   font-weight: bold;
   border-radius: 50px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  z-index: 9999; /* siempre arriba */
+  z-index: 9999;
+  /* siempre arriba */
 }
 
 .floating-continue-btn:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
-@media (max-width: 900px) {
-  .tutorial-map-container {
-    padding: 0;
-    align-items: stretch;
-  }
+/* Que el panel del minijuego use todo el ancho cuando está embebido en el viewport móvil */
+.unit4-game-container .minigame-container {
+  width: 100%;
+  max-width: 100%;
+}
 
-  .floating-continue-btn {
-    bottom: 96px; /* evita solapar controles móviles */
-    right: 16px;
+/* Un poco menos margen vertical en móvil para que se vea más compacto */
+@media (max-width: 900px) {
+  .td-battlefield {
+    margin: 10px auto 12px;
   }
+}
+
+.floating-continue-btn {
+  bottom: 96px;
+  /* evita solapar controles móviles */
+  right: 16px;
 }

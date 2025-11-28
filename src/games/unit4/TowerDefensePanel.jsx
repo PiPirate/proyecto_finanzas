@@ -678,9 +678,9 @@ export function TowerDefensePanel({ onComplete, onClose }) {
   const livesLeft = Math.max(0, GAME_CONFIG.MAX_ENEMIES_PASSED - enemiesPassedCount);
 
   return (
-    <div className="unit4-game-container">
+  <div className="unit4-game-container td-tower-defense-container">
       <div className="td-overlay">
-        <div className="td-panel minigame-container">
+      <div className="td-panel minigame-container td-tower-defense-panel">
           {/* INTRO */}
           {gamePhase === 'intro' && (
             <div className="td-intro-content">
