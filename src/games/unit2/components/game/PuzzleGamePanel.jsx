@@ -1,3 +1,4 @@
+// src/games/unit2/components/game/PuzzleGamePanel.jsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './PuzzleGamePanel.css';
 import dungeonMapImage from '../../assets/DungeonGame/DungeonMap.png';
@@ -5,26 +6,25 @@ import boxSprite from '../../assets/DungeonGame/CajaDungeon.png';
 
 // Sprites del mago - Fácil de reemplazar
 // Caminando hacia atrás (S / abajo)
-import wizardBackFrame1 from '../../assets/DungeonGame/CaminataFrontal-1.png'
-import wizardBackFrame2 from '../../assets/DungeonGame/CaminataFrontal-2.png'
+import wizardBackFrame1 from '../../assets/DungeonGame/CaminataFrontal-1.png';
+import wizardBackFrame2 from '../../assets/DungeonGame/CaminataFrontal-2.png';
 // Caminando hacia adelante (W / arriba)
-import wizardFrontFrame1 from '../../assets/DungeonGame/CaminataTrasera-2.png'
-import wizardFrontFrame2 from '../../assets/DungeonGame/CaminataTrasera-1.png'
+import wizardFrontFrame1 from '../../assets/DungeonGame/CaminataTrasera-2.png';
+import wizardFrontFrame2 from '../../assets/DungeonGame/CaminataTrasera-1.png';
 // Caminando hacia la izquierda (A / left)
-import wizardLeftFrame1 from '../../assets/DungeonGame/CaminataIzquierda-1.png'
-import wizardLeftFrame2 from '../../assets/DungeonGame/CaminataIzquierda-2.png'
+import wizardLeftFrame1 from '../../assets/DungeonGame/CaminataIzquierda-1.png';
+import wizardLeftFrame2 from '../../assets/DungeonGame/CaminataIzquierda-2.png';
 // Caminando hacia la derecha (D / right)
-import wizardRightFrame1 from '../../assets/DungeonGame/CaminataDerecha-1.png'
-import wizardRightFrame2 from '../../assets/DungeonGame/CaminataDerecha-2.png'
+import wizardRightFrame1 from '../../assets/DungeonGame/CaminataDerecha-1.png';
+import wizardRightFrame2 from '../../assets/DungeonGame/CaminataDerecha-2.png';
 // Estático mirando hacia arriba (idle up)
-import wizardIdleUp from '../../assets/DungeonGame/TraseraEstatica.png'
+import wizardIdleUp from '../../assets/DungeonGame/TraseraEstatica.png';
 // Estático mirando hacia abajo (idle down)
-import wizardIdleDown from '../../assets/DungeonGame/FrontalEstatico.png'
+import wizardIdleDown from '../../assets/DungeonGame/FrontalEstatico.png';
 // Estático mirando hacia la izquierda (idle left)
-import wizardIdleLeft from '../../assets/DungeonGame/IzquierdaEstatico.png'
+import wizardIdleLeft from '../../assets/DungeonGame/IzquierdaEstatico.png';
 // Estático mirando hacia la derecha (idle right)
-import wizardIdleRight from '../../assets/DungeonGame/DerechaEstatico.png'
-
+import wizardIdleRight from '../../assets/DungeonGame/DerechaEstatico.png';
 
 const TILE_SIZE = 40;
 const MAP_WIDTH = 16;
@@ -71,16 +71,16 @@ const GAME_OBJECTS = [
 ];
 
 const WIZARD_TIPS = [
-  "💡 Las necesidades siempre primero",
-  "🔥 El ahorro no es lo que sobra",
-  "⚔️ Cada peso cuenta para tu futuro",
-  "✨ Invertir en ti mismo siempre vale la pena",
-  "🧙 El equilibrio 50-30-20 es tu escudo",
-  "💎 La educación es la mejor inversión",
-  "🛡️ Un fondo de emergencia te protege",
-  "🎯 Primero necesidades, luego gustos",
-  "📊 Prioriza inteligentemente tu dinero",
-  "🌟 Disciplina hoy, libertad mañana",
+  '💡 Las necesidades siempre primero',
+  '🔥 El ahorro no es lo que sobra',
+  '⚔️ Cada peso cuenta para tu futuro',
+  '✨ Invertir en ti mismo siempre vale la pena',
+  '🧙 El equilibrio 50-30-20 es tu escudo',
+  '💎 La educación es la mejor inversión',
+  '🛡️ Un fondo de emergencia te protege',
+  '🎯 Primero necesidades, luego gustos',
+  '📊 Prioriza inteligentemente tu dinero',
+  '🌟 Disciplina hoy, libertad mañana',
 ];
 
 export function PuzzleGamePanel({ onComplete, onClose }) {
@@ -114,36 +114,38 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   const animationFrameRef = useRef();
   const enemiesRef = useRef([]);
   const stepCountRef = useRef(0);
-  const projectileIdRef = useRef(0); // 👈 NUEVO
+  const projectileIdRef = useRef(0);
+
+  const touchStartRef = useRef({ x: 0, y: 0 });
 
   const getNextProjectileId = () => {
     projectileIdRef.current += 1;
     return `proj-${projectileIdRef.current}`;
   };
 
-
-
   // Sincronizar enemiesRef
   useEffect(() => {
     enemiesRef.current = enemies;
   }, [enemies]);
 
-  // Detectar objeto cercano
+  // Detectar objeto cercano y daño por contacto
   useEffect(() => {
     if (stage !== 'playing') return;
 
     const nearby = objects.find(obj => {
-      const dist = Math.abs(obj.position.x - playerPos.x) + Math.abs(obj.position.y - playerPos.y);
+      const dist =
+        Math.abs(obj.position.x - playerPos.x) +
+        Math.abs(obj.position.y - playerPos.y);
       return dist <= 1.5;
     });
 
     setNearbyObject(nearby || null);
 
-    // Verificar colisión con enemigos
-    const touchingEnemy = enemies.find(enemy =>
-      enemy.isAlive &&
-      Math.abs(enemy.position.x - playerPos.x) < 0.7 &&
-      Math.abs(enemy.position.y - playerPos.y) < 0.7
+    const touchingEnemy = enemies.find(
+      enemy =>
+        enemy.isAlive &&
+        Math.abs(enemy.position.x - playerPos.x) < 0.7 &&
+        Math.abs(enemy.position.y - playerPos.y) < 0.7,
     );
 
     if (touchingEnemy && !invulnerable) {
@@ -159,19 +161,17 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     }
   }, [playerPos, objects, stage, enemies, invulnerable]);
 
-  // Inicializar
+  // Inicializar objetos y enemigos al comenzar a jugar
   useEffect(() => {
     if (stage === 'playing' && objects.length === 0) {
-      // Definir salas del mapa para distribución equitativa
       const rooms = [
-        { name: 'TopLeft', xMin: 1, xMax: 6, yMin: 1, yMax: 7 },      // Sala superior izquierda
-        { name: 'TopRight', xMin: 10, xMax: 14, yMin: 1, yMax: 7 },   // Sala superior derecha
-        { name: 'BottomLeft', xMin: 1, xMax: 6, yMin: 10, yMax: 15 }, // Sala inferior izquierda
-        { name: 'BottomRight', xMin: 10, xMax: 14, yMin: 10, yMax: 15 } // Sala inferior derecha
+        { name: 'TopLeft', xMin: 1, xMax: 6, yMin: 1, yMax: 7 },
+        { name: 'TopRight', xMin: 10, xMax: 14, yMin: 1, yMax: 7 },
+        { name: 'BottomLeft', xMin: 1, xMax: 6, yMin: 10, yMax: 15 },
+        { name: 'BottomRight', xMin: 10, xMax: 14, yMin: 10, yMax: 15 },
       ];
 
       const initialObjects = GAME_OBJECTS.map((obj, index) => {
-        // Distribuir objetos equitativamente por salas
         const roomIndex = index % rooms.length;
         const room = rooms[roomIndex];
 
@@ -181,8 +181,12 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
           x = Math.floor(Math.random() * (room.xMax - room.xMin)) + room.xMin;
           y = Math.floor(Math.random() * (room.yMax - room.yMin)) + room.yMin;
           attempts++;
-          if (attempts > 100) break; // Evitar bucle infinito
-        } while (!isWalkable(x, y) || isNearAltar(x, y) || (x === 3 && y === 2));
+          if (attempts > 100) break;
+        } while (
+          !isWalkable(x, y) ||
+          isNearAltar(x, y) ||
+          (x === 3 && y === 2)
+        );
 
         return { ...obj, position: { x, y } };
       });
@@ -191,42 +195,49 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     }
   }, [stage, objects.length]);
 
-  // Game loop para movimiento fluido e independiente de enemigos
+  // Game loop de enemigos
   useEffect(() => {
     if (stage !== 'playing') return;
 
     const gameLoop = () => {
       const now = Date.now();
 
-      setEnemies(prev => prev.map(enemy => {
-        if (!enemy.isAlive) return enemy;
+      setEnemies(prev =>
+        prev.map(enemy => {
+          if (!enemy.isAlive) return enemy;
 
-        let updated = { ...enemy };
+          let updated = { ...enemy };
 
-        // Movimiento independiente
-        if (now - enemy.lastMoveTime > enemy.moveDelay) {
-          const moves = [{ x: 0, y: -1 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 1, y: 0 }];
-          const randomMove = moves[Math.floor(Math.random() * moves.length)];
-          const newX = enemy.position.x + randomMove.x;
-          const newY = enemy.position.y + randomMove.y;
+          // Movimiento
+          if (now - enemy.lastMoveTime > enemy.moveDelay) {
+            const moves = [
+              { x: 0, y: -1 },
+              { x: 0, y: 1 },
+              { x: -1, y: 0 },
+              { x: 1, y: 0 },
+            ];
+            const randomMove = moves[Math.floor(Math.random() * moves.length)];
+            const newX = enemy.position.x + randomMove.x;
+            const newY = enemy.position.y + randomMove.y;
 
-          if (isWalkable(newX, newY)) {
-            updated.position = { x: newX, y: newY };
+            if (isWalkable(newX, newY)) {
+              updated.position = { x: newX, y: newY };
+            }
+            updated.direction = randomMove.x < 0 ? 'left' : 'right';
+            updated.lastMoveTime = now;
+            updated.moveDelay = 600 + Math.random() * 600;
           }
-          updated.direction = randomMove.x < 0 ? 'left' : 'right';
-          updated.lastMoveTime = now;
-          updated.moveDelay = 600 + Math.random() * 600; // 600-1200ms
-        }
 
-        // Disparo independiente
-        if (enemy.canShoot && now - enemy.lastShootTime > enemy.shootDelay) {
-          enemyShoot(enemy);
-          updated.lastShootTime = now;
-          updated.shootDelay = 2000 + Math.random() * 2000; // 2-4s
-        }
+          // Disparo
+          if (enemy.canShoot && now - enemy.lastShootTime > enemy.shootDelay) {
+            enemyShoot(enemy);
+            updated.lastShootTime = now;
+            updated.shootDelay = 2000 + Math.random() * 2000;
+          }
 
-        return updated;
-      }));
+          return updated;
+        }),
+      );
 
       animationFrameRef.current = requestAnimationFrame(gameLoop);
     };
@@ -248,30 +259,37 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       setProjectiles(prev => {
         if (prev.length === 0) return [];
 
-        const currentEnemies = enemiesRef.current; // 👈 snapshot de enemigos
+        const currentEnemies = enemiesRef.current;
         const updatedProjectiles = [];
 
-        // Mover proyectiles uno a uno
         prev.forEach(proj => {
           let newX = proj.position.x;
           let newY = proj.position.y;
 
           switch (proj.direction) {
-            case 'up': newY -= 0.5; break;
-            case 'down': newY += 0.5; break;
-            case 'left': newX -= 0.5; break;
-            case 'right': newX += 0.5; break;
-            default: break;
+            case 'up':
+              newY -= 0.5;
+              break;
+            case 'down':
+              newY += 0.5;
+              break;
+            case 'left':
+              newX -= 0.5;
+              break;
+            case 'right':
+              newX += 0.5;
+              break;
+            default:
+              break;
           }
 
-          // Si choca con pared o sale del mapa → se destruye
           if (!isWalkable(Math.floor(newX), Math.floor(newY))) {
-            return; // no se agrega a updatedProjectiles
+            return;
           }
 
           const nextLife = (proj.life ?? 50) - 1;
           if (nextLife <= 0) {
-            return; // muere por tiempo
+            return;
           }
 
           const movedProj = {
@@ -280,7 +298,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
             life: nextLife,
           };
 
-          // Colisión con jugador (si viene del enemigo)
+          // Golpe al jugador
           if (movedProj.fromEnemy) {
             const hitPlayer =
               Math.abs(movedProj.position.x - playerPos.x) < 0.8 &&
@@ -299,18 +317,18 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
             }
 
             if (hitPlayer) {
-              return; // no se conserva el proyectil
+              return;
             }
           } else {
-            // Colisión con enemigos (si viene del jugador)
-            const enemyHit = currentEnemies.find(enemy =>
-              enemy.isAlive &&
-              Math.abs(movedProj.position.x - enemy.position.x) < 0.8 &&
-              Math.abs(movedProj.position.y - enemy.position.y) < 0.8
+            // Golpe a enemigo
+            const enemyHit = currentEnemies.find(
+              enemy =>
+                enemy.isAlive &&
+                Math.abs(movedProj.position.x - enemy.position.x) < 0.8 &&
+                Math.abs(movedProj.position.y - enemy.position.y) < 0.8,
             );
 
             if (enemyHit) {
-              // Aplicar daño con un solo setEnemies por tick
               setEnemies(prevEnemies =>
                 prevEnemies.map(enemy => {
                   if (enemy.id !== enemyHit.id || !enemy.isAlive) return enemy;
@@ -321,14 +339,13 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                     return { ...enemy, hp: 0, isAlive: false };
                   }
                   return { ...enemy, hp: newHp };
-                })
+                }),
               );
 
-              return; // no se conserva el proyectil
+              return;
             }
           }
 
-          // Si no chocó con nada y aún tiene vida, lo mantenemos
           updatedProjectiles.push(movedProj);
         });
 
@@ -339,21 +356,18 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     return () => clearInterval(projInterval);
   }, [stage, playerPos.x, playerPos.y, invulnerable]);
 
-
-  const spawnEnemies = (count) => {
+  const spawnEnemies = count => {
     const newEnemies = [];
     const now = Date.now();
 
-    // Definir salas del mapa para distribución equitativa
     const rooms = [
       { name: 'TopLeft', xMin: 1, xMax: 6, yMin: 1, yMax: 7 },
       { name: 'TopRight', xMin: 10, xMax: 14, yMin: 1, yMax: 7 },
       { name: 'BottomLeft', xMin: 1, xMax: 6, yMin: 10, yMax: 15 },
-      { name: 'BottomRight', xMin: 10, xMax: 14, yMin: 10, yMax: 15 }
+      { name: 'BottomRight', xMin: 10, xMax: 14, yMin: 10, yMax: 15 },
     ];
 
     for (let i = 0; i < count; i++) {
-      // Distribuir enemigos equitativamente por salas
       const roomIndex = i % rooms.length;
       const room = rooms[roomIndex];
 
@@ -363,30 +377,30 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
         x = Math.floor(Math.random() * (room.xMax - room.xMin)) + room.xMin;
         y = Math.floor(Math.random() * (room.yMax - room.yMin)) + room.yMin;
         attempts++;
-        if (attempts > 100) break; // Evitar bucle infinito
+        if (attempts > 100) break;
       } while (!isWalkable(x, y));
 
-      const canShoot = Math.random() < 0.4;
+      const canShootEnemy = Math.random() < 0.4;
 
       newEnemies.push({
         id: `enemy-${Date.now()}-${i}`,
         position: { x, y },
         hp: 2,
         maxHp: 2,
-        sprite: canShoot ? '👹' : '👾',
+        sprite: canShootEnemy ? '👹' : '👾',
         direction: 'left',
         isAlive: true,
         lastMoveTime: now + Math.random() * 500,
         moveDelay: 600 + Math.random() * 600,
-        canShoot,
+        canShoot: canShootEnemy,
         lastShootTime: now,
-        shootDelay: 2000 + Math.random() * 2000
+        shootDelay: 2000 + Math.random() * 2000,
       });
     }
     setEnemies(prev => [...prev, ...newEnemies]);
   };
 
-  const enemyShoot = (enemy) => {
+  const enemyShoot = enemy => {
     let shootDir = 'down';
     const dx = playerPos.x - enemy.position.x;
     const dy = playerPos.y - enemy.position.y;
@@ -398,7 +412,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     }
 
     const newProj = {
-      id: getNextProjectileId(),        // 👈 antes: `proj-enemy-${Date.now()}-${Math.random()}`
+      id: getNextProjectileId(),
       position: { ...enemy.position },
       direction: shootDir,
       fromEnemy: true,
@@ -408,17 +422,18 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     setProjectiles(prev => [...prev, newProj]);
   };
 
-
-
   const showTip = () => {
-    let availableTips = WIZARD_TIPS.map((_, idx) => idx).filter(idx => !tipsShown.has(idx));
+    let availableTips = WIZARD_TIPS.map((_, idx) => idx).filter(
+      idx => !tipsShown.has(idx),
+    );
 
     if (availableTips.length === 0) {
       setTipsShown(new Set());
       availableTips = WIZARD_TIPS.map((_, idx) => idx);
     }
 
-    const randomIdx = availableTips[Math.floor(Math.random() * availableTips.length)];
+    const randomIdx =
+      availableTips[Math.floor(Math.random() * availableTips.length)];
     setCurrentTip(WIZARD_TIPS[randomIdx]);
     setShowTipBanner(true);
     setTipsShown(prev => new Set([...prev, randomIdx]));
@@ -432,8 +447,10 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     if (tile === 1) return false;
 
     if (!ignoringObjects) {
-      const objectAtPos = objects.find(obj =>
-        Math.abs(obj.position.x - x) < 0.6 && Math.abs(obj.position.y - y) < 0.6
+      const objectAtPos = objects.find(
+        obj =>
+          Math.abs(obj.position.x - x) < 0.6 &&
+          Math.abs(obj.position.y - y) < 0.6,
       );
       if (objectAtPos) return false;
     }
@@ -442,20 +459,20 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   };
 
   const isNearAltar = (x, y) => {
-    return DUNGEON_MAP[y] && (
-      DUNGEON_MAP[y][x] === 2 ||
-      DUNGEON_MAP[y][x] === 3 ||
-      DUNGEON_MAP[y][x] === 4
+    return (
+      DUNGEON_MAP[y] &&
+      (DUNGEON_MAP[y][x] === 2 ||
+        DUNGEON_MAP[y][x] === 3 ||
+        DUNGEON_MAP[y][x] === 4)
     );
   };
 
   const isCornerOrEdge = (x, y) => {
-    // Verificar si está en un rincón o borde (rodeado de paredes)
     const directions = [
-      { dx: 0, dy: -1 }, // arriba
-      { dx: 0, dy: 1 },  // abajo
-      { dx: -1, dy: 0 }, // izquierda
-      { dx: 1, dy: 0 },  // derecha
+      { dx: 0, dy: -1 },
+      { dx: 0, dy: 1 },
+      { dx: -1, dy: 0 },
+      { dx: 1, dy: 0 },
     ];
 
     let wallCount = 0;
@@ -464,19 +481,25 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       const checkX = x + dir.dx;
       const checkY = y + dir.dy;
 
-      // Si está fuera del mapa o es una pared, contar
-      if (checkX < 0 || checkX >= MAP_WIDTH || checkY < 0 || checkY >= MAP_HEIGHT || DUNGEON_MAP[checkY][checkX] === 1) {
+      if (
+        checkX < 0 ||
+        checkX >= MAP_WIDTH ||
+        checkY < 0 ||
+        checkY >= MAP_HEIGHT ||
+        DUNGEON_MAP[checkY][checkX] === 1
+      ) {
         wallCount++;
       }
     }
 
-    // Si tiene 3 o 4 paredes alrededor, es un rincón/borde peligroso
     return wallCount >= 3;
   };
 
   const getObjectAt = (x, y) => {
-    return objects.find(obj =>
-      Math.abs(obj.position.x - x) < 0.8 && Math.abs(obj.position.y - y) < 0.8
+    return objects.find(
+      obj =>
+        Math.abs(obj.position.x - x) < 0.8 &&
+        Math.abs(obj.position.y - y) < 0.8,
     );
   };
 
@@ -484,7 +507,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     if (!canShoot || stage !== 'playing') return;
 
     const newProj = {
-      id: getNextProjectileId(),        // 👈 antes: `proj-player-${Date.now()}`
+      id: getNextProjectileId(),
       position: { ...playerPos },
       direction,
       fromEnemy: false,
@@ -496,51 +519,48 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     setTimeout(() => setCanShoot(true), 300);
   };
 
+  const handleMove = useCallback(
+    newDir => {
+      if (stage !== 'playing' || isMoving) return;
 
+      setDirection(newDir);
 
-  const handleMove = useCallback((newDir) => {
-    if (stage !== 'playing' || isMoving) return;
+      const moves = {
+        up: { x: 0, y: -1 },
+        down: { x: 0, y: 1 },
+        left: { x: -1, y: 0 },
+        right: { x: 1, y: 0 },
+      };
 
-    // Actualizar dirección inmediatamente
-    setDirection(newDir);
+      const move = moves[newDir];
+      const newX = playerPos.x + move.x;
+      const newY = playerPos.y + move.y;
 
-    // Calcular nueva posición
-    const moves = {
-      up: { x: 0, y: -1 },
-      down: { x: 0, y: 1 },
-      left: { x: -1, y: 0 },
-      right: { x: 1, y: 0 },
-    };
+      const objectAhead = getObjectAt(newX, newY);
 
-    const move = moves[newDir];
-    const newX = playerPos.x + move.x;
-    const newY = playerPos.y + move.y;
+      if (objectAhead) {
+        const pushed = pushObject(objectAhead, newDir);
+        if (pushed) {
+          setIsMoving(true);
+          setPlayerPos({ x: newX, y: newY });
 
-    const objectAhead = getObjectAt(newX, newY);
+          stepCountRef.current += 1;
+          setWalkFrame(stepCountRef.current % 2);
 
-    if (objectAhead) {
-      const pushed = pushObject(objectAhead, newDir);
-      if (pushed) {
+          setTimeout(() => setIsMoving(false), 150);
+        }
+      } else if (isWalkable(newX, newY)) {
         setIsMoving(true);
         setPlayerPos({ x: newX, y: newY });
 
-        // Cambiar frame de animación cuando camina
         stepCountRef.current += 1;
         setWalkFrame(stepCountRef.current % 2);
 
         setTimeout(() => setIsMoving(false), 150);
       }
-    } else if (isWalkable(newX, newY)) {
-      setIsMoving(true);
-      setPlayerPos({ x: newX, y: newY });
-
-      // Cambiar frame de animación cuando camina
-      stepCountRef.current += 1;
-      setWalkFrame(stepCountRef.current % 2);
-
-      setTimeout(() => setIsMoving(false), 150);
-    }
-  }, [playerPos, stage, isMoving, objects]);
+    },
+    [playerPos, stage, isMoving, objects],
+  );
 
   const pushObject = (obj, dir) => {
     const moves = {
@@ -554,13 +574,12 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     const newX = obj.position.x + move.x;
     const newY = obj.position.y + move.y;
 
-    // Verificar que la nueva posición sea válida Y que no sea un rincón/borde
     if (isWalkable(newX, newY, true) && !isCornerOrEdge(newX, newY)) {
-      setObjects(prev => prev.map(o =>
-        o.id === obj.id
-          ? { ...o, position: { x: newX, y: newY } }
-          : o
-      ));
+      setObjects(prev =>
+        prev.map(o =>
+          o.id === obj.id ? { ...o, position: { x: newX, y: newY } } : o,
+        ),
+      );
 
       setTimeout(() => checkAltarPlacement(obj.id, newX, newY), 100);
       return true;
@@ -572,7 +591,6 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   const pullObject = () => {
     if (stage !== 'playing') return false;
 
-    // Buscar objeto adelante del jugador en la dirección que está mirando
     const moves = {
       up: { x: 0, y: -1 },
       down: { x: 0, y: 1 },
@@ -588,24 +606,24 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
 
     if (!objectAhead) return false;
 
-    // La caja se mueve a la posición actual del jugador
-    // Y el jugador se mueve a donde estaba la caja
     const playerOldPos = { ...playerPos };
     const objectOldPos = { ...objectAhead.position };
 
-    // Verificar que la posición del jugador actual esté libre
     if (isWalkable(playerOldPos.x, playerOldPos.y, true)) {
-      // Mover objeto a posición del jugador
-      setObjects(prev => prev.map(o =>
-        o.id === objectAhead.id
-          ? { ...o, position: playerOldPos }
-          : o
-      ));
+      setObjects(prev =>
+        prev.map(o =>
+          o.id === objectAhead.id
+            ? { ...o, position: playerOldPos }
+            : o,
+        ),
+      );
 
-      // Mover jugador a posición del objeto
       setPlayerPos(objectOldPos);
 
-      setTimeout(() => checkAltarPlacement(objectAhead.id, playerOldPos.x, playerOldPos.y), 100);
+      setTimeout(
+        () => checkAltarPlacement(objectAhead.id, playerOldPos.x, playerOldPos.y),
+        100,
+      );
       return true;
     }
 
@@ -615,22 +633,17 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   const handleMobileAction = useCallback(() => {
     if (stage !== 'playing') return;
 
-    // Si hay una caja cerca, intentamos comportarnos como "Z" (jalar caja)
     if (nearbyObject) {
-      const pulled = pullObject();   // intenta hacer la lógica de Z
+      const pulled = pullObject();
       if (!pulled) {
-        // Si no se pudo jalar, disparamos fuego
         shootFireball();
       }
     } else {
-      // Si no hay caja cerca, siempre dispara bola de fuego
       shootFireball();
     }
   }, [stage, nearbyObject, pullObject, shootFireball]);
 
-
   useEffect(() => {
-    // Esta función se llamará cuando los botones generales disparen "mobile-action"
     const onMobileAction = () => {
       handleMobileAction();
     };
@@ -641,8 +654,6 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     };
   }, [handleMobileAction]);
 
-
-
   const checkAltarPlacement = (objId, x, y) => {
     const obj = objects.find(o => o.id === objId);
     if (!obj) return;
@@ -650,11 +661,14 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     const tile = DUNGEON_MAP[Math.floor(y)][Math.floor(x)];
 
     if (tile === 2) {
-      if (!needsAltar.includes(objId)) setNeedsAltar(prev => [...prev, objId]);
+      if (!needsAltar.includes(objId))
+        setNeedsAltar(prev => [...prev, objId]);
     } else if (tile === 3) {
-      if (!wantsAltar.includes(objId)) setWantsAltar(prev => [...prev, objId]);
+      if (!wantsAltar.includes(objId))
+        setWantsAltar(prev => [...prev, objId]);
     } else if (tile === 4) {
-      if (!savingsAltar.includes(objId)) setSavingsAltar(prev => [...prev, objId]);
+      if (!savingsAltar.includes(objId))
+        setSavingsAltar(prev => [...prev, objId]);
     } else {
       setNeedsAltar(prev => prev.filter(id => id !== objId));
       setWantsAltar(prev => prev.filter(id => id !== objId));
@@ -665,29 +679,53 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
   };
 
   const checkPuzzleSolution = () => {
-    const needsCorrect = needsAltar.every(id => objects.find(o => o.id === id)?.category === 'needs');
-    const wantsCorrect = wantsAltar.every(id => objects.find(o => o.id === id)?.category === 'wants');
-    const savingsCorrect = savingsAltar.every(id => objects.find(o => o.id === id)?.category === 'savings');
+    const needsCorrect = needsAltar.every(
+      id => objects.find(o => o.id === id)?.category === 'needs',
+    );
+    const wantsCorrect = wantsAltar.every(
+      id => objects.find(o => o.id === id)?.category === 'wants',
+    );
+    const savingsCorrect = savingsAltar.every(
+      id => objects.find(o => o.id === id)?.category === 'savings',
+    );
 
-    const allPlaced = needsAltar.length + wantsAltar.length + savingsAltar.length === objects.length;
+    const allPlaced =
+      needsAltar.length + wantsAltar.length + savingsAltar.length ===
+      objects.length;
 
-    const needsValue = needsAltar.reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
-    const wantsValue = wantsAltar.reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
-    const savingsValue = savingsAltar.reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
+    const needsValue = needsAltar.reduce(
+      (sum, id) => sum + (objects.find(o => o.id === id)?.value || 0),
+      0,
+    );
+    const wantsValue = wantsAltar.reduce(
+      (sum, id) => sum + (objects.find(o => o.id === id)?.value || 0),
+      0,
+    );
+    const savingsValue = savingsAltar.reduce(
+      (sum, id) => sum + (objects.find(o => o.id === id)?.value || 0),
+      0,
+    );
 
-    if (allPlaced && needsCorrect && wantsCorrect && savingsCorrect &&
-      needsValue === 50 && wantsValue === 30 && savingsValue === 20) {
+    if (
+      allPlaced &&
+      needsCorrect &&
+      wantsCorrect &&
+      savingsCorrect &&
+      needsValue === 50 &&
+      wantsValue === 30 &&
+      savingsValue === 20
+    ) {
       setPuzzleSolved(true);
       setTimeout(() => setStage('complete'), 1500);
     }
   };
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
       const key = e.key.toLowerCase();
 
       if (key === 'h') {
-        setShowHint(!showHint);
+        setShowHint(prev => !prev);
         return;
       }
 
@@ -709,24 +747,31 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
 
       const currentKeys = Array.from(keysPressed);
 
-      // Detectar movimiento diagonal
-      if ((currentKeys.includes('w') || currentKeys.includes('arrowup')) &&
-        (currentKeys.includes('a') || currentKeys.includes('arrowleft'))) {
+      if (
+        (currentKeys.includes('w') || currentKeys.includes('arrowup')) &&
+        (currentKeys.includes('a') || currentKeys.includes('arrowleft'))
+      ) {
         e.preventDefault();
         handleMove('up');
         setTimeout(() => handleMove('left'), 50);
-      } else if ((currentKeys.includes('w') || currentKeys.includes('arrowup')) &&
-        (currentKeys.includes('d') || currentKeys.includes('arrowright'))) {
+      } else if (
+        (currentKeys.includes('w') || currentKeys.includes('arrowup')) &&
+        (currentKeys.includes('d') || currentKeys.includes('arrowright'))
+      ) {
         e.preventDefault();
         handleMove('up');
         setTimeout(() => handleMove('right'), 50);
-      } else if ((currentKeys.includes('s') || currentKeys.includes('arrowdown')) &&
-        (currentKeys.includes('a') || currentKeys.includes('arrowleft'))) {
+      } else if (
+        (currentKeys.includes('s') || currentKeys.includes('arrowdown')) &&
+        (currentKeys.includes('a') || currentKeys.includes('arrowleft'))
+      ) {
         e.preventDefault();
         handleMove('down');
         setTimeout(() => handleMove('left'), 50);
-      } else if ((currentKeys.includes('s') || currentKeys.includes('arrowdown')) &&
-        (currentKeys.includes('d') || currentKeys.includes('arrowright'))) {
+      } else if (
+        (currentKeys.includes('s') || currentKeys.includes('arrowdown')) &&
+        (currentKeys.includes('d') || currentKeys.includes('arrowright'))
+      ) {
         e.preventDefault();
         handleMove('down');
         setTimeout(() => handleMove('right'), 50);
@@ -756,7 +801,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       }
     };
 
-    const handleKeyUp = (e) => {
+    const handleKeyUp = e => {
       const key = e.key.toLowerCase();
       setKeysPressed(prev => new Set([...prev].filter(k => k !== key)));
     };
@@ -769,57 +814,138 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     };
   }, [handleMove, stage, showHint, keysPressed]);
 
+  // INTRO
   if (stage === 'intro') {
     return (
-      <div className="game-panel-overlay" style={{ transform: "scale(0.75)", zIndex: 1000 }}>
+      <div
+        className="game-panel-overlay"
+        style={{ transform: 'scale(0.75)', zIndex: 1000 }}
+      >
         <div className="game-panel puzzle-game-panel" style={{ maxWidth: '700px' }}>
           <div className="panel-header">
             <h2>🔥 El Dungeon del Equilibrio Financiero</h2>
-            <button onClick={onClose} style={{ background: 'transparent', border: 'none', fontSize: '20px', cursor: 'pointer', padding: '4px 8px' }}>✕</button>
+            <button
+              onClick={onClose}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                fontSize: '20px',
+                cursor: 'pointer',
+                padding: '4px 8px',
+              }}
+            >
+              ✕
+            </button>
           </div>
 
           <div className="panel-content" style={{ padding: '24px' }}>
             <div style={{ textAlign: 'center', marginBottom: '24px' }}>
               <div style={{ fontSize: '64px', marginBottom: '16px' }}>🧙‍♂️</div>
               <h3 style={{ marginBottom: '16px' }}>¡Aventura Financiera Épica!</h3>
-              <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '24px' }}>
-                Eres un mago sabio que debe restaurar el equilibrio en el Templo de las Finanzas.
-                <br /><strong>¡Derrota monstruos y clasifica objetos!</strong>
+              <p
+                style={{
+                  fontSize: '16px',
+                  lineHeight: '1.6',
+                  marginBottom: '24px',
+                }}
+              >
+                Eres un mago sabio que debe restaurar el equilibrio en el Templo de
+                las Finanzas.
+                <br />
+                <strong>¡Derrota monstruos y clasifica objetos!</strong>
               </p>
             </div>
 
-            <div style={{ background: '#FFF3E0', padding: '16px', borderRadius: '8px', marginBottom: '16px', border: '2px solid #FF9800' }}>
-              <h4 style={{ marginBottom: '12px', color: '#E65100' }}>🎯 Tu Misión:</h4>
-              <ul style={{ paddingLeft: '20px', margin: 0, fontSize: '14px' }}>
-                <li><strong>Clasifica objetos en 3 altares identificados:</strong></li>
-                <li style={{ marginLeft: '20px', color: '#4CAF50' }}>🛒 <strong>NECESIDADES</strong> (verde) → Esquina superior izquierda</li>
-                <li style={{ marginLeft: '20px', color: '#2196F3' }}>🎮 <strong>GUSTOS</strong> (azul) → Centro derecha del mapa</li>
-                <li style={{ marginLeft: '20px', color: '#FFC107' }}>🐷 <strong>AHORRO</strong> (amarillo) → Esquina inferior izquierda</li>
+            <div
+              style={{
+                background: '#FFF3E0',
+                padding: '16px',
+                borderRadius: '8px',
+                marginBottom: '16px',
+                border: '2px solid #FF9800',
+              }}
+            >
+              <h4 style={{ marginBottom: '12px', color: '#E65100' }}>
+                🎯 Tu Misión:
+              </h4>
+              <ul
+                style={{
+                  paddingLeft: '20px',
+                  margin: 0,
+                  fontSize: '14px',
+                }}
+              >
+                <li>
+                  <strong>Clasifica objetos en 3 altares identificados:</strong>
+                </li>
+                <li style={{ marginLeft: '20px', color: '#4CAF50' }}>
+                  🛒 <strong>NECESIDADES</strong> (verde) → Esquina superior izquierda
+                </li>
+                <li style={{ marginLeft: '20px', color: '#2196F3' }}>
+                  🎮 <strong>GUSTOS</strong> (azul) → Centro derecha del mapa
+                </li>
+                <li style={{ marginLeft: '20px', color: '#FFC107' }}>
+                  🐷 <strong>AHORRO</strong> (amarillo) → Esquina inferior izquierda
+                </li>
                 <li>Acércate a objetos para ver su descripción y categoría</li>
                 <li>Derrota enemigos para moverte libremente 👹</li>
-                <li><strong>Meta:</strong> 50 pts Necesidades + 30 pts Gustos + 20 pts Ahorro</li>
+                <li>
+                  <strong>Meta:</strong> 50 pts Necesidades + 30 pts Gustos + 20 pts
+                  Ahorro
+                </li>
               </ul>
             </div>
 
-            <div style={{ background: '#E3F2FD', padding: '16px', borderRadius: '8px', marginBottom: '24px', border: '2px solid #2196F3' }}>
+            <div
+              style={{
+                background: '#E3F2FD',
+                padding: '16px',
+                borderRadius: '8px',
+                marginBottom: '24px',
+                border: '2px solid #2196F3',
+              }}
+            >
               <h4 style={{ marginBottom: '12px' }}>⚔️ Controles:</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '14px' }}>
-                <div><strong>WASD / Flechas:</strong> Mover (diagonal: 2 teclas)</div>
-                <div><strong>ESPACIO:</strong> Lanzar fuego 🔥</div>
-                <div><strong>Empujar:</strong> Camina hacia objetos</div>
-                <div><strong>Z:</strong> Jalar caja 📦</div>
-                <div><strong>H:</strong> Ver/Ocultar pista</div>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '8px',
+                  fontSize: '14px',
+                }}
+              >
+                <div>
+                  <strong>WASD / Flechas:</strong> Mover (diagonal: 2 teclas)
+                </div>
+                <div>
+                  <strong>ESPACIO:</strong> Lanzar fuego 🔥
+                </div>
+                <div>
+                  <strong>Empujar:</strong> Camina hacia objetos
+                </div>
+                <div>
+                  <strong>Z:</strong> Jalar caja 📦
+                </div>
+                <div>
+                  <strong>H:</strong> Ver/Ocultar pista
+                </div>
               </div>
             </div>
 
             <button
               onClick={() => setStage('playing')}
               style={{
-                width: '100%', padding: '16px', fontSize: '18px',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white', border: 'none', borderRadius: '8px',
-                cursor: 'pointer', fontWeight: 'bold',
-                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
+                width: '100%',
+                padding: '16px',
+                fontSize: '18px',
+                background:
+                  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
               }}
             >
               ⚔️ ¡Entrar al Dungeon!
@@ -830,22 +956,34 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     );
   }
 
+  // STAGE: playing
   if (stage === 'playing') {
-    // Solo contar objetos correctos en cada altar
     const needsValue = needsAltar
       .filter(id => objects.find(o => o.id === id)?.category === 'needs')
-      .reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
+      .reduce(
+        (sum, id) => sum + (objects.find(o => o.id === id)?.value || 0),
+        0,
+      );
 
     const wantsValue = wantsAltar
       .filter(id => objects.find(o => o.id === id)?.category === 'wants')
-      .reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
+      .reduce(
+        (sum, id) => sum + (objects.find(o => o.id === id)?.value || 0),
+        0,
+      );
 
     const savingsValue = savingsAltar
       .filter(id => objects.find(o => o.id === id)?.category === 'savings')
-      .reduce((sum, id) => sum + (objects.find(o => o.id === id)?.value || 0), 0);
+      .reduce(
+        (sum, id) => sum + (objects.find(o => o.id === id)?.value || 0),
+        0,
+      );
 
     return (
-      <div className="game-panel-overlay" style={{ transform: 'scale(0.6)', zIndex: 1000 }}>
+      <div
+        className="game-panel-overlay"
+        style={{ transform: 'scale(0.6)', zIndex: 1000 }}
+      >
         <div
           className="game-panel puzzle-game-panel"
           style={{
@@ -855,7 +993,6 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
             position: 'relative',
           }}
         >
-          {/* CONTENEDOR PRINCIPAL: MAPA + HUD LATERAL */}
           <div
             style={{
               display: 'flex',
@@ -880,12 +1017,16 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 imageRendering: 'pixelated',
               }}
             >
-              {/* Marcadores de altares */}
+              {/* Altares */}
               {DUNGEON_MAP.map((row, y) =>
                 row.map((tile, x) => {
                   if (tile === 2 || tile === 3 || tile === 4) {
                     const altarColor =
-                      tile === 2 ? '#4CAF50' : tile === 3 ? '#2196F3' : '#FFC107';
+                      tile === 2
+                        ? '#4CAF50'
+                        : tile === 3
+                          ? '#2196F3'
+                          : '#FFC107';
                     const altarGlow =
                       tile === 2
                         ? 'rgba(76, 175, 80, 0.6)'
@@ -893,7 +1034,11 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                           ? 'rgba(33, 150, 243, 0.6)'
                           : 'rgba(255, 193, 7, 0.6)';
                     const altarLabel =
-                      tile === 2 ? 'NECESIDADES' : tile === 3 ? 'GUSTOS' : 'AHORRO';
+                      tile === 2
+                        ? 'NECESIDADES'
+                        : tile === 3
+                          ? 'GUSTOS'
+                          : 'AHORRO';
 
                     return (
                       <div
@@ -914,7 +1059,6 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                           filter: `drop-shadow(0 0 20px ${altarColor})`,
                         }}
                       >
-                        {/* Etiqueta flotante del altar */}
                         <div
                           style={{
                             position: 'absolute',
@@ -930,7 +1074,8 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                             animation: 'altarLabelFloat 3s ease-in-out infinite',
                             zIndex: 100,
                             letterSpacing: '0.3px',
-                            textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                            textShadow:
+                              '1px 1px 2px rgba(0,0,0,0.8)',
                           }}
                         >
                           {altarLabel}
@@ -942,14 +1087,15 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                             height: '60%',
                             borderRadius: '50%',
                             background: `radial-gradient(circle, ${altarColor} 0%, transparent 60%)`,
-                            animation: 'altarPulse 2s ease-in-out infinite reverse',
+                            animation:
+                              'altarPulse 2s ease-in-out infinite reverse',
                           }}
                         />
                       </div>
                     );
                   }
                   return null;
-                })
+                }),
               )}
 
               {/* Objetos (cajas) */}
@@ -1003,8 +1149,11 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                       fontSize: '32px',
                       zIndex: 15,
                       transform:
-                        enemy.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)',
-                      filter: 'drop-shadow(2px 2px 4px rgba(255,0,0,0.6))',
+                        enemy.direction === 'left'
+                          ? 'scaleX(-1)'
+                          : 'scaleX(1)',
+                      filter:
+                        'drop-shadow(2px 2px 4px rgba(255,0,0,0.6))',
                       transition: 'all 0.15s ease-out',
                     }}
                   >
@@ -1018,13 +1167,16 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                   key={proj.id}
                   style={{
                     position: 'absolute',
-                    left: `${proj.position.x * TILE_SIZE + TILE_SIZE / 2 - 12}px`,
-                    top: `${proj.position.y * TILE_SIZE + TILE_SIZE / 2 - 12}px`,
+                    left:
+                      proj.position.x * TILE_SIZE + TILE_SIZE / 2 - 12,
+                    top:
+                      proj.position.y * TILE_SIZE + TILE_SIZE / 2 - 12,
                     width: '24px',
                     height: '24px',
                     fontSize: '24px',
                     zIndex: 20,
-                    filter: 'drop-shadow(0 0 8px rgba(255,100,0,0.8))',
+                    filter:
+                      'drop-shadow(0 0 8px rgba(255,100,0,0.8))',
                   }}
                 >
                   {proj.fromEnemy ? '💀' : '🔥'}
@@ -1043,7 +1195,9 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '36px',
-                  transition: isMoving ? 'all 0.15s ease-out' : 'none',
+                  transition: isMoving
+                    ? 'all 0.15s ease-out'
+                    : 'none',
                   zIndex: 25,
                   filter: invulnerable
                     ? 'drop-shadow(0 0 8px #ff0)'
@@ -1135,7 +1289,8 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                     borderRadius: '8px',
                     fontSize: '15px',
                     fontWeight: 'bold',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                    boxShadow:
+                      '0 4px 20px rgba(0,0,0,0.5)',
                     border: '2px solid #4CAF50',
                     zIndex: 1000,
                     maxWidth: '80%',
@@ -1164,7 +1319,8 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                     zIndex: 100,
                     color: 'white',
                     fontWeight: 'bold',
-                    textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                    textShadow:
+                      '2px 2px 4px rgba(0,0,0,0.8)',
                   }}
                 >
                   ✨ ¡EQUILIBRIO LOGRADO! ✨
@@ -1188,7 +1344,8 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.6)',
+                    boxShadow:
+                      '0 4px 12px rgba(0,0,0,0.6)',
                     zIndex: 60,
                     fontSize: '11px',
                   }}
@@ -1243,7 +1400,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
               )}
             </div>
 
-            {/* HUD LATERAL (VIDA + ALTARES + CONTROLES) */}
+            {/* HUD LATERAL */}
             <div
               style={{
                 width: '260px',
@@ -1257,7 +1414,6 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 boxSizing: 'border-box',
               }}
             >
-              {/* Header + botón cerrar */}
               <div
                 style={{
                   display: 'flex',
@@ -1266,7 +1422,12 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                   marginBottom: '4px',
                 }}
               >
-                <div style={{ fontSize: '13px', fontWeight: 'bold' }}>
+                <div
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                  }}
+                >
                   🧙 Estado del Dungeon
                 </div>
                 <button
@@ -1286,8 +1447,14 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 </button>
               </div>
 
-              {/* Vidas */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              {/* Vida */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                }}
+              >
                 <div
                   style={{
                     fontSize: '11px',
@@ -1326,7 +1493,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 </div>
               </div>
 
-              {/* Altar Necesidades */}
+              {/* Barras de altares */}
               <div>
                 <div
                   style={{
@@ -1338,7 +1505,9 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 >
                   <span style={{ fontWeight: 'bold' }}>🏛️ Necesidades</span>
                   <span
-                    style={{ color: needsValue === 50 ? '#4CAF50' : '#fff' }}
+                    style={{
+                      color: needsValue === 50 ? '#4CAF50' : '#fff',
+                    }}
                   >
                     {needsValue}/50 {needsValue === 50 && '✓'}
                   </span>
@@ -1356,14 +1525,14 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                     style={{
                       width: `${(needsValue / 50) * 100}%`,
                       height: '100%',
-                      background: needsValue === 50 ? '#4CAF50' : '#FFC107',
+                      background:
+                        needsValue === 50 ? '#4CAF50' : '#FFC107',
                       transition: 'all 0.3s ease',
                     }}
                   />
                 </div>
               </div>
 
-              {/* Altar Gustos */}
               <div>
                 <div
                   style={{
@@ -1375,7 +1544,9 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 >
                   <span style={{ fontWeight: 'bold' }}>🏛️ Gustos</span>
                   <span
-                    style={{ color: wantsValue === 30 ? '#4CAF50' : '#fff' }}
+                    style={{
+                      color: wantsValue === 30 ? '#4CAF50' : '#fff',
+                    }}
                   >
                     {wantsValue}/30 {wantsValue === 30 && '✓'}
                   </span>
@@ -1393,14 +1564,14 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                     style={{
                       width: `${(wantsValue / 30) * 100}%`,
                       height: '100%',
-                      background: wantsValue === 30 ? '#4CAF50' : '#FFC107',
+                      background:
+                        wantsValue === 30 ? '#4CAF50' : '#FFC107',
                       transition: 'all 0.3s ease',
                     }}
                   />
                 </div>
               </div>
 
-              {/* Altar Ahorro */}
               <div>
                 <div
                   style={{
@@ -1412,7 +1583,9 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 >
                   <span style={{ fontWeight: 'bold' }}>🏛️ Ahorro</span>
                   <span
-                    style={{ color: savingsValue === 20 ? '#4CAF50' : '#fff' }}
+                    style={{
+                      color: savingsValue === 20 ? '#4CAF50' : '#fff',
+                    }}
                   >
                     {savingsValue}/20 {savingsValue === 20 && '✓'}
                   </span>
@@ -1430,14 +1603,15 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                     style={{
                       width: `${(savingsValue / 20) * 100}%`,
                       height: '100%',
-                      background: savingsValue === 20 ? '#4CAF50' : '#FFC107',
+                      background:
+                        savingsValue === 20 ? '#4CAF50' : '#FFC107',
                       transition: 'all 0.3s ease',
                     }}
                   />
                 </div>
               </div>
 
-              {/* Enemigos + botón pista */}
+              {/* Enemigos + pista */}
               <div
                 style={{
                   display: 'flex',
@@ -1459,7 +1633,7 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                   👾 {enemies.filter(e => e.isAlive).length}
                 </div>
                 <button
-                  onClick={() => setShowHint(!showHint)}
+                  onClick={() => setShowHint(prev => !prev)}
                   style={{
                     background: '#FFC107',
                     border: 'none',
@@ -1475,7 +1649,6 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                 </button>
               </div>
 
-              {/* Texto pista */}
               {showHint && (
                 <div
                   style={{
@@ -1487,8 +1660,9 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
                     color: '#263238',
                   }}
                 >
-                  <strong>💡 Recuerda:</strong> Necesidades = esenciales para vivir | Gustos = lo que
-                  disfrutas pero no necesitas | Ahorro = inversión en tu futuro.
+                  <strong>💡 Recuerda:</strong> Necesidades = esenciales para
+                  vivir | Gustos = lo que disfrutas pero no necesitas | Ahorro =
+                  inversión en tu futuro.
                 </div>
               )}
 
@@ -1519,31 +1693,91 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     );
   }
 
-
-
+  // STAGE: complete (AQUÍ SOLO LLAMAMOS onComplete, NO onClose)
   if (stage === 'complete') {
     return (
       <div className="game-panel-overlay" style={{ zIndex: 1000 }}>
-        <div className="game-panel puzzle-game-panel" style={{ maxWidth: '600px' }}>
+        <div
+          className="game-panel puzzle-game-panel"
+          style={{ maxWidth: '600px' }}
+        >
           <div className="panel-header">
             <h2>🎉 ¡Dungeon Completado!</h2>
           </div>
 
-          <div className="panel-content" style={{ padding: '32px', textAlign: 'center' }}>
+          <div
+            className="panel-content"
+            style={{ padding: '32px', textAlign: 'center' }}
+          >
             <div style={{ fontSize: '80px', marginBottom: '24px' }}>🏆</div>
-            <h3 style={{ marginBottom: '16px', fontSize: '24px' }}>¡Maestro del Equilibrio Financiero!</h3>
-            <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '24px' }}>
-              Has clasificado correctamente todos los objetos y restaurado el equilibrio sagrado 50-30-20.
+            <h3
+              style={{ marginBottom: '16px', fontSize: '24px' }}
+            >
+              ¡Maestro del Equilibrio Financiero!
+            </h3>
+            <p
+              style={{
+                fontSize: '16px',
+                lineHeight: '1.6',
+                marginBottom: '24px',
+              }}
+            >
+              Has clasificado correctamente todos los objetos y restaurado el
+              equilibrio sagrado 50-30-20.
             </p>
 
-            <div style={{ background: '#E8F5E9', padding: '16px', borderRadius: '8px', marginBottom: '24px', border: '2px solid #4CAF50', textAlign: 'left' }}>
-              <p style={{ margin: '0 0 12px 0', fontSize: '15px', fontWeight: 'bold' }}>🧙‍♂️ Lección del Mago Sabio:</p>
-              <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.5' }}>
-                "Clasificar gastos es sabiduría. Cada peso tiene un propósito: <strong>sobrevivir</strong> (necesidades), <strong>disfrutar</strong> (gustos) o <strong>crecer</strong> (ahorro). Quien domina este equilibrio, domina su futuro financiero."
+            <div
+              style={{
+                background: '#E8F5E9',
+                padding: '16px',
+                borderRadius: '8px',
+                marginBottom: '24px',
+                border: '2px solid #4CAF50',
+                textAlign: 'left',
+              }}
+            >
+              <p
+                style={{
+                  margin: '0 0 12px 0',
+                  fontSize: '15px',
+                  fontWeight: 'bold',
+                }}
+              >
+                🧙‍♂️ Lección del Mago Sabio:
+              </p>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: '14px',
+                  lineHeight: '1.5',
+                }}
+              >
+                "Clasificar gastos es sabiduría. Cada peso tiene un propósito:{' '}
+                <strong>sobrevivir</strong> (necesidades),{' '}
+                <strong>disfrutar</strong> (gustos) o{' '}
+                <strong>crecer</strong> (ahorro). Quien domina este equilibrio,
+                domina su futuro financiero."
               </p>
             </div>
 
-            <button onClick={() => { onComplete(); onClose(); }} style={{ width: '100%', padding: '16px', fontSize: '18px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)' }}>
+            <button
+              onClick={() => {
+                if (onComplete) onComplete();
+              }}
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontSize: '18px',
+                background:
+                  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+              }}
+            >
               ✨ ¡Continuar Aventura!
             </button>
           </div>
@@ -1552,29 +1786,85 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
     );
   }
 
+  // STAGE: gameover
   if (stage === 'gameover') {
     return (
       <div className="game-panel-overlay" style={{ zIndex: 1000 }}>
-        <div className="game-panel puzzle-game-panel" style={{ maxWidth: '600px' }}>
+        <div
+          className="game-panel puzzle-game-panel"
+          style={{ maxWidth: '600px' }}
+        >
           <div className="panel-header">
             <h2>💔 ¡Game Over!</h2>
           </div>
 
-          <div className="panel-content" style={{ padding: '32px', textAlign: 'center' }}>
+          <div
+            className="panel-content"
+            style={{ padding: '32px', textAlign: 'center' }}
+          >
             <div style={{ fontSize: '80px', marginBottom: '24px' }}>💀</div>
-            <h3 style={{ marginBottom: '16px', fontSize: '24px' }}>¡Has Perdido!</h3>
-            <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '24px' }}>
+            <h3
+              style={{ marginBottom: '16px', fontSize: '24px' }}
+            >
+              ¡Has Perdido!
+            </h3>
+            <p
+              style={{
+                fontSize: '16px',
+                lineHeight: '1.6',
+                marginBottom: '24px',
+              }}
+            >
               No has logrado restaurar el equilibrio financiero en el Dungeon.
             </p>
 
-            <div style={{ background: '#FFEB3B', padding: '16px', borderRadius: '8px', marginBottom: '24px', border: '2px solid #FF9800', textAlign: 'left' }}>
-              <p style={{ margin: '0 0 12px 0', fontSize: '15px', fontWeight: 'bold' }}>🧙‍♂️ Lección del Mago Sabio:</p>
-              <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.5' }}>
-                "El equilibrio financiero es crucial. Cada peso cuenta para tu futuro. Aprende de tus errores y vuelve a intentarlo."
+            <div
+              style={{
+                background: '#FFEB3B',
+                padding: '16px',
+                borderRadius: '8px',
+                marginBottom: '24px',
+                border: '2px solid #FF9800',
+                textAlign: 'left',
+              }}
+            >
+              <p
+                style={{
+                  margin: '0 0 12px 0',
+                  fontSize: '15px',
+                  fontWeight: 'bold',
+                }}
+              >
+                🧙‍♂️ Lección del Mago Sabio:
+              </p>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: '14px',
+                  lineHeight: '1.5',
+                }}
+              >
+                "El equilibrio financiero es crucial. Cada peso cuenta para tu
+                futuro. Aprende de tus errores y vuelve a intentarlo."
               </p>
             </div>
 
-            <button onClick={onClose} style={{ width: '100%', padding: '16px', fontSize: '18px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)' }}>
+            <button
+              onClick={onClose}
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontSize: '18px',
+                background:
+                  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+              }}
+            >
               🔁 ¡Reintentar!
             </button>
           </div>

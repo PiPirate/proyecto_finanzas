@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/EvaluationStage.css';
 
-// Nuevo GameWorldSimple depurado
+// GameWorldSimple del banco (GameEvaluation.jsx)
 import { GameWorldSimple } from '../../games/unit2/components/GameEvaluation';
 import '../../games/unit2/styles/globals.css';
 
@@ -16,9 +16,9 @@ export default function EvaluationStage({ onComplete }) {
 
   const handleFinish = () => {
     if (typeof onComplete === 'function') {
-      onComplete(); // Marca como completado
+      onComplete(); // marca como completado en tu flujo general
     }
-    navigate('/'); // Volver a módulos
+    navigate('/'); // volver a módulos / menú principal
   };
 
   return (
@@ -34,10 +34,12 @@ export default function EvaluationStage({ onComplete }) {
             isMobile ? 'tutorial-game-wrapper--mobile-scale' : ''
           }`}
         >
-          <GameWorldSimple onComplete={() => {}} />
+          {/* Aquí ahora SÍ le pasamos handleFinish */}
+          <GameWorldSimple onComplete={handleFinish} />
         </div>
 
-        {/* Botón flotante siempre visible */}
+        {/* Si quieres puedes dejar el botón flotante como salida manual extra,
+            o quitarlo si ya no lo necesitas. */}
         <div className="floating-continue-btn" onClick={handleFinish}>
           Continuar →
         </div>

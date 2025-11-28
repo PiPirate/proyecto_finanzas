@@ -22,15 +22,16 @@ export function GameWorldSimple({ onComplete }) {
   const [playerPos, setPlayerPos] = useState({ x: 8, y: 10 });
   const [direction, setDirection] = useState('down');
   const [isMoving, setIsMoving] = useState(false);
-  const [gameState, setGameState] = useState('exploring');
+  const [gameState, setGameState] = useState('exploring'); // exploring | dialogue | puzzle_game
 
   const [currentDialogueQueue, setCurrentDialogueQueue] = useState([]);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const [facingObjectName, setFacingObjectName] = useState(null);
 
   const [introShown, setIntroShown] = useState(false);
-  const TILE_SIZE = 64;
+  const [pendingCompletion, setPendingCompletion] = useState(false); // se pone en true cuando el puzzle terminó bien
 
+  const TILE_SIZE = 64;
   const touchStartRef = useRef({ x: 0, y: 0 });
 
   // Cámara responsiva EXACTA a GameWorld
@@ -67,7 +68,7 @@ export function GameWorldSimple({ onComplete }) {
   const introDialogue = [
     {
       speaker: 'system',
-      text: 'Dirígete a la computadora para realizar la evaluación.',
+      text: 'Dirígete a la computadora para realizar la evaluación final de esta unidad.',
       emotion: 'neutral'
     }
   ];
@@ -75,10 +76,11 @@ export function GameWorldSimple({ onComplete }) {
   // Mostrar intro
   useEffect(() => {
     if (!introShown) {
-      setTimeout(() => {
+      const t = setTimeout(() => {
         startDialogueSequence(introDialogue);
         setIntroShown(true);
       }, 600);
+      return () => clearTimeout(t);
     }
   }, [introShown]);
 
@@ -178,9 +180,18 @@ export function GameWorldSimple({ onComplete }) {
       return;
     }
 
+    // Último diálogo de la cola
     setCurrentDialogueQueue([]);
     setCurrentDialogueIndex(0);
-    setGameState('exploring');
+
+    // Si venimos de un puzzle completado, aquí disparamos el onComplete del padre
+    if (pendingCompletion && typeof onComplete === 'function') {
+      setPendingCompletion(false);
+      onComplete();
+      // no hace falta setGameState, el padre normalmente va a navegar fuera
+    } else {
+      setGameState('exploring');
+    }
   };
 
   // Controles teclado
@@ -205,7 +216,7 @@ export function GameWorldSimple({ onComplete }) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleMove, handleInteract, gameState]);
+  }, [handleMove, handleInteract, gameState, handleDialogueAdvance]);
 
   // Touch Controls
   const handleTouchStart = (e) => {
@@ -234,6 +245,8 @@ export function GameWorldSimple({ onComplete }) {
       else handleInteract();
       return;
     }
+
+    if (gameState !== 'exploring') return;
 
     if (ax > ay) handleMove(dx > 0 ? 'right' : 'left');
     else handleMove(dy > 0 ? 'down' : 'up');
@@ -301,10 +314,33 @@ export function GameWorldSimple({ onComplete }) {
         {gameState === 'puzzle_game' && (
           <PuzzleGamePanel
             onComplete={() => {
-              setGameState('exploring');
-              if (onComplete) onComplete();
+              // Puzzle completado con éxito:
+              // activamos bandera y mostramos diálogo de cierre.
+              setPendingCompletion(true);
+              setCurrentDialogueQueue([
+                {
+                  speaker: 'system',
+                  text: '✅ Has completado la evaluación interactiva de esta unidad.',
+                  emotion: 'neutral'
+                },
+                {
+                  speaker: 'system',
+                  text: 'Tus decisiones en el dungeon mostraron cómo aplicas la regla del equilibrio entre necesidades, gustos y ahorro.',
+                  emotion: 'neutral'
+                },
+                {
+                  speaker: 'system',
+                  text: 'Ahora regresarás al menú para cerrar esta misión y continuar con otros retos financieros.',
+                  emotion: 'neutral'
+                }
+              ]);
+              setCurrentDialogueIndex(0);
+              setGameState('dialogue');
             }}
-            onClose={() => setGameState('exploring')}
+            onClose={() => {
+              // Cerrar el panel sin completar: vuelves a explorar
+              setGameState('exploring');
+            }}
           />
         )}
       </div>
