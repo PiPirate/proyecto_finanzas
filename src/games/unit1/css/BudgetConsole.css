@@ -1,0 +1,514 @@
+/* src/games/unit1/BudgetConsole.css */
+
+/* Capa oscura sobre el juego */
+.budget-console-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  cursor: pointer;
+}
+
+/* Marco general inspirado en el de diálogo */
+.budget-console-frame {
+  background-color: #121a2f;
+  border: 3px solid #4c6fbf;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 2px #192243,
+    0 16px 0 rgba(0, 0, 0, 0.5);
+  padding: 18px;
+  image-rendering: pixelated;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Monitor: tamaño grande */
+.budget-console-monitor {
+  width: 780px;
+  height: 600px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  position: relative;
+  image-rendering: pixelated;
+}
+
+/* Zona de la pantalla donde va el contenido */
+.budget-console-screen {
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  top: 20%;
+  bottom: 9%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 10px 18px 18px 18px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  cursor: url('../../assets/unit1/icons/retro_cursor.png'), pointer;
+}
+
+/* Cabecera: solo el nombre del hablante, sin caja */
+.budget-console-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 6px;
+}
+
+.budget-console-speaker {
+  font-family: 'VCR OSD Mono', monospace;
+  margin-top: 5%;
+  font-size: 20px;
+  color: #c0d5ff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Texto dentro de la pantalla */
+.budget-console-text {
+  flex: 1;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 20px;
+  line-height: 1.5;
+  color: #e5f0ff;
+  text-shadow: 1px 1px 0 #000;
+  white-space: pre-wrap;     /* respeta \n */
+  word-wrap: break-word;
+}
+
+/* Contenedor del icono del minijuego */
+.budget-console-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+/* Icono con animación de latido */
+.budget-console-icon {
+  width: 55%;
+  height: auto;
+  image-rendering: pixelated;
+  animation: budget-console-icon-pulse 1.3s ease-in-out infinite;
+}
+
+@keyframes budget-console-icon-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+/* Flechita de siguiente (se usa SOLO en los diálogos de personas,
+   es decir, en MiniGame1Summary: Carmina y Mesa) */
+.budget-console-next {
+  align-self: flex-end;
+  margin-top: 4px;
+  font-size: 20px;
+  color: #e5f0ff;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.budget-console-next--visible {
+  opacity: 1;
+}
+
+/* ========================================= */
+/*      ESTILOS DEL MINI-JUEGO 1            */
+/* ========================================= */
+
+.mg1-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+.mg1-title {
+  margin: 4px 0 6px 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 25px;
+  color: #e5f0ff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.mg1-instructions {
+  margin: 0 0 8px 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 18px;
+  color: #c0d5ff;
+  text-align: center;
+}
+
+.mg1-phrase-box {
+  margin-top: 6px;
+  padding: 10px 14px;
+  max-width: 100%;
+  background: rgba(5, 13, 35, 0.7);
+  border: 2px solid #4c6fbf;
+  border-radius: 10px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 20px;
+  color: #e5f0ff;
+  text-align: center;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.mg1-buttons {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.mg1-button {
+  min-width: 140px;
+  padding: 8px 12px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 20px;
+  border-radius: 10px;
+  border: 2px solid #4c6fbf;
+  background: #121a2f;
+  color: #e5f0ff;
+  text-shadow: 1px 1px 0 #000;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+.mg1-button--vaga {
+  background: #261327;
+}
+
+.mg1-button--clara {
+  background: #123026;
+}
+
+.mg1-button:hover {
+  filter: brightness(1.1);
+}
+
+.mg1-feedback {
+  margin-top: 10px;
+  min-height: 40px;
+  max-width: 100%;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  color: #ffd9a0;
+  text-align: center;
+}
+
+.mg1-progress {
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  color: #c0d5ff;
+  text-align: center;
+}
+
+/* contenedor de los diálogos finales del minijuego */
+.mg1-summary {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ======== estilo tipo DialogueBox para Carmina ========= */
+
+.mg1-summary--carmina {
+  justify-content: flex-end;
+}
+
+.mg1-dialogue-panel {
+  width: 100%;
+  background-color: #131b34;
+  border: 3px solid #4c6fbf;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 2px #192243,
+    0 8px 0 rgba(0, 0, 0, 0.4);
+  padding: 16px 24px 20px 24px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.mg1-dialogue-speaker {
+  position: absolute;
+  top: 6px;
+  left: 18px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 16px;
+  color: #9bb6ff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.mg1-dialogue-text {
+  margin-top: 22px;
+  margin-bottom: 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #e5f0ff;
+  text-shadow: 1px 1px 0 #000;
+  white-space: pre-wrap;
+}
+
+/* recolocamos la flechita dentro del panel de Carmina */
+.mg1-summary--carmina .budget-console-next {
+  position: absolute;
+  right: 24px;
+  bottom: 14px;
+}
+/* ========================================= */
+/*      ESTILOS DEL MINI-JUEGO 2            */
+/* ========================================= */
+
+.mg2-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+.mg2-title {
+  margin: 4px 0 6px 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 20px;
+  color: #e5f0ff;
+  text-shadow: 1px 1px 0 #000;
+  text-align: center;
+}
+
+.mg2-instructions {
+  margin: 0 0 10px 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  color: #c0d5ff;
+  text-align: center;
+}
+
+.mg2-phrase-box {
+  margin: 6px auto 10px auto;
+  padding: 10px 14px;
+  max-width: 100%;
+  background: rgba(5, 13, 35, 0.7);
+  border: 2px solid #4c6fbf;
+  border-radius: 10px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 18px;
+  color: #e5f0ff;
+  text-align: center;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.mg2-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.mg2-option-button {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid #4c6fbf;
+  background: #121a2f;
+  color: #e5f0ff;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.mg2-option-button:hover {
+  filter: brightness(1.08);
+}
+
+.mg2-option-button--selected {
+  background: #162756;
+  box-shadow: 0 0 0 2px #8aa4ff;
+}
+
+.mg2-feedback {
+  margin-top: 10px;
+  min-height: 46px;
+  max-width: 100%;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  color: #ffd9a0;
+  text-align: center;
+}
+
+.mg2-bottom-row {
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.mg2-progress {
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  color: #c0d5ff;
+}
+
+.mg2-next-button {
+  min-width: 150px;
+  padding: 6px 12px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 2px solid #4c6fbf;
+  background: #121a2f;
+  color: #e5f0ff;
+  cursor: pointer;
+}
+
+.mg2-next-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.mg2-next-button:not(:disabled):hover {
+  filter: brightness(1.08);
+}
+
+/* ========================================= */
+/*      ESTILOS DEL MINI-JUEGO 3            */
+/* ========================================= */
+
+.mg3-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+.mg3-title {
+  margin: 4px 0 6px 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 20px;
+  color: #e5f0ff;
+  text-shadow: 1px 1px 0 #000;
+  text-align: center;
+}
+
+.mg3-instructions {
+  margin: 0 0 10px 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  color: #c0d5ff;
+  text-align: center;
+}
+
+.mg3-budget-amount {
+  color: #ffe082;
+}
+
+.mg3-goals {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mg3-goal-card {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid #4c6fbf;
+  background: #121a2f;
+  color: #e5f0ff;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.mg3-goal-card:hover {
+  filter: brightness(1.08);
+}
+
+.mg3-goal-card--selected {
+  background: #203a75;
+  box-shadow: 0 0 0 2px #8aa4ff;
+}
+
+.mg3-hint {
+  margin-top: 10px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 13px;
+  color: #c0d5ff;
+  text-align: center;
+}
+
+.mg3-feedback {
+  margin-top: 10px;
+  min-height: 40px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  color: #ffd9a0;
+  text-align: center;
+}
+
+.mg3-bottom-row {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.mg3-progress {
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  color: #c0d5ff;
+}
+
+.mg3-next-button {
+  min-width: 170px;
+  padding: 6px 12px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 2px solid #4c6fbf;
+  background: #121a2f;
+  color: #e5f0ff;
+  cursor: pointer;
+}
+
+.mg3-next-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.mg3-next-button:not(:disabled):hover {
+  filter: brightness(1.08);
+}
+
+
+.description {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  font-family: system-ui, sans-serif;
+}

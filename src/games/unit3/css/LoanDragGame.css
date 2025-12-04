@@ -1,0 +1,316 @@
+.loan-game-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.loan-game-window {
+    background-image: url("../../../assets/unit3/objects/table.png");
+    background-repeat: repeat;
+    background-size: 100% 100%;
+    background-position: center top;
+
+    padding: 24px 24px 20px;
+    width: 600px;
+    max-width: 95vw;
+    max-height: 90vh;
+    border-radius: 16px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    overflow-y: auto;
+
+    color: white;
+    position: relative;
+}
+
+.loan-game-window::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+        145deg,
+        rgba(13, 71, 161, 0.55),
+        rgba(26, 35, 126, 0.8)
+    );
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.module-title {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.loan-title {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.intro {
+    text-align: center;
+}
+
+.loan-subtitle {
+    margin-bottom: 20px;
+    color: #e3f2fd;
+    font-size: 15px;
+}
+
+.module-desc {
+    color: #e3f2fd;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.loan-progress {
+    font-size: 13px;
+    color: #bbdefb;
+    opacity: 0.9;
+    margin-bottom: 6px;
+}
+
+/* Cuadro de pregunta única */
+
+.loan-question {
+    background: rgba(8, 20, 40, 0.85);
+    border-radius: 12px;
+    padding: 16px 16px 14px;
+    border: 1px solid rgba(187, 222, 251, 0.35);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+    margin-top: 4px;
+    margin-bottom: 18px;
+}
+
+.loan-question-label {
+    font-size: 15px;
+    margin-bottom: 14px;
+    color: #e3f2fd;
+}
+
+/* Opciones tipo test */
+
+.loan-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.loan-option-btn {
+    width: 100%;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.96);
+    color: #0d1b2a;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(144, 164, 174, 0.8);
+    font-size: 14px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition:
+        transform 0.08s ease,
+        box-shadow 0.08s ease,
+        background 0.12s ease,
+        border-color 0.12s ease;
+    position: relative;
+}
+
+.loan-option-btn::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(96, 125, 139, 0.8);
+}
+
+.loan-option-btn span {
+    display: inline-block;
+}
+
+.loan-option-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+    background: #ffffff;
+}
+
+.loan-option-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Estado seleccionada */
+
+.loan-option-btn.selected {
+    border-color: #1976d2;
+    background: #e3f2fd;
+}
+
+/* Estado correcta (al finalizar módulo o si quieres marcarla) */
+
+.loan-option-btn.correct {
+    border-color: #2e7d32;
+    background: #e8f5e9;
+}
+
+.loan-option-btn.correct::before {
+    background: #2e7d32;
+}
+
+/* Estado incorrecta seleccionada */
+
+.loan-option-btn.wrong {
+    border-color: #c62828;
+    background: #ffebee;
+}
+
+.loan-option-btn.wrong::before {
+    background: #c62828;
+}
+
+/* Botones generales */
+
+.loan-finish-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+    background: linear-gradient(135deg, #43a047, #2e7d32);
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    margin-top: 6px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+    transition:
+        transform 0.08s ease,
+        box-shadow 0.08s ease,
+        opacity 0.12s ease;
+}
+
+.loan-finish-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+.loan-finish-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.loan-finish-btn.disabled {
+    background: gray;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.loan-next-module-btn {
+    display: inline-block;
+}
+
+/* Hint y feedback */
+
+.loan-hint-box {
+    background: #fff9c4;
+    border-left: 4px solid #ffcc00;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #795548;
+}
+
+.loan-feedback-box {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #0d47a1;
+    white-space: pre-line;
+}
+
+/* Resumen (si lo quisieras usar en algún momento) */
+
+.loan-summary {
+    background: #f1f8e9;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border-left: 3px solid #4caf50;
+    color: #33691e;
+}
+
+/* Lo viejo de drag & drop queda sin uso, pero lo dejamos por si lo reaprovechas */
+
+.loan-cards {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.loan-card {
+    background: #ffffff !important;
+    padding: 10px 15px !important;
+    border-radius: 8px !important;
+    cursor: default;
+    user-select: none;
+    min-height: auto !important;
+    color: black !important;
+}
+
+.loan-dropzones {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.dropzone {
+    border: 2px dashed #c4bfbf;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    color: #e3f2fd;
+}
+
+/* Responsivo */
+
+@media (max-width: 768px) {
+    .loan-game-window {
+        width: calc(100vw - 32px);
+        padding: 18px 16px;
+    }
+
+    .loan-question {
+        padding: 14px 12px;
+    }
+
+    .loan-option-btn {
+        font-size: 13px;
+        padding: 8px 10px 8px 16px;
+    }
+}
+
+/* Nuevo estilo para hacer scroll en las opciones */
+.loan-options-scrollable {
+    max-height: 250px; /* Define la altura máxima para las opciones */
+    overflow-y: auto; /* Aplica el scroll vertical si es necesario */
+    padding-right: 8px; /* Espacio para que la barra de scroll no se pegue al borde */
+}
+
+/* Opcional: mejora el aspecto del scroll en navegadores basados en Webkit */
+.loan-options-scrollable::-webkit-scrollbar {
+    width: 6px;
+}
+
+.loan-options-scrollable::-webkit-scrollbar-thumb {
+    background: rgba(187, 222, 251, 0.4);
+    border-radius: 10px;
+}

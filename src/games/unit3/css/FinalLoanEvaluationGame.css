@@ -1,0 +1,366 @@
+/* ----------------------------------------------
+   1. CONTENEDOR PRINCIPAL DEL JUEGO
+---------------------------------------------- */
+.final-loan-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, #1c1c254f, #0d0d1233);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    z-index: 200;
+    font-family: "Poppins", sans-serif;
+    color: white;
+}
+
+.loan-stage {
+    position: relative;
+    width: min(1100px, 92vw);
+    height: min(720px, 90vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.side-card-layer {
+    position: absolute;
+    inset: 0;
+}
+
+/* ----------------------------------------------
+   2. TARJETA PRINCIPAL (POKER CARD)
+---------------------------------------------- */
+.loan-card {
+    background: #fafafa;
+    color: #333;
+    width: 420px;
+    min-height: 520px;
+    padding: 30px;
+    border-radius: 20px;
+    border: 3px solid #d6d6d6;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    cursor: grab;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    display: flex;
+    flex-direction: column;
+
+    /* Importante para gestos en móvil (Pointer Events) */
+    touch-action: none;
+}
+
+.loan-card:active {
+    cursor: grabbing;
+    transform: scale(1.03);
+}
+
+.loan-card h2 {
+    font-size: 26px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.loan-card h3 {
+    margin-top: 18px;
+    font-size: 19px;
+    font-weight: 600;
+    color: #222;
+}
+
+.loan-card p {
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.loan-card ul {
+    margin-top: 10px;
+    padding-left: 18px;
+}
+
+.swipe-hint {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 16px;
+    color: #444;
+}
+
+/* ----------------------------------------------
+   3. TARJETAS LATERALES (OPCIONES)
+---------------------------------------------- */
+.side-card {
+    position: absolute;
+    width: 260px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.795);
+    border: 2px solid rgb(255, 255, 255);
+    backdrop-filter: blur(6px);
+    color: #110000;
+    border-radius: 16px;
+    font-size: 15px;
+    text-align: center;
+    transition: 0.2s ease;
+    pointer-events: auto;
+    z-index: 100;
+
+    cursor: pointer;
+    outline: none;
+}
+
+.side-card:hover {
+    transform: scale(1.05);
+}
+
+.side-card:focus-visible {
+    outline: 3px solid #2563eb;
+}
+
+/* Posiciones por defecto (PC) */
+.side-left {
+    left: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.side-right {
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.side-up {
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.side-down {
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Highlights dinámicos */
+.side-card.highlight {
+    transform: scale(1.12);
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.25);
+    border: 3px solid #fff;
+}
+
+.side-right.highlight {
+    box-shadow: 0 0 20px 6px rgba(0, 255, 0, 0.7);
+}
+.side-left.highlight {
+    box-shadow: 0 0 20px 6px rgba(255, 0, 0, 0.7);
+}
+.side-up.highlight {
+    box-shadow: 0 0 20px 6px rgba(0, 150, 255, 0.7);
+}
+.side-down.highlight {
+    box-shadow: 0 0 20px 6px rgba(255, 200, 0, 0.7);
+}
+
+/* ----------------------------------------------
+   4. FEEDBACK EFECTO BURBUJA
+---------------------------------------------- */
+.feedback-box {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    color: #222;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-weight: 600;
+    border: 2px solid #ddd;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    animation: fadeInScale 0.4s ease forwards;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ----------------------------------------------
+   5. PANTALLA FINAL
+---------------------------------------------- */
+.final-screen {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 300;
+}
+
+.final-box {
+    width: 500px;
+    padding: 30px;
+    border-radius: 22px;
+    text-align: center;
+    animation: dropIn 0.45s ease-out forwards;
+    color: white;
+}
+
+@keyframes dropIn {
+    from {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.final-box.success {
+    background: linear-gradient(135deg, #22c55e, #15803d);
+}
+.final-box.medium {
+    background: linear-gradient(135deg, #facc15, #d97706);
+}
+.final-box.fail {
+    background: linear-gradient(135deg, #ef4444, #991b1b);
+}
+
+.score {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.final-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+}
+
+.retry-btn,
+.finish-btn {
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.retry-btn {
+    background: #ffffff;
+    color: #d32f2f;
+}
+.retry-btn:hover {
+    background: #ffe7e7;
+}
+
+.finish-btn {
+    background: #ffffff;
+    color: #1e3a8a;
+}
+.finish-btn:hover {
+    background: #e0ebff;
+}
+
+/* ==========================================================================
+   6. MEDIA QUERY: AJUSTES PARA CELULARES
+   ========================================================================== */
+@media (max-width: 900px) {
+    .final-loan-overlay {
+        padding: 16px 12px;
+        align-items: flex-start;
+        justify-content: center;
+        overflow-y: auto;
+    }
+
+    .loan-stage {
+        width: 100%;
+        max-width: 520px;
+        height: auto;
+        padding: 10px 0 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .side-card-layer {
+        position: static;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .loan-card {
+        width: 100% !important;
+        min-height: auto;
+        height: auto;
+        max-height: 70vh;
+        padding: 18px;
+        transform: none !important;
+        overflow-y: auto;
+    }
+
+    .loan-card h2 {
+        font-size: 22px;
+        margin-bottom: 8px;
+    }
+    .loan-card h3 {
+        font-size: 16px;
+        margin-top: 12px;
+    }
+    .loan-card p {
+        font-size: 13px;
+    }
+    .loan-card ul {
+        padding-left: 15px;
+        font-size: 13px;
+    }
+
+    .side-card {
+        position: relative;
+        width: 100%;
+        max-width: none;
+        padding: 10px 12px;
+        font-size: 12px;
+        line-height: 1.3;
+        background: rgba(255, 255, 255, 0.96);
+        z-index: 250;
+        transform: none !important;
+    }
+
+    .side-left,
+    .side-right,
+    .side-up,
+    .side-down {
+        left: auto;
+        right: auto;
+        top: auto;
+        bottom: auto;
+        transform: none;
+    }
+
+    .feedback-box {
+        position: static;
+        transform: none;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .final-box {
+        width: 90%;
+        padding: 20px;
+    }
+}

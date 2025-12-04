@@ -1,0 +1,42 @@
+/* src/games/core/player/Player.css */
+
+/* Esto lo dejamos igual, que ya funciona bonito */
+.player {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center top;
+  image-rendering: pixelated;
+  transform-origin: center center;
+
+  /* IDLE: frames 1–5 */
+  animation: player-idle 1.2s steps(2) infinite;
+}
+
+@keyframes player-idle {
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    background-position-y: 0.001%;  /* ya lo tenías así y va bien */
+  }
+}
+
+/* Aquí es donde cambiamos cosas */
+
+/* WALK: frames 6–9 → 4 frames */
+.player.player--moving {
+  animation: player-walk 0.8s steps(4) infinite; /* 4 frames, no 5 */
+}
+
+/* WALK: frames 6–9 (o 6–8 según tengas el rango).
+   Aquí dejo el ejemplo que acordamos antes:
+   del 62.5% al 100% con 4 frames. */
+@keyframes player-walk {
+  from {
+    background-position-y: 0%;  /* justo después del idle */
+  }
+  to {
+    background-position-y: 131%;   /* último frame de la tirilla */
+  }
+}

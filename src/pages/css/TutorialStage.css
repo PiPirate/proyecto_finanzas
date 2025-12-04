@@ -1,0 +1,184 @@
+/* src/pages/css/TutorialStage.css */
+
+.tutorial-map-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Escala ajustable para que el mapa, sprites y cuadros de diálogo ocupen menos espacio en móvil */
+  --tutorial-mobile-scale: 0.85;
+}
+
+.tutorial-game-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+
+.tutorial-map-container--mobile {
+  padding: 0;
+  min-height: var(--app-vh, 100dvh);
+  align-items: stretch;
+}
+
+.tutorial-game-wrapper--mobile-scale {
+  transform: scale(var(--tutorial-mobile-scale));
+  transform-origin: top center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Overlay cuando se completa el objetivo (mensaje pequeño antiguo) */
+.tutorial-success {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.95);
+  color: #f9fafb;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  max-width: 280px;
+  font-size: 0.95rem;
+  z-index: 900;
+
+  /* Scroll */
+  max-height: 70vh;
+  /* límite de alto del cuadro */
+  overflow-y: auto;
+  /* activa scrollbar vertical */
+  -webkit-overflow-scrolling: touch;
+  /* scroll suave en móvil */
+}
+
+.tutorial-continue-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+}
+
+.tutorial-continue-btn:hover {
+  filter: brightness(1.05);
+}
+
+/* ========= MODAL FINAL DEL TUTORIAL ========= */
+
+/* Fondo oscuro tipo modal, ocupa todo el contenedor del mapa */
+.tutorial-endcard-overlay {
+  position: absolute;
+  inset: 0;
+  /* top:0; right:0; bottom:0; left:0 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Capa oscura + blur del contenido de atrás */
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9999;
+  /* por encima del mapa, HUD, diálogos, etc. */
+}
+
+/* Tarjeta de contenido del modal */
+.tutorial-endcard {
+  background: #ffffff;
+  padding: 24px 32px;
+  border-radius: 16px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+}
+
+.tutorial-endcard-title {
+  margin: 0 0 12px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.tutorial-endcard-text {
+  margin: 0 0 20px;
+  line-height: 1.5;
+  font-size: 0.95rem;
+  color: #1f2933;
+}
+
+/* Botón del modal */
+.tutorial-endcard-button {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.tutorial-endcard-button:hover {
+  filter: brightness(1.05);
+}
+
+/* Botón flotante para continuar */
+.floating-continue-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 9999;
+  /* siempre arriba */
+}
+
+.floating-continue-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* Que el panel del minijuego use todo el ancho cuando está embebido en el viewport móvil */
+.unit4-game-container .minigame-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Un poco menos margen vertical en móvil para que se vea más compacto */
+@media (max-width: 900px) {
+  .td-battlefield {
+    margin: 10px auto 12px;
+  }
+}
+
+.floating-continue-btn {
+  bottom: 96px;
+  /* evita solapar controles móviles */
+  right: 16px;
+}

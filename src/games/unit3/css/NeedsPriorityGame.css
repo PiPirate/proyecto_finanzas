@@ -1,0 +1,190 @@
+/* ==== OVERLAY ==== */
+.needs-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4000;
+}
+
+/* ==== VENTANA PRINCIPAL ==== */
+.needs-window {
+    background-image: url("../../../assets/unit3/objects/board.png");
+    background-repeat: repeat;
+    /* La imagen se repite sin deformarse */
+    background-size: 100% 100%;
+    /* Mantiene tamaño real */
+    background-position: center top;
+    /* Desde la esquina superior izquierda */
+    padding: 8px 65px 1px 65px;
+    border-radius: 14px;
+    width: 920px;
+    height: 800px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    animation: fadeIn .3s ease;
+}
+
+@media (max-width: 900px) {   /* Ajusta el ancho que necesites */
+.needs-window{
+        width: 1320px;
+    height: 500px; 
+    overflow-y: auto;  
+    }
+
+    .col-list {
+    max-height:none !important;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+}
+
+/* ==== 2 COLUMNAS ==== */
+.needs-columns {
+    display: grid;
+    grid-template-columns: 38% 62%;
+    gap: 20px;
+}
+
+/* ==== COLUMNA IZQUIERDA ==== */
+.col-info {
+    color: white;
+    padding-right: 15px;
+    border-right: 2px solid rgba(255, 255, 255, 0.12);
+}
+
+
+.col-info h2 {
+    margin-bottom: 10px;
+    font-size: 26px;
+}
+
+.income strong {
+    color: #7a4cff;
+}
+
+.instructions {
+    margin: 12px 0 20px;
+    color: #ffffff;
+}
+
+/* ==== BOTONES ==== */
+.needs-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #5f4c22;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.needs-btn:hover {
+    background: #3f331a;
+    transition: background-color 0.3s ease;
+    transform: scale(1.02);
+}
+
+.needs-btn.yes {
+    background: #00c853;
+}
+.needs-btn.no {
+    background: #ff5252;
+}
+
+.needs-btn.finish {
+    background: #00e676;
+    margin-top: 25px;
+}
+
+/* ==== COLUMNA DERECHA (LISTA + RESULTADOS) ==== */
+.col-list {
+    max-height: 90vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* ==== LISTA ==== */
+.list {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ==== ITEM DEL LISTADO ==== */
+.item {
+    text-align: center;
+    padding: 12px 15px;
+    border-radius: 10px;
+    cursor: grab;
+    user-select: none;
+    font-size: 15px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.25s ease, background-color 0.25s ease, 
+                opacity 0.25s ease, box-shadow 0.25s ease;
+}
+
+.item:hover {
+    transform: scale(1.02);
+}
+
+/* Dragging */
+.item.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+    cursor: grabbing;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+}
+
+/* ===== COLORES SEGÚN TIPO ===== */
+.type-essential { background: #ffe5e5; }
+.type-important { background: #fff7cc; }
+.type-variable  { background: #e8f3ff; }
+.type-capricho  { background: #f4e8ff; }
+
+/* Resultados */
+.result-message {
+    background: #283044;
+    color: #e3f2fd;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    white-space: pre-line;
+}
+
+.question {
+    margin-top: 15px;
+    color: #e3e3e3;
+}
+
+/* ==== ANIMACIÓN FADE ==== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* ===== SCROLLBAR ESTILO ELEGANTE ===== */
+.col-list::-webkit-scrollbar {
+    width: 10px;
+}
+
+.col-list::-webkit-scrollbar-track {
+    background: #15171d00;       /* Fondo oscuro */
+    border-radius: 10px;
+}
+
+.col-list::-webkit-scrollbar-thumb {
+    background: #5f4c22;        /* Color de la barra */
+    border-radius: 10px;
+    border: 2px solid #15171d00;  /* Para crear separación visual */
+}
+
+.col-list::-webkit-scrollbar-thumb:hover {
+    background: #9b6eff;        /* Color al pasar el mouse */
+}
+

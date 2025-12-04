@@ -1,0 +1,206 @@
+.piggy-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+}
+
+/* Marco central, estilo similar al computador/MK25 */
+.piggy-frame {
+  background-color: #121a2f;
+  border: 3px solid #4c6fbf;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 2px #192243,
+    0 16px 0 rgba(0, 0, 0, 0.5);
+  padding: 20px 28px 24px 28px;
+  width: 780px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
+/* Cerdito arriba-centro */
+.piggy-pig-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.piggy-pig {
+  image-rendering: pixelated;
+  transition: transform 0.25s ease-out;
+}
+
+/* Tamaños según el “score” */
+.piggy-pig--tiny {
+  width: 60px;
+  transform: scale(0.9);
+}
+
+.piggy-pig--small {
+  width: 70px;
+  transform: scale(1);
+}
+
+.piggy-pig--normal {
+  width: 80px;
+  transform: scale(1.05);
+}
+
+.piggy-pig--big {
+  width: 92px;
+  transform: scale(1.12);
+}
+
+.piggy-pig--huge {
+  width: 105px;
+  transform: scale(1.2);
+}
+
+.piggy-progress-label {
+  margin-top: 6px;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  color: #c0d5ff;
+}
+
+/* Tarjeta de la decisión */
+.piggy-card {
+  width: 100%;
+  background: #131b34;
+  border-radius: 12px;
+  border: 2px solid #4c6fbf;
+  padding: 16px 20px;
+  box-shadow: 0 0 0 2px #192243;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.piggy-card-text {
+  margin: 0 0 8px 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #e5f0ff;
+  text-align: center;
+}
+
+.piggy-step-label {
+  margin: 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 13px;
+  color: #9bb6ff;
+  text-align: center;
+}
+
+/* Botones de decisiones */
+.piggy-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.piggy-button {
+  min-width: 130px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 2px solid #4c6fbf;
+  background: #121a2f;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 15px;
+  color: #e5f0ff;
+  text-shadow: 1px 1px 0 #000;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+.piggy-button--save {
+  background: #123026;
+}
+
+.piggy-button--spend {
+  background: #261327;
+}
+
+.piggy-button--delay {
+  background: #222433;
+}
+
+.piggy-button:hover {
+  filter: brightness(1.1);
+}
+
+/* Feedback educativo debajo de los botones */
+.piggy-feedback {
+  min-height: 48px;
+  width: 100%;
+  margin: 0 0 10px 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  color: #ffd9a0;
+  text-align: center;
+}
+
+/* Zona inferior con botón siguiente */
+.piggy-bottom-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.piggy-next-button,
+.piggy-finish-button {
+  min-width: 200px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 2px solid #4c6fbf;
+  background: #192243;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 16px;
+  color: #e5f0ff;
+  cursor: pointer;
+}
+
+.piggy-next-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.piggy-next-button:not(:disabled):hover,
+.piggy-finish-button:hover {
+  filter: brightness(1.1);
+}
+
+/* Título y textos del resumen final */
+.piggy-title {
+  margin: 0 0 12px 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 22px;
+  color: #e5f0ff;
+  text-align: center;
+}
+
+.piggy-summary-text {
+  margin: 0 0 8px 0;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 16px;
+  color: #e5f0ff;
+  text-align: center;
+}
+
+.piggy-summary-text--secondary {
+  font-size: 14px;
+  color: #c0d5ff;
+  margin-bottom: 18px;
+}

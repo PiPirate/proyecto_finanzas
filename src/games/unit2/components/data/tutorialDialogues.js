@@ -1,0 +1,86 @@
+export const tutorialDialogues = [
+  {
+    id: 'intro_1',
+    speaker: 'assistant',
+    text: '¡Hola! Soy tu asistente virtual. Bienvenido a tu casa, donde aprenderás a gestionar tu dinero personal.',
+    emotion: 'happy',
+  },
+  {
+    id: 'intro_2',
+    speaker: 'assistant',
+    text: 'Este mes recibirás un ingreso de $10,000. Vamos a aprender cómo distribuirlo de forma inteligente.',
+    emotion: 'neutral',
+  },
+  {
+    id: 'cubetas_1',
+    speaker: 'assistant',
+    text: 'Mira a tu alrededor. Hay tres zonas importantes: Necesidades (gastos básicos), Gustos (opcionales) y Ahorro (tus metas).',
+    emotion: 'neutral',
+  },
+  {
+    id: 'cubetas_2',
+    speaker: 'assistant',
+    text: 'La clave es separar PRIMERO tu ahorro. Así te aseguras de alimentar tus metas cada mes, sin importar qué pase.',
+    emotion: 'thinking',
+  },
+  {
+    id: 'necesidades_1',
+    speaker: 'assistant',
+    text: 'Las NECESIDADES son gastos que no puedes evitar: comida, servicios, transporte básico. Deben ser tu prioridad.',
+    emotion: 'neutral',
+  },
+  {
+    id: 'gustos_1',
+    speaker: 'assistant',
+    text: 'Los GUSTOS son entretenimiento y antojos. Son importantes para tu bienestar, pero puedes ajustarlos según tu presupuesto.',
+    emotion: 'happy',
+  },
+  {
+    id: 'ahorro_1',
+    speaker: 'assistant',
+    text: 'El AHORRO es para tus metas financieras. ¡Mira cómo crece cuando eres constante! Imagina lo que puedes lograr.',
+    emotion: 'happy',
+  },
+  {
+    id: 'regla_1',
+    speaker: 'assistant',
+    text: 'Una guía útil es la regla 50-30-20: 50% necesidades, 30% gustos, 20% ahorro. Puedes ajustarla según tus objetivos.',
+    emotion: 'neutral',
+  },
+  {
+    id: 'practica_1',
+    speaker: 'assistant',
+    text: 'Ahora tú decides. Ve a la mesa de presupuesto (centro arriba) para distribuir tu ingreso mensual en las tres cubetas.',
+    emotion: 'happy',
+  },
+  {
+    id: 'feedback_1',
+    speaker: 'assistant',
+    text: '¡Genial! Has distribuido tu presupuesto. Recuerda siempre priorizar: Ahorro primero, necesidades completas, y gustos ajustados.',
+    emotion: 'happy',
+  },
+  {
+    id: 'situaciones_1',
+    speaker: 'assistant',
+    text: 'En la vida aparecen situaciones inesperadas: facturas, invitaciones, emergencias. La clave es mantener tu ahorro protegido.',
+    emotion: 'thinking',
+  },
+  {
+    id: 'situaciones_2',
+    speaker: 'assistant',
+    text: 'Si llega una factura inesperada, usa tu presupuesto de necesidades. Si te invitan a salir, evalúa tu presupuesto de gustos.',
+    emotion: 'neutral',
+  },
+  {
+    id: 'conclusion_1',
+    speaker: 'assistant',
+    text: 'Recuerda: no hay puntaje correcto o incorrecto aquí. Lo importante es que entiendas cómo funciona tu dinero.',
+    emotion: 'happy',
+  },
+  {
+    id: 'conclusion_2',
+    speaker: 'assistant',
+    text: '¡Excelente trabajo! Ahora estás listo para el juego final, donde pondrás en práctica todo lo aprendido. ¡Suerte!',
+    emotion: 'happy',
+  },
+];

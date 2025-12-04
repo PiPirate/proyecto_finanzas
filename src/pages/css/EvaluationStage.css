@@ -1,0 +1,870 @@
+/* ================================
+   CONTENEDOR GENERAL
+=================================== */
+
+.evaluation-stage {
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:
+    radial-gradient(circle at top, rgba(59, 130, 246, 0.18), transparent 55%),
+    radial-gradient(circle at bottom, rgba(16, 185, 129, 0.18), #020617 80%);
+  font-family: 'Arial Black', system-ui, -apple-system, BlinkMacSystemFont,
+    sans-serif;
+}
+
+.fighting-game-container {
+  width: 100%;
+  max-width: 1300px;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 18px;
+  border: 4px solid #020617;
+  box-shadow:
+    0 0 0 3px #1e293b,
+    0 0 0 6px #0f172a,
+    0 35px 80px rgba(0, 0, 0, 0.9);
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .stage-container {
+    width: 100%;
+    min-height: var(--app-vh, 100dvh);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .evaluation-stage {
+    padding: 0;
+    min-height: var(--app-vh, 100dvh);
+  }
+
+  .fighting-game-container {
+    width: 100vw;
+    height: var(--app-vh, 100dvh);
+    max-width: none;
+    border-radius: 0;
+  }
+}
+
+/* ================================
+   HUD SUPERIOR (VIDAS / TIMER)
+=================================== */
+
+.hud-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 110px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(3, 7, 18, 0.9) 45%,
+    transparent 100%
+  );
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 20px;
+  z-index: 30;
+  border-bottom: 3px solid rgba(250, 204, 21, 0.3);
+}
+
+.hud-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.player1-hud .player-info {
+  flex-direction: row;
+}
+
+.player2-hud .player-info {
+  flex-direction: row-reverse;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-name {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow:
+    3px 3px 0 #000,
+    -1px -1px 0 #facc15,
+    1px 1px 0 #facc15,
+    0 0 18px #f97316;
+}
+
+/* Retratos del HUD (puedes setear background-image si quieres) */
+
+
+.health-bar-outer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.health-bar-label {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #facc15;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.health-bar-label--right {
+  text-align: right;
+}
+
+.health-bar-container {
+  width: 100%;
+  height: 26px;
+  background: #000;
+  border: 3px solid #e5e7eb;
+  box-shadow:
+    0 0 0 2px #020617,
+    inset 0 3px 12px rgba(0, 0, 0, 0.9);
+  position: relative;
+  overflow: hidden;
+}
+
+.health-bar-container.reverse {
+  direction: rtl;
+}
+
+.health-bar-fill {
+  height: 100%;
+  transition: width 0.25s ease-out;
+  position: relative;
+}
+
+.player1-fill {
+  background: linear-gradient(
+    180deg,
+    #ef4444 0%,
+    #dc2626 40%,
+    #b91c1c 70%,
+    #7f1d1d 100%
+  );
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.45);
+}
+
+.player2-fill {
+  background: linear-gradient(
+    180deg,
+    #60a5fa 0%,
+    #2563eb 40%,
+    #1d4ed8 70%,
+    #1e3a8a 100%
+  );
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.45);
+}
+
+.health-bar-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 7px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.7) 0%,
+    transparent 100%
+  );
+}
+
+/* Timer y round */
+
+.hud-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 140px;
+}
+
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #000;
+  border-radius: 10px;
+  border: 4px solid #e5e7eb;
+  padding: 6px 14px;
+  box-shadow:
+    0 0 0 2px #facc15,
+    0 6px 0 #4b5563,
+    0 0 30px rgba(250, 204, 21, 0.6);
+}
+
+.timer-display {
+  font-size: 44px;
+  font-weight: 900;
+  color: #facc15;
+  text-shadow:
+    3px 3px 0 #000,
+    0 0 14px #facc15;
+  line-height: 1;
+  font-family: 'Impact', 'Arial Black', system-ui;
+}
+
+.timer-label {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #e5e7eb;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.round-display {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.9);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 2px solid rgba(248, 250, 252, 0.4);
+}
+
+.round-text {
+  font-size: 11px;
+  font-weight: 900;
+  color: #e5e7eb;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.round-number {
+  font-size: 18px;
+  font-weight: 900;
+  color: #facc15;
+  text-shadow: 2px 2px 0 #000;
+}
+
+/* ================================
+   ARENA / FONDO / PERSONAJES
+=================================== */
+
+.fighting-arena {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.background-image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.background-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+  filter: brightness(0.85) contrast(1.1) saturate(1.1);
+}
+
+.arena-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    transparent 35%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+/* Contenedor de personajes */
+
+.characters-container {
+  position: absolute;
+  bottom: 150px; /* espacio para panel + barra de botones */
+  left: 0;
+  right: 0;
+  height: 360px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 130px;
+  z-index: 10;
+}
+
+.character {
+  position: relative;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.9));
+  transform-origin: bottom center;
+  transition: transform 0.15s ease-out;
+  animation: fighterFloat 2.4s ease-in-out infinite;
+}
+
+/* Animación suave tipo “flotar” para ambos luchadores */
+
+@keyframes fighterFloat {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Imagen estática de los personajes */
+
+.character-sprite {
+  width: auto;
+  height: 300px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: block;
+}
+
+/* Ajustes por personaje (opcional) */
+
+.pig-sprite {
+  height: 300px;
+}
+
+.enemy-sprite {
+  height: 300px;
+  transform: scaleX(1); /* que mire hacia el cerdito */
+}
+
+/* Golpe recibido: sacudida lateral + flote */
+
+.character-hit-left {
+  animation:
+    fighterFloat 2.4s ease-in-out infinite,
+    hitShakeLeft 0.18s linear;
+}
+
+.character-hit-right {
+  animation:
+    fighterFloat 2.4s ease-in-out infinite,
+    hitShakeRight 0.18s linear;
+}
+
+@keyframes hitShakeLeft {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-6px) translateX(-12px);
+  }
+  50% {
+    transform: translateY(-3px) translateX(8px);
+  }
+  75% {
+    transform: translateY(-1px) translateX(-4px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+@keyframes hitShakeRight {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-6px) translateX(12px);
+  }
+  50% {
+    transform: translateY(-3px) translateX(-8px);
+  }
+  75% {
+    transform: translateY(-1px) translateX(4px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* Mensaje central tipo “FIGHT!” */
+
+.fight-messages {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.combo-display {
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #facc15;
+  text-shadow:
+    5px 5px 0 #000,
+    -2px -2px 0 #f97316,
+    0 0 40px #ef4444,
+    0 0 80px #ef4444;
+  opacity: 0.8;
+  animation: comboPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes comboPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+/* ================================
+   PANEL DE ENUNCIADO (ABAJO)
+=================================== */
+
+.evaluation-question-panel {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 88px; /* hueco para barra de botones */
+  width: 100%;
+  max-width: 1000px;
+  padding: 10px 20px 14px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.9) 0%,
+    rgba(15, 23, 42, 0.98) 60%,
+    rgba(15, 23, 42, 1) 100%
+  );
+  border-radius: 12px;
+  border: 2px solid rgba(148, 163, 184, 0.6);
+  box-shadow: 0 -14px 30px rgba(0, 0, 0, 0.7);
+}
+
+.question-step {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #a5b4fc;
+  text-shadow: 1px 1px 0 #000;
+  margin: 0;
+}
+
+.question-context {
+  font-size: 15px;
+  line-height: 1.3;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.question-text {
+  font-size: 16px;
+  line-height: 1.3;
+  color: #f9fafb;
+  margin: 2px 0 4px;
+  text-shadow: 1px 1px 0 #020617;
+}
+
+.evaluation-question-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Feedback debajo del enunciado */
+
+.evaluation-feedback {
+  min-height: 20px;
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #e5e7eb;
+}
+
+.evaluation-feedback--correct {
+  color: #bbf7d0;
+}
+
+.evaluation-feedback--wrong {
+  color: #fed7aa;
+}
+
+/* ================================
+   BARRA DE BOTONES ARCADE (ABAJO)
+=================================== */
+
+.controls-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 70px;
+  background: radial-gradient(circle at top, #1f2937, #020617 80%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 45;
+  border-top: 2px solid rgba(30, 64, 175, 0.7);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.85);
+}
+
+/* Solo usamos la barra para los tres botones arcade */
+
+.controls-bar .evaluation-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 520px;
+}
+
+/* Botones gordos y redondos tipo arcade */
+
+.evaluation-option-btn {
+  min-width: 130px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 3px solid rgba(148, 163, 184, 0.9);
+  background: radial-gradient(circle at top, #1e293b, #020617 80%);
+  color: #f9fafb;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.15s ease-out,
+    border-color 0.15s ease-out,
+    background 0.2s ease-out;
+  box-shadow:
+    0 4px 0 rgba(15, 23, 42, 0.9),
+    0 10px 18px rgba(0, 0, 0, 0.8);
+}
+
+.evaluation-option-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 0 rgba(15, 23, 42, 1),
+    0 14px 24px rgba(0, 0, 0, 0.9);
+}
+
+.evaluation-option-btn:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.evaluation-option-btn--selected {
+  box-shadow:
+    0 0 0 2px rgba(248, 250, 252, 0.7),
+    0 10px 24px rgba(0, 0, 0, 1);
+}
+
+/* Colores según tipo de decisión */
+
+.evaluation-option-btn--accept {
+  background: radial-gradient(circle at top, #22c55e, #065f46 80%);
+  border-color: #4ade80;
+}
+
+.evaluation-option-btn--doubt {
+  background: radial-gradient(circle at top, #facc15, #92400e 80%);
+  border-color: #fde68a;
+}
+
+.evaluation-option-btn--reject {
+  background: radial-gradient(circle at top, #f97373, #7f1d1d 80%);
+  border-color: #fecaca;
+}
+
+/* ================================
+   PANEL RESULTADO FINAL
+=================================== */
+
+.evaluation-result-panel {
+  text-align: left;
+}
+
+.evaluation-result-title {
+  font-size: 22px;
+  margin: 0 0 8px;
+  color: #fbbf24;
+  text-shadow:
+    2px 2px 0 #000,
+    0 0 18px rgba(251, 191, 36, 0.8);
+}
+
+.evaluation-result-text {
+  margin: 4px 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #e5e7eb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.evaluation-result-text--secondary {
+  font-size: 14px;
+  color: #cbd5f5;
+  margin-top: 6px;
+}
+
+.evaluation-bottom-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.evaluation-finish-btn {
+  padding: 9px 22px;
+  border-radius: 999px;
+  border: none;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #022c22;
+  box-shadow:
+    0 0 0 1px #ecfdf5,
+    0 10px 22px rgba(0, 0, 0, 0.9);
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.15s ease-out,
+    filter 0.15s ease-out;
+}
+
+.evaluation-finish-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+/* ================================
+   RESPONSIVE
+=================================== */
+
+@media (max-width: 1024px) {
+  .characters-container {
+    padding: 0 90px;
+    bottom: 20px;
+  }
+
+  .character-sprite {
+    height: 230px;
+  }
+
+  .combo-display {
+    font-size: 52px;
+  }
+}
+
+@media (max-width: 768px) {
+  .evaluation-stage {
+    padding: 12px;
+  }
+
+  .fighting-game-container {
+    border-radius: 14px;
+  }
+
+  .fighting-arena {
+    align-items: center;
+  }
+
+  .hud-top {
+    height: 95px;
+    padding: 8px 10px;
+  }
+
+  .characters-container {
+    padding: 0 70px;
+    bottom: 115px;
+    height: 320px;
+  }
+
+  .character-sprite {
+    width: 155px;
+    height: 155px;
+  }
+
+  .player-name {
+    font-size: 14px;
+  }
+
+  .health-bar-container {
+    height: 22px;
+  }
+
+  .timer-display {
+    font-size: 34px;
+  }
+
+  .combo-display {
+    font-size: 42px;
+  }
+
+  .evaluation-question-panel {
+    padding: 10px 14px 12px;
+    bottom: 82px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 2px solid rgba(148, 163, 184, 0.45);
+    z-index: 60;
+  }
+
+  .evaluation-question-content--mobile {
+    max-height: 180px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+
+  .evaluation-question-content--mobile {
+    max-height: 180px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+
+  .controls-bar {
+    height: 68px;
+  }
+
+  .controls-bar .evaluation-options {
+    gap: 10px;
+  }
+
+  .evaluation-option-btn {
+    min-width: 110px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .question-step,
+  .question-context,
+  .question-text,
+  .evaluation-feedback,
+  .evaluation-result-text,
+  .evaluation-result-text--secondary {
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  .evaluation-result-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .characters-container {
+    padding: 0 40px;
+    bottom: 110px;
+  }
+
+  .character-sprite {
+    width: 130px;
+    height: 130px;
+  }
+
+  .player-name {
+    font-size: 12px;
+  }
+
+  .evaluation-question-content--mobile {
+    max-height: 160px;
+  }
+
+  .question-text {
+    font-size: 15px;
+  }
+
+  .controls-bar .evaluation-options {
+    flex-wrap: wrap;
+  }
+}
+
+/* ---------- Tutorial de la evaluación (overlay centrado) ---------- */
+
+.evaluation-tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;      /* centra vertical */
+  justify-content: center;  /* centra horizontal */
+  background: rgba(15, 23, 42, 0.6); /* leve oscurecido del fondo */
+  z-index: 30;              /* por encima del juego */
+}
+
+.evaluation-tutorial-overlay--mobile {
+  align-items: flex-start;
+  padding: 16px 12px 0;
+  z-index: 120;
+}
+
+.evaluation-tutorial-dialog {
+  width: min(90%, 780px);
+  background: linear-gradient(135deg, #0f172a, #020617);
+  border-radius: 18px;
+  padding: 24px 28px 22px;
+  box-shadow: 0 22px 45px rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  color: #e5e7eb;
+}
+
+.evaluation-tutorial-header {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a5b4fc;
+}
+
+.evaluation-tutorial-speaker {
+  display: inline-block;
+}
+
+.evaluation-tutorial-text {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.evaluation-tutorial-next {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.8rem;
+  text-align: right;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.evaluation-tutorial-next--visible {
+  opacity: 1;
+}

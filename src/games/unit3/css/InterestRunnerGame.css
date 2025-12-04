@@ -1,0 +1,93 @@
+.interest-runner-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+}
+
+.game-window {
+    background: #1d1f27;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+/* SOLO PARA UNIT 4: replica EXACTA del estilo global */
+.unit3-game-container .minigame-containert {
+    width: 60%;
+    max-width: 5300px;
+    animation: minigame-appear 0.3s ease-out;
+    overflow-y: auto;
+    align-items: center;
+}
+
+/* SOLO PARA UNIT 4: media query exclusivo */
+@media (max-height: 900px) and (orientation: landscape) {
+    .unit3-game-container .minigame-containert {
+        width: 150%;
+        transform: scale(0.6);
+        transform-origin: center;
+    }
+}
+
+.intro-window {
+    background: #1d1f27;
+    color: white;
+    padding: 22px;
+    border-radius: 12px;
+    width: 480px;
+    text-align: center;
+}
+
+.intro-window button,
+.end-screen button {
+    margin-top: 15px;
+    padding: 11px 20px;
+    background: #7a4cff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.question-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-box {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 450px;
+    text-align: center;
+}
+
+.modal-box button {
+    margin: 10px;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.explanation {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.final-text {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: white;
+    text-align: center;
+}
