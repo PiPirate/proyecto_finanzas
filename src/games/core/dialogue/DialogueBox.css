@@ -88,22 +88,22 @@
 .dialogue-face--talking-advisor,
 .dialogue-face--idle-advisor {
   width: 118%;          /* por ejemplo, un poco más grande que Carmina */
-  height: 118%;
-  background-size: 115% auto;
+  height: 110%;
+  background-size: 120% auto;
 }
 
 /* MODO HABLANDO ASESOR */
 .dialogue-face--talking-advisor {
   /* ajusta duración y steps al número de frames
      de asesor_player_talking.png */
-  animation: dialogue-face-talk-advisor 1.4s steps(5) infinite;
+  animation: dialogue-face-talk-advisor 1.3s steps(3) infinite;
 }
 
 /* MODO NEUTRAL ASESOR */
 .dialogue-face--idle-advisor {
   /* ajusta duración y steps al número de frames
      de asesor_player_neutral.png */
-  animation: dialogue-face-idle-advisor 1.7s steps(4) infinite;
+  animation: dialogue-face-idle-advisor 1.7s steps(1) infinite;
 }
 
 /* IDLE ASESOR */
@@ -113,7 +113,7 @@
   }
   to {
     /* igual: ajusta según el alto total de la tirilla del asesor */
-    background-position-y: 142.6%;
+    background-position-y: 130%;
   }
 }
 
@@ -125,7 +125,7 @@
   to {
     /* si ves que “camina” demasiado la tira, baja este porcentaje
        (por ejemplo 100%, 95%, etc.) */
-    background-position-y: 131.7%;
+    background-position-y: 154.7%;
   }
 }
 
