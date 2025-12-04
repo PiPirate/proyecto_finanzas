@@ -28,6 +28,10 @@ import advisorFaceNeutral from '../../assets/unit1/asesor_player_neutral.png';
 // Icono del cerdito / alcancía
 import pigFace from '../../assets/unit1/icons/pig_icon.png';
 
+
+import InteractionMarker from '../core/ui/InteractionMarker';
+
+
 // Monitor neutro
 import budgetComputerImage from '../../assets/unit1/null_desktop.png';
 
@@ -432,6 +436,22 @@ function Unit1GameScene({ onGoalReached }) {
     }
   };
 
+  const currentHintType = useMemo(() => {
+    // 1) Antes de asesor principal -> resaltar asesor
+    if (!advisorMainDone) return 'advisor';
+
+    // 2) Asesor visto, falta consola de presupuesto -> resaltar mesa presupuesto
+    if (advisorMainDone && !mkTrainingFinished) return 'budget-station';
+
+    // 3) Consola lista, falta cerdito -> resaltar piggy
+    if (advisorPostMkDone && !pigIntroDone) return 'piggy-bank';
+
+    // 4) Si ya hiciste todo -> nada
+    return null;
+  }, [advisorMainDone, mkTrainingFinished, advisorPostMkDone, pigIntroDone]);
+
+
+
   const findNearestInteractive = useCallback(() => {
     const MAX_DISTANCE = 1.25;
 
@@ -575,6 +595,18 @@ function Unit1GameScene({ onGoalReached }) {
         cameraPosition={isMobile ? cameraPosition : null}
         viewportRef={isMobile ? viewportRef : null}
       >
+        {currentHintType &&
+          unit1InteractiveZones
+            .filter((zone) => zone.type === currentHintType)
+            .map((zone) => (
+              <InteractionMarker
+                key={`${zone.x}-${zone.y}-${zone.type}`}
+                tileX={zone.x}
+                tileY={zone.y}
+                tileSize={unit1TileSize}
+              />
+            ))}
+
         <Player
           pixelPosition={pixelPosition}
           tileSize={unit1TileSize}

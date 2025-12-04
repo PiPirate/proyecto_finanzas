@@ -26,6 +26,21 @@
     animation: fadeIn .3s ease;
 }
 
+@media (max-width: 900px) {   /* Ajusta el ancho que necesites */
+.needs-window{
+        width: 1320px;
+    height: 500px; 
+    overflow-y: auto;  
+    }
+
+    .col-list {
+    max-height:none !important;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+}
+
 /* ==== 2 COLUMNAS ==== */
 .needs-columns {
     display: grid;
@@ -39,6 +54,7 @@
     padding-right: 15px;
     border-right: 2px solid rgba(255, 255, 255, 0.12);
 }
+
 
 .col-info h2 {
     margin-bottom: 10px;

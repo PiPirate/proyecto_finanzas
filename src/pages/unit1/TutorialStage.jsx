@@ -48,8 +48,6 @@ export default function TutorialStage({ onComplete }) {
               </h2>
 
               <p className="tutorial-success-text">
-                Terminaste el recorrido con el asesor, MK25 y la alcancía.
-                <br />
                 Ahora pasarás a la prueba evaluativa de conocimientos para poner
                 a prueba lo que aprendiste en esta unidad.
               </p>
