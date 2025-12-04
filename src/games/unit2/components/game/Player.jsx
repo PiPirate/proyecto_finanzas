@@ -1,10 +1,10 @@
 import React from 'react';
 import playerIdleSprite from '../../assets/SociaStatic.png';
 import playerWalkLeftSprite from '../../assets/SociaIzquierda2.png';
-import playerWalkDownFrame1 from '../../assets/SociaAtras1.png';
-import playerWalkDownFrame2 from '../../assets/SociaAtras2.png';
-import playerWalkUpFrame1 from '../../assets/SociaAdelante2.png';
-import playerWalkUpFrame2 from '../../assets/SociaAdelante1.png';
+import playerWalkDownFrame1 from '../../assets/SociaIzquierda1.png';
+import playerWalkDownFrame2 from '../../assets/SociaIzquierda2.png';
+import playerWalkUpFrame1 from '../../assets/SociaDerecha2.png';
+import playerWalkUpFrame2 from '../../assets/SociaDerecha1.png';
 
 export function Player({ position, direction, isMoving }) {
   const TILE_SIZE = 64;
