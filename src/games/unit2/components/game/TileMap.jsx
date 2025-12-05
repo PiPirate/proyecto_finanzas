@@ -31,7 +31,6 @@ export function TileMap({ mapData }) {
                   top: `${y * TILE_SIZE}px`,
                   width: `${TILE_SIZE}px`,
                   height: `${TILE_SIZE}px`,
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
                   pointerEvents: 'none',
                 }}
               />
