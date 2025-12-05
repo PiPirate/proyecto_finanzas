@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import "./css/FinalLoanEvaluationGame.css";
 
 export default function FinalLoanEvaluationGame({ visible, onFinish }) {
+    console.log("🧩 FinalLoanEvaluationGame montado/renderizado");
     if (!visible) return null;
 
     // ------------------------------------------------------
@@ -168,7 +169,9 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     const [correctCount, setCorrectCount] = useState(0);
     const [endScreen, setEndScreen] = useState(null);
     const [hoverDirection, setHoverDirection] = useState(null);
-    const [isLocked, setIsLocked] = useState(false); // evita doble respuesta
+
+    // Candado duro para evitar dobles respuestas
+    const lockRef = useRef(false);
 
     const startPos = useRef({ x: 0, y: 0 });
     const isPointerDownRef = useRef(false);
@@ -184,9 +187,9 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
         setFeedback(null);
         setEndScreen(null);
         setHoverDirection(null);
-        setIsLocked(false);
         startPos.current = { x: 0, y: 0 };
         isPointerDownRef.current = false;
+        lockRef.current = false;
     }
 
     function finishGame(score) {
@@ -206,7 +209,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
         }
 
         setEndScreen({ type, msg });
-        setIsLocked(false);
+        lockRef.current = true; // ya no queremos más interacciones
     }
 
     // ------------------------------------------------------
@@ -220,8 +223,9 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     };
 
     function handlePointerDown(e) {
-        // Evita scroll mientras haces swipe en móvil
         e.preventDefault();
+        if (lockRef.current || endScreen) return;
+
         isPointerDownRef.current = true;
         const { x, y } = getPoint(e);
         startPos.current = { x, y };
@@ -229,7 +233,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     }
 
     function handlePointerMove(e) {
-        if (!isPointerDownRef.current || isLocked || endScreen) return;
+        if (!isPointerDownRef.current || lockRef.current || endScreen) return;
 
         const { x, y } = getPoint(e);
         const dx = x - startPos.current.x;
@@ -260,7 +264,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
 
         setHoverDirection(null);
 
-        if (isLocked || endScreen) return;
+        if (lockRef.current || endScreen) return;
 
         let direction = null;
 
@@ -279,7 +283,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     // 5. RESPUESTA
     // ------------------------------------------------------
     function evaluateChoice(dir) {
-        if (isLocked || endScreen) return;
+        if (lockRef.current || endScreen) return;
 
         const round = rounds[index];
         if (!round) return;
@@ -289,7 +293,8 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
 
         const isLast = index === rounds.length - 1;
 
-        setIsLocked(true);
+        // Bloqueamos inmediatamente
+        lockRef.current = true;
         setFeedback(option.msg);
 
         setCorrectCount((prevCorrect) => {
@@ -302,7 +307,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
                     finishGame(newCorrect);
                 } else {
                     setIndex((prevIndex) => prevIndex + 1);
-                    setIsLocked(false);
+                    lockRef.current = false; // solo aquí se desbloquea para la siguiente ronda
                 }
             }, 1300);
 
