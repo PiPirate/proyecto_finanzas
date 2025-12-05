@@ -117,25 +117,25 @@
 
 /* Posiciones por defecto (PC) */
 .side-left {
-    left: 8%;
+    left: 5%;
     top: 50%;
     transform: translateY(-50%);
 }
 
 .side-right {
-    right: 8%;
+    right: 5%;
     top: 50%;
     transform: translateY(-50%);
 }
 
 .side-up {
-    top: 8%;
+    top: -5%;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .side-down {
-    bottom: 8%;
+    bottom: -5%;
     left: 50%;
     transform: translateX(-50%);
 }
