@@ -1827,19 +1827,19 @@
 /* Carmina: tamaño de sprite dentro del marco */
 .dialogue-face--talking-carmina,
 .dialogue-face--idle-carmina {
-  width: 103%;
+  width: 118%;
   height: 107%;
   background-size: 108% auto;
 }
 
 /* Carmina hablando */
 .dialogue-face--talking-carmina {
-  animation: dialogue-face-talk-carmina 1.5s steps(5) infinite;
+  animation: dialogue-face-talk-carmina 1.3s steps(5) infinite;
 }
 
 /* Carmina neutral */
 .dialogue-face--idle-carmina {
-  animation: dialogue-face-idle-carmina 2.5s steps(4) infinite;
+  animation: dialogue-face-idle-carmina 1.8s steps(4) infinite;
 }
 
 @keyframes dialogue-face-talk-carmina {
@@ -1856,7 +1856,7 @@
     background-position-y: 0%;
   }
   to {
-    background-position-y: 137.1%;
+    background-position-y: 137.5%;
   }
 }
 
