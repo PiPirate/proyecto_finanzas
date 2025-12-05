@@ -193,16 +193,14 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     }
 
     function finishGame(score) {
-        const total = rounds.length;
         let type = "";
         let msg = "";
 
-        if (score >= Math.floor(total * 0.75)) {
+        const MIN_SUCCESS = 5; // 👈 gana con 5 o más aciertos
+
+        if (score >= MIN_SUCCESS) {
             type = "success";
             msg = "🎉 ¡Excelente! Manejas muy bien los conceptos.";
-        } else if (score >= Math.floor(total * 0.5)) {
-            type = "medium";
-            msg = "⚠ Buen intento, pero puedes mejorar.";
         } else {
             type = "fail";
             msg = "❌ Te recomendamos repetir el juego antes de continuar.";
@@ -211,6 +209,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
         setEndScreen({ type, msg });
         lockRef.current = true; // ya no queremos más interacciones
     }
+
 
     // ------------------------------------------------------
     // 4. GESTOS (POINTER EVENTS)
@@ -334,25 +333,30 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
                         </p>
 
                         <div className="final-buttons">
+                            {/* Si NO ganó → solo Reintentar */}
                             {endScreen.type !== "success" && (
                                 <button className="retry-btn" onClick={resetGame}>
                                     Reintentar
                                 </button>
                             )}
 
-                            <button
-                                className="finish-btn"
-                                onClick={() =>
-                                    onFinish?.({
-                                        score: correctCount,
-                                        total: rounds.length,
-                                        passed: endScreen.type === "success"
-                                    })
-                                }
-                            >
-                                Finalizar
-                            </button>
+                            {/* Si ganó (5 o más buenas) → solo Finalizar */}
+                            {endScreen.type === "success" && (
+                                <button
+                                    className="finish-btn"
+                                    onClick={() =>
+                                        onFinish?.({
+                                            score: correctCount,
+                                            total: rounds.length,
+                                            passed: true
+                                        })
+                                    }
+                                >
+                                    Finalizar
+                                </button>
+                            )}
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -372,9 +376,8 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
                         <button
                             key={o.dir}
                             type="button"
-                            className={`side-card side-${o.dir} ${
-                                hoverDirection === o.dir ? "highlight" : ""
-                            }`}
+                            className={`side-card side-${o.dir} ${hoverDirection === o.dir ? "highlight" : ""
+                                }`}
                             onClick={() => evaluateChoice(o.dir)}
                         >
                             {o.label}
