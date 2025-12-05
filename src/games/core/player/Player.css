@@ -10,7 +10,7 @@
   transform-origin: center center;
 
   /* IDLE: frames 1–5 */
-  animation: player-idle 1.2s steps(2) infinite;
+  animation: player-idle 1.2s steps(5) infinite;
 }
 
 @keyframes player-idle {
@@ -18,7 +18,7 @@
     background-position-y: 0%;
   }
   to {
-    background-position-y: 0.001%;  /* ya lo tenías así y va bien */
+    background-position-y: 62.5%;  /* ya lo tenías así y va bien */
   }
 }
 
@@ -26,7 +26,7 @@
 
 /* WALK: frames 6–9 → 4 frames */
 .player.player--moving {
-  animation: player-walk 0.8s steps(4) infinite; /* 4 frames, no 5 */
+  animation: player-walk 0.4s steps(3) infinite; /* 4 frames, no 5 */
 }
 
 /* WALK: frames 6–9 (o 6–8 según tengas el rango).
@@ -34,9 +34,9 @@
    del 62.5% al 100% con 4 frames. */
 @keyframes player-walk {
   from {
-    background-position-y: 0%;  /* justo después del idle */
+    background-position-y: 62.411221%;  /* justo después del idle */
   }
   to {
-    background-position-y: 131%;   /* último frame de la tirilla */
+    background-position-y: 100%;   /* último frame de la tirilla */
   }
 }
