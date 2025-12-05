@@ -333,25 +333,30 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
                         </p>
 
                         <div className="final-buttons">
+                            {/* Si NO ganó → solo Reintentar */}
                             {endScreen.type !== "success" && (
                                 <button className="retry-btn" onClick={resetGame}>
                                     Reintentar
                                 </button>
                             )}
 
-                            <button
-                                className="finish-btn"
-                                onClick={() =>
-                                    onFinish?.({
-                                        score: correctCount,
-                                        total: rounds.length,
-                                        passed: endScreen.type === "success"
-                                    })
-                                }
-                            >
-                                Finalizar
-                            </button>
+                            {/* Si ganó (5 o más buenas) → solo Finalizar */}
+                            {endScreen.type === "success" && (
+                                <button
+                                    className="finish-btn"
+                                    onClick={() =>
+                                        onFinish?.({
+                                            score: correctCount,
+                                            total: rounds.length,
+                                            passed: true
+                                        })
+                                    }
+                                >
+                                    Finalizar
+                                </button>
+                            )}
                         </div>
+
                     </div>
                 </div>
             </div>
