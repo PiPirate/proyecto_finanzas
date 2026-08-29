@@ -54,8 +54,8 @@ const loanIntroDialogue = [
     "Toda evaluación financiera se basa en cuatro pilares clave: liquidez, endeudamiento, rentabilidad y eficiencia.",
     "La liquidez indica si una empresa puede cumplir sus obligaciones inmediatas.",
     "El endeudamiento refleja cuánto depende la empresa de recursos ajenos.",
-    "La rentabilidad muestra si la empresa está generando valor.",
-    "Y la eficiencia mide qué tan bien aprovecha sus recursos.",
+    "Rentabilidad: es saber si su negocio le está dejando plata, o sea, si después de pagar todo lo que gasta en mercancía, arriendo, servicios, empleados, todavía le queda ganancia en el bolsillo.",
+    "La eficiencia mide qué tan bien usas lo que tienes para lograr un resultado, es decir, si estás aprovechando bien tu tiempo, dinero o recursos sin desperdiciarlos.",
     "Vamos a identificarlos mejor con un minijuego interactivo."
 ];
 
