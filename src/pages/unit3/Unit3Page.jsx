@@ -7,9 +7,10 @@ import EvaluationStage from './EvaluationStage';
 export default function Unit1Page() {
   return (
     <UnitPage
-      unitNumber={1}
+      unitId="unidad-3"
+      unitNumber={3}
       unitTitle="Préstamos inteligentes"
-      unitColor="linear-gradient(135deg, #2563eb, #1d4ed8)"
+      unitColor="linear-gradient(135deg, #22c55e, #10b981)"
       VideoStage={VideoStage}
       TutorialStage={TutorialStage}
       EvaluationStage={EvaluationStage}

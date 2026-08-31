@@ -7,9 +7,10 @@ import EvaluationStage from './EvaluationStage';
 export default function Unit1Page() {
   return (
     <UnitPage
-      unitNumber={1}
+      unitId="unidad-4"
+      unitNumber={4}
       unitTitle="Pagos digitales seguros"
-      unitColor="linear-gradient(135deg, #2563eb, #1d4ed8)"
+      unitColor="linear-gradient(135deg, #f97316, #ef4444)"
       VideoStage={VideoStage}
       TutorialStage={TutorialStage}
       EvaluationStage={EvaluationStage}

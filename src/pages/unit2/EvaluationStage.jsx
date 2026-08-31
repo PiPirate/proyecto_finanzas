@@ -16,7 +16,7 @@ export default function EvaluationStage({ onComplete }) {
 
   const handleFinish = () => {
     if (typeof onComplete === 'function') {
-      onComplete(); // marca como completado en tu flujo general
+      onComplete({ passed: true });
     }
     navigate('/'); // volver a módulos / menú principal
   };
@@ -38,11 +38,6 @@ export default function EvaluationStage({ onComplete }) {
           <GameWorldSimple onComplete={handleFinish} />
         </div>
 
-        {/* Si quieres puedes dejar el botón flotante como salida manual extra,
-            o quitarlo si ya no lo necesitas. */}
-        <div className="floating-continue-btn" onClick={handleFinish}>
-          Continuar →
-        </div>
       </div>
     </GameViewport>
   );

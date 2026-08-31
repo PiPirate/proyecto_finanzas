@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Play, CheckCircle, Lock, Circle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './css/UnitPage.css';
 import { useDeviceMode } from '../hooks/useDeviceMode';
 import { useOrientationLock } from '../hooks/useOrientationLock';
+import { STAGE_IDS, useCourseProgress } from '../progress/courseProgress';
 
 export default function UnitPage({
+  unitId,
   unitNumber,
   unitTitle,
   unitColor,
@@ -14,10 +16,26 @@ export default function UnitPage({
   EvaluationStage,
 }) {
   const navigate = useNavigate();
-  const [currentStage, setCurrentStage] = useState(0); // 0: video, 1: tutorial, 2: evaluación
-  const [completedStages, setCompletedStages] = useState([]);
+  const { getUnitProgress, recordUnitAccess, completeStage } = useCourseProgress();
+  const savedProgress = getUnitProgress(unitId);
+  const initialCompletedStages = STAGE_IDS.reduce(
+    (completed, stageId, index) => savedProgress.stages[stageId] ? [...completed, index] : completed,
+    [],
+  );
+  const [currentStage, setCurrentStage] = useState(() => {
+    const firstPending = STAGE_IDS.findIndex((stageId) => !savedProgress.stages[stageId]);
+    return firstPending === -1 ? 2 : firstPending;
+  });
+  const [completedStages, setCompletedStages] = useState(initialCompletedStages);
+  const accessRecorded = useRef(false);
   const { isMobile } = useDeviceMode();
   const { isLandscape } = useOrientationLock();
+
+  useEffect(() => {
+    if (accessRecorded.current) return;
+    accessRecorded.current = true;
+    recordUnitAccess(unitId);
+  }, [recordUnitAccess, unitId]);
 
   const stages = [
     {
@@ -43,13 +61,20 @@ export default function UnitPage({
     },
   ];
 
-  const handleStageComplete = () => {
-    if (!completedStages.includes(currentStage)) {
-      setCompletedStages([...completedStages, currentStage]);
-    }
+  const handleStageComplete = (result = {}) => {
+    const stageId = STAGE_IDS[currentStage];
+    const passed = currentStage !== 2 || result.passed !== false;
+
+    completeStage(unitId, stageId, result);
+
+    if (!passed) return;
+
+    setCompletedStages((previous) =>
+      previous.includes(currentStage) ? previous : [...previous, currentStage],
+    );
 
     if (currentStage < stages.length - 1) {
-      setCurrentStage(currentStage + 1);
+      setCurrentStage((previous) => previous + 1);
     }
   };
 

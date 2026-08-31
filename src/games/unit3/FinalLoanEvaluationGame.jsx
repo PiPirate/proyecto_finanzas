@@ -194,7 +194,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
         let type = "";
         let msg = "";
 
-        if (score >= Math.floor(total * 0.75)) {
+        if (score >= Math.ceil(total * 0.75)) {
             type = "success";
             msg = "🎉 ¡Excelente! Manejas muy bien los conceptos.";
         } else if (score >= Math.floor(total * 0.5)) {

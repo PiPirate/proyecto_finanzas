@@ -1,4 +1,24 @@
-# React + Vite
+# Finanzas Cotidianas Interactivas
+
+Aplicación React con cuatro unidades de educación financiera.
+
+## Progreso y desbloqueo
+
+- La unidad 1 está disponible desde el inicio.
+- Cada unidad siguiente se desbloquea únicamente cuando la evaluación de la unidad anterior se aprueba.
+- Se guarda el avance de video, tutorial y evaluación para poder continuar después de recargar.
+- El perfil muestra primer y último acceso, número de accesos, fecha de finalización, intentos y mejor resultado.
+- Las rutas de unidades bloqueadas también están protegidas; no basta con escribir su URL.
+
+El estado se guarda bajo la clave `finanzas-cotidianas:progress:v1` de `localStorage`. Para reiniciar un usuario de prueba, elimine esa clave desde las herramientas del navegador.
+
+## Alcance de la persistencia
+
+Esta versión es una SPA sin autenticación ni servidor. El seguimiento identifica al usuario y conserva su actividad en el navegador actual, pero no es evidencia segura para entregar incentivos: `localStorage` puede editarse y no se sincroniza entre dispositivos.
+
+Para un despliegue con beneficios reales, el siguiente paso es conectar los eventos de acceso y evaluación a una API autenticada y almacenarlos en una base de datos del servidor. El modelo local ya registra los campos necesarios para realizar esa integración.
+
+## Desarrollo
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

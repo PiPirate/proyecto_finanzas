@@ -304,7 +304,7 @@ export default function EvaluationStage({ onComplete, unitColor }) {
 
   const handleFinishEvaluation = () => {
     if (onComplete) {
-      onComplete();
+      onComplete({ passed, score: correctCount, total: totalQuestions });
     }
     navigate('/');
   };
@@ -481,7 +481,7 @@ export default function EvaluationStage({ onComplete, unitColor }) {
                     className="evaluation-finish-btn"
                     onClick={handleFinishEvaluation}
                   >
-                    Finalizar evaluación
+                    {passed ? 'Finalizar evaluación' : 'Volver y reintentar después'}
                   </button>
                 </div>
               </div>
