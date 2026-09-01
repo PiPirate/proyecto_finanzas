@@ -61,6 +61,33 @@ export default function UnitPage({
     },
   ];
 
+  const handleBack = () => {
+    if (currentStage === 0) {
+      navigate('/');
+      return;
+    }
+
+    setCurrentStage((previous) => previous - 1);
+  };
+
+  const backLabels = [
+    'Volver a los cursos',
+    'Volver al video',
+    'Volver al tutorial',
+  ];
+
+  const renderStageBackButton = (floating = false) => (
+    <button
+      type="button"
+      onClick={handleBack}
+      className={`stage-back-button${floating ? ' stage-back-button--floating' : ''}`}
+      aria-label={backLabels[currentStage]}
+    >
+      <ArrowLeft aria-hidden="true" />
+      <span>{backLabels[currentStage]}</span>
+    </button>
+  );
+
   const handleStageComplete = (result = {}) => {
     const stageId = STAGE_IDS[currentStage];
     const passed = currentStage !== 2 || result.passed !== false;
@@ -107,6 +134,7 @@ export default function UnitPage({
 
   return (
     <div className="unit-page">
+      {!shouldShowProgress && renderStageBackButton(true)}
       <div className="unit-page-container">
         {/* Header */}
         <header className="unit-header">
@@ -114,11 +142,6 @@ export default function UnitPage({
           <div className="hero-decor-bottom"></div>
 
           <div className="hero-content">
-            <button onClick={() => navigate('/')} className="back-button">
-              <ArrowLeft />
-              <span>Volver</span>
-            </button>
-
             <div className="unit-header-info">
               <div className="unit-badge">
                 <span>Unidad {unitNumber}</span>
@@ -131,6 +154,9 @@ export default function UnitPage({
         {/* Progress Indicator */}
         {shouldShowProgress && (
           <div className="unit-progress-container">
+            <div className="unit-progress-actions">
+              {renderStageBackButton()}
+            </div>
             <div className="unit-progress-wrapper">
               {stages.map((stage, index) => (
                 <React.Fragment key={stage.id}>
