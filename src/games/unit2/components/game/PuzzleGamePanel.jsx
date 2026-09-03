@@ -674,6 +674,8 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       setWantsAltar(prev => prev.filter(id => id !== objId));
       setSavingsAltar(prev => prev.filter(id => id !== objId));
     }
+
+    setTimeout(checkPuzzleSolution, 200);
   };
 
   const checkPuzzleSolution = () => {
@@ -717,51 +719,6 @@ export function PuzzleGamePanel({ onComplete, onClose }) {
       setTimeout(() => setStage('complete'), 1500);
     }
   };
-
-  useEffect(() => {
-  if (stage !== 'playing') return;
-
-  const needsCorrect = needsAltar.every(
-    id => objects.find(o => o.id === id)?.category === 'needs',
-  );
-  const wantsCorrect = wantsAltar.every(
-    id => objects.find(o => o.id === id)?.category === 'wants',
-  );
-  const savingsCorrect = savingsAltar.every(
-    id => objects.find(o => o.id === id)?.category === 'savings',
-  );
-
-  const allPlaced =
-    needsAltar.length + wantsAltar.length + savingsAltar.length ===
-    objects.length;
-
-  const needsValue = needsAltar.reduce(
-    (sum, id) => sum + (objects.find(o => o.id === id)?.value || 0),
-    0,
-  );
-  const wantsValue = wantsAltar.reduce(
-    (sum, id) => sum + (objects.find(o => o.id === id)?.value || 0),
-    0,
-  );
-  const savingsValue = savingsAltar.reduce(
-    (sum, id) => sum + (objects.find(o => o.id === id)?.value || 0),
-    0,
-  );
-
-  if (
-    allPlaced &&
-    needsCorrect &&
-    wantsCorrect &&
-    savingsCorrect &&
-    needsValue === 50 &&
-    wantsValue === 30 &&
-    savingsValue === 20
-  ) {
-    setPuzzleSolved(true);
-    setTimeout(() => setStage('complete'), 1500);
-  }
-}, [needsAltar, wantsAltar, savingsAltar, objects, stage]);
-
 
   useEffect(() => {
     const handleKeyDown = e => {

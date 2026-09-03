@@ -38,14 +38,14 @@ const introDialogue = [
   'Hoy vine a esta cafetería a trabajar un rato… y a ponerle orden a mi dinero.',
   'Siempre digo que voy a ahorrar, pero al final del mes no sé en qué se fue todo.',
   'Quiero empezar por lo básico: tomar mejores decisiones con mi plata y definir metas claras.',
-  'Primero me acerco al mostrador, pido algo y hablo con el barista.',
+  'Primero me acerco al mostrador, pido algo y hablo con el barista que, además, es experto en finanzas.',
 ];
 
 // Diálogo con el barista antes de sentarse
 const vendorIntroDialogue = [
   {
     speaker: 'Barista',
-    text: '¡Hola! Bienvenida a la cafetería, soy el barista. ¿Qué te sirvo hoy?',
+    text: '¡Hola! Bienvenida a la cafetería, soy el barista y también soy experto en finanzas. ¿Qué te sirvo hoy?',
   },
   {
     speaker: 'Carmina',

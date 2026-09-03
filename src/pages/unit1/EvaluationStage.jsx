@@ -11,13 +11,6 @@ import useTypewriterText from '../../games/core/hooks/useTypewriterText';
 import GameViewport from '../../components/responsive/GameViewport';
 import { useDeviceMode } from '../../hooks/useDeviceMode';
 
-import {
-  getBeneficiarioByDocumento,
-  actualizarNivel,
-} from '../../api/endpoint';
-
-const DEFAULT_DOCUMENTO = '91111103';
-
 // Ajusta estos nombres/rutas a tus archivos reales
 import pigFighter from '../../assets/unit1/pig.png';
 import enemyFighter from '../../assets/unit1/cat.png';
@@ -244,7 +237,7 @@ export default function EvaluationStage({ onComplete, unitColor }) {
       if (isTimeout) {
         setFeedback(
           question.feedbackTimeout ||
-          'Se acabó el tiempo; el gasto impulsivo te tomó por sorpresa.'
+            'Se acabó el tiempo; el gasto impulsivo te tomó por sorpresa.'
         );
       } else {
         const fb = question.feedback?.[decisionKey] || '';
@@ -309,61 +302,12 @@ export default function EvaluationStage({ onComplete, unitColor }) {
     return () => clearInterval(id);
   }, [timer, showResult, question, hasAnswered, handleTimeout, showTutorial]);
 
-  const handleFinishEvaluation = async () => {
-    try {
-      // 1) Documento: primero el del login (localStorage), si no, el de pruebas
-      const storedDoc = localStorage.getItem('finanzas_doc');
-      const documento = (storedDoc || DEFAULT_DOCUMENTO || '').trim();
-
-      console.log('[Eval U1] Documento usado para actualizar nivel:', documento);
-
-      if (!documento) {
-        console.warn('[Eval U1] No hay documento, no se actualiza nivel');
-      } else {
-        // 2) Usuario desde el backend
-        const userData = await getBeneficiarioByDocumento(documento);
-        console.log('[Eval U1] Usuario antes de subir nivel:', userData);
-
-        if (!userData) {
-          console.warn('[Eval U1] No se encontró usuario para ese documento');
-        } else {
-          const nivelActual = Number(userData.nivelactual ?? 0);
-
-          // 🧩 IMPORTANTE:
-          // Este EvaluationStage es de la UNIDAD 1,
-          // así que queremos dejar al usuario al menos en NIVEL 2 (desbloquear Unidad 2)
-          const targetLevel = 2;
-
-          const nextLevel = Math.max(nivelActual, targetLevel);
-
-          if (nextLevel !== nivelActual) {
-            console.log(
-              `[Eval U1] Subiendo nivel de ${nivelActual} a ${nextLevel}...`
-            );
-            await actualizarNivel(userData, nextLevel);
-            console.log('[Eval U1] Nivel actualizado en backend a:', nextLevel);
-          } else {
-            console.log(
-              '[Eval U1] Nivel ya es suficiente, no se actualiza:',
-              nivelActual
-            );
-          }
-        }
-      }
-    } catch (err) {
-      console.error('[Eval U1] Error al actualizar nivel:', err);
-    } finally {
-      // 3) Tu flujo normal
-      if (onComplete) {
-        onComplete();
-      }
-      navigate('/');
-
-      // 4) Forzar que App + ModulesController recarguen el nivel desde el backend
-      window.location.reload();
+  const handleFinishEvaluation = () => {
+    if (onComplete) {
+      onComplete({ passed, score: correctCount, total: totalQuestions });
     }
+    navigate('/');
   };
-
 
   const feedbackClass =
     hasAnswered && isCorrect != null
@@ -381,217 +325,217 @@ export default function EvaluationStage({ onComplete, unitColor }) {
         />
 
         <div className="fighting-game-container">
-          {/* HUD superior */}
-          <div className="hud-top">
-            <div className="hud-section player1-hud">
-              <div className="player-info">
-                <div className="player-name">CERDITO AHORRO</div>
-                <div className="player-portrait player-portrait--pig" />
-              </div>
-
-              <div className="health-bar-outer">
-                <div className="health-bar-label">VIDA</div>
-                <div className="health-bar-container">
-                  <div
-                    className="health-bar-fill player1-fill"
-                    style={{ width: `${playerHealth}%` }}
-                  >
-                    <div className="health-bar-shine" />
-                  </div>
-                </div>
-              </div>
+        {/* HUD superior */}
+        <div className="hud-top">
+          <div className="hud-section player1-hud">
+            <div className="player-info">
+              <div className="player-name">CERDITO AHORRO</div>
+              <div className="player-portrait player-portrait--pig" />
             </div>
 
-            <div className="hud-center">
-              <div className="timer-container">
-                <div className="timer-display">
-                  {timer >= 0 ? timer : 0}
-                </div>
-                <div className="timer-label">TIME</div>
-              </div>
-              <div className="round-display">
-                <div className="round-text">ROUND</div>
-                <div className="round-number">{round}</div>
-              </div>
-            </div>
-
-            <div className="hud-section player2-hud">
-              <div className="player-info">
-                <div className="player-portrait player-portrait--enemy" />
-                <div className="player-name">GASTO IMPULSIVO</div>
-              </div>
-
-              <div className="health-bar-outer">
-                <div className="health-bar-label health-bar-label--right">
-                  VIDA
-                </div>
-                <div className="health-bar-container reverse">
-                  <div
-                    className="health-bar-fill player2-fill"
-                    style={{ width: `${enemyHealth}%` }}
-                  >
-                    <div className="health-bar-shine" />
-                  </div>
+            <div className="health-bar-outer">
+              <div className="health-bar-label">VIDA</div>
+              <div className="health-bar-container">
+                <div
+                  className="health-bar-fill player1-fill"
+                  style={{ width: `${playerHealth}%` }}
+                >
+                  <div className="health-bar-shine" />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Arena */}
-          <div className="fighting-arena">
-            <div className="background-image">
+          <div className="hud-center">
+            <div className="timer-container">
+              <div className="timer-display">
+                {timer >= 0 ? timer : 0}
+              </div>
+              <div className="timer-label">TIME</div>
+            </div>
+            <div className="round-display">
+              <div className="round-text">ROUND</div>
+              <div className="round-number">{round}</div>
+            </div>
+          </div>
+
+          <div className="hud-section player2-hud">
+            <div className="player-info">
+              <div className="player-portrait player-portrait--enemy" />
+              <div className="player-name">GASTO IMPULSIVO</div>
+            </div>
+
+            <div className="health-bar-outer">
+              <div className="health-bar-label health-bar-label--right">
+                VIDA
+              </div>
+              <div className="health-bar-container reverse">
+                <div
+                  className="health-bar-fill player2-fill"
+                  style={{ width: `${enemyHealth}%` }}
+                >
+                  <div className="health-bar-shine" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Arena */}
+        <div className="fighting-arena">
+          <div className="background-image">
+            <img
+              src={fightBg}
+              alt="Escenario"
+              className="background-img"
+            />
+            <div className="arena-overlay" />
+          </div>
+
+          <div className="characters-container">
+            <div
+              className={
+                'character player1-character' +
+                (pigHit ? ' character-hit-left' : '')
+              }
+            >
               <img
-                src={fightBg}
-                alt="Escenario"
-                className="background-img"
+                src={pigFighter}
+                alt="Cerdito peleador"
+                className="character-sprite pig-sprite"
               />
-              <div className="arena-overlay" />
             </div>
 
-            <div className="characters-container">
-              <div
-                className={
-                  'character player1-character' +
-                  (pigHit ? ' character-hit-left' : '')
-                }
-              >
-                <img
-                  src={pigFighter}
-                  alt="Cerdito peleador"
-                  className="character-sprite pig-sprite"
-                />
-              </div>
+            <div
+              className={
+                'character player2-character' +
+                (enemyHit ? ' character-hit-right' : '')
+              }
+            >
+              <img
+                src={enemyFighter}
+                alt="Enemigo"
+                className="character-sprite enemy-sprite"
+              />
+            </div>
+          </div>
 
-              <div
-                className={
-                  'character player2-character' +
-                  (enemyHit ? ' character-hit-right' : '')
-                }
-              >
-                <img
-                  src={enemyFighter}
-                  alt="Enemigo"
-                  className="character-sprite enemy-sprite"
-                />
+          {!showResult && (
+            <div className="fight-messages">
+              <div className="combo-display">
+                {!hasAnswered
+                  ? 'FIGHT!'
+                  : isCorrect
+                  ? '¡BUEN GOLPE!'
+                  : '¡AY, ESE GASTO!'}
               </div>
             </div>
+          )}
 
-            {!showResult && (
-              <div className="fight-messages">
-                <div className="combo-display">
-                  {!hasAnswered
-                    ? 'FIGHT!'
-                    : isCorrect
-                      ? '¡BUEN GOLPE!'
-                      : '¡AY, ESE GASTO!'}
+          <div className="evaluation-question-panel">
+            {!showResult && question && (
+              <>
+                <p className="question-step">
+                  Pregunta {currentIndex + 1} de {totalQuestions}
+                </p>
+                <div
+                  className={`evaluation-question-content ${isMobile ? 'evaluation-question-content--mobile' : ''}`}
+                >
+                  <p className="question-context">
+                    {question.context}
+                  </p>
+                  <p className="question-text">
+                    {question.question}
+                  </p>
+                  <p className={feedbackClass}>{feedback}</p>
+                </div>
+              </>
+            )}
+
+            {showResult && (
+              <div className="evaluation-result-panel">
+                <h2 className="evaluation-result-title">
+                  {passed
+                    ? '¡Victoria para la Alcancía!'
+                    : 'Combate completo'}
+                </h2>
+
+                <p className="evaluation-result-text">
+                  Respondiste correctamente {correctCount} de{' '}
+                  {totalQuestions} rondas.
+                  {passed
+                    ? ' Tus decisiones muestran que entendiste cómo leer tus ingresos, cuidar tus gastos, usar el presupuesto y hacer crecer tu ahorro con pequeñas acciones.'
+                    : ' Aun así, este combate te muestra en qué decisiones puedes mejorar para que tu ahorro sea más fuerte.'}
+                </p>
+
+                <p className="evaluation-result-text evaluation-result-text--secondary">
+                  Recuerda: conocer tus ingresos, ordenar tus gastos,
+                  tener un presupuesto y tomar decisiones constantes es
+                  el combo que hace crecer tu cerdito, no al gasto
+                  impulsivo.
+                </p>
+
+                <div className="evaluation-bottom-row">
+                  <button
+                    type="button"
+                    className="evaluation-finish-btn"
+                    onClick={handleFinishEvaluation}
+                  >
+                    {passed ? 'Finalizar evaluación' : 'Volver y reintentar después'}
+                  </button>
                 </div>
               </div>
             )}
-
-            <div className="evaluation-question-panel">
-              {!showResult && question && (
-                <>
-                  <p className="question-step">
-                    Pregunta {currentIndex + 1} de {totalQuestions}
-                  </p>
-                  <div
-                    className={`evaluation-question-content ${isMobile ? 'evaluation-question-content--mobile' : ''}`}
-                  >
-                    <p className="question-context">
-                      {question.context}
-                    </p>
-                    <p className="question-text">
-                      {question.question}
-                    </p>
-                    <p className={feedbackClass}>{feedback}</p>
-                  </div>
-                </>
-              )}
-
-              {showResult && (
-                <div className="evaluation-result-panel">
-                  <h2 className="evaluation-result-title">
-                    {passed
-                      ? '¡Victoria para la Alcancía!'
-                      : 'Combate completo'}
-                  </h2>
-
-                  <p className="evaluation-result-text">
-                    Respondiste correctamente {correctCount} de{' '}
-                    {totalQuestions} rondas.
-                    {passed
-                      ? ' Tus decisiones muestran que entendiste cómo leer tus ingresos, cuidar tus gastos, usar el presupuesto y hacer crecer tu ahorro con pequeñas acciones.'
-                      : ' Aun así, este combate te muestra en qué decisiones puedes mejorar para que tu ahorro sea más fuerte.'}
-                  </p>
-
-                  <p className="evaluation-result-text evaluation-result-text--secondary">
-                    Recuerda: conocer tus ingresos, ordenar tus gastos,
-                    tener un presupuesto y tomar decisiones constantes es
-                    el combo que hace crecer tu cerdito, no al gasto
-                    impulsivo.
-                  </p>
-
-                  <div className="evaluation-bottom-row">
-                    <button
-                      type="button"
-                      className="evaluation-finish-btn"
-                      onClick={handleFinishEvaluation}
-                    >
-                      Finalizar evaluación
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="controls-bar">
-              {!showResult && question && (
-                <div className="evaluation-options">
-                  <button
-                    type="button"
-                    className={
-                      'evaluation-option-btn evaluation-option-btn--reject' +
-                      (selectedDecision === 'reject'
-                        ? ' evaluation-option-btn--selected'
-                        : '')
-                    }
-                    onClick={() => handleDecisionClick('reject')}
-                    disabled={hasAnswered}
-                  >
-                    Rechazar
-                  </button>
-
-                  <button
-                    type="button"
-                    className={
-                      'evaluation-option-btn evaluation-option-btn--doubt' +
-                      (selectedDecision === 'doubt'
-                        ? ' evaluation-option-btn--selected'
-                        : '')
-                    }
-                    onClick={() => handleDecisionClick('doubt')}
-                    disabled={hasAnswered}
-                  >
-                    Dudar
-                  </button>
-
-                  <button
-                    type="button"
-                    className={
-                      'evaluation-option-btn evaluation-option-btn--accept' +
-                      (selectedDecision === 'accept'
-                        ? ' evaluation-option-btn--selected'
-                        : '')
-                    }
-                    onClick={() => handleDecisionClick('accept')}
-                    disabled={hasAnswered}
-                  >
-                    Aceptar
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
+
+          <div className="controls-bar">
+            {!showResult && question && (
+              <div className="evaluation-options">
+                <button
+                  type="button"
+                  className={
+                    'evaluation-option-btn evaluation-option-btn--reject' +
+                    (selectedDecision === 'reject'
+                      ? ' evaluation-option-btn--selected'
+                      : '')
+                  }
+                  onClick={() => handleDecisionClick('reject')}
+                  disabled={hasAnswered}
+                >
+                  Rechazar
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    'evaluation-option-btn evaluation-option-btn--doubt' +
+                    (selectedDecision === 'doubt'
+                      ? ' evaluation-option-btn--selected'
+                      : '')
+                  }
+                  onClick={() => handleDecisionClick('doubt')}
+                  disabled={hasAnswered}
+                >
+                  Dudar
+                </button>
+
+                <button
+                  type="button"
+                  className={
+                    'evaluation-option-btn evaluation-option-btn--accept' +
+                    (selectedDecision === 'accept'
+                      ? ' evaluation-option-btn--selected'
+                      : '')
+                  }
+                  onClick={() => handleDecisionClick('accept')}
+                  disabled={hasAnswered}
+                >
+                  Aceptar
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
         </div>
       </div>
     </GameViewport>

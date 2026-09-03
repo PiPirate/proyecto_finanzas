@@ -8,8 +8,8 @@ import GameViewport from '../../components/responsive/GameViewport';
 export default function EvaluationStage({ onComplete, unitColor }) {
   const navigate = useNavigate();
 
-  const handleGameComplete = () => {
-    onComplete();
+  const handleGameComplete = (result) => {
+    onComplete(result);
     navigate('/');
   };
 

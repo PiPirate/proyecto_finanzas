@@ -416,7 +416,7 @@ export function TowerDefensePanel({ onComplete, onClose }) {
   const [playerLane, setPlayerLane] = useState(1);
   const [enemies, setEnemies] = useState([]);
   const [enemiesPassedCount, setEnemiesPassedCount] = useState(0);
-  const [enemiesKilledCount, setEnemiesKilledCount] = useState(0);
+  const [, setEnemiesKilledCount] = useState(0);
   const [gameTime, setGameTime] = useState(GAME_CONFIG.TOTAL_GAME_TIME);
 
   const { isMobile } = useDeviceMode();
@@ -843,7 +843,14 @@ export function TowerDefensePanel({ onComplete, onClose }) {
             <div className="td-end-screen">
               <h2>🏆 ¡Victoria financiera!</h2>
               <p>Respondiste correctamente {GAME_CONFIG.QUESTIONS_TO_WIN} preguntas.</p>
-              <button className="td-end-button" onClick={onComplete}>
+              <button
+                className="td-end-button"
+                onClick={() => onComplete?.({
+                  passed: true,
+                  score: correctAnswers,
+                  total: GAME_CONFIG.QUESTIONS_TO_WIN,
+                })}
+              >
                 Finalizar
               </button>
             </div>

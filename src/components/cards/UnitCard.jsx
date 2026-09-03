@@ -1,4 +1,4 @@
-import { Target, Wallet, Handshake, ShieldCheck, Lock, Clock, TrendingUp } from 'lucide-react'
+import { Target, Wallet, Handshake, ShieldCheck, Lock, Clock, TrendingUp, CheckCircle2 } from 'lucide-react'
 import './UnitCard.css'
 
 const iconMap = {
@@ -10,6 +10,10 @@ const iconMap = {
 
 const UnitCard = ({ unit, onOpen }) => {
   const Icon = iconMap[unit.icon] || Target
+  const isCompleted = unit.progress?.status === 'completed'
+  const isInProgress = unit.progress?.status === 'in_progress'
+  const completedStages = Object.keys(unit.progress?.stages || {}).length
+  const progressPercent = Math.round((completedStages / 3) * 100)
 
   const gradientColors = {
     'from-blue-500 to-cyan-500': { from: '#3b82f6', to: '#06b6d4' },
@@ -22,7 +26,7 @@ const UnitCard = ({ unit, onOpen }) => {
 
   return (
     <div
-      className="unitcard-wrapper"
+      className={`unitcard-wrapper ${!unit.isUnlocked ? 'unitcard-wrapper--locked' : ''}`}
       style={{ '--gradient-from': colors.from, '--gradient-to': colors.to }}
     >
       <div className="unitcard-inner">
@@ -31,7 +35,12 @@ const UnitCard = ({ unit, onOpen }) => {
           <div className="unitcard-icon">
             <Icon />
           </div>
-          <span className="unitcard-number">{unit.number}</span>
+          <div className="unitcard-header-status">
+            <span className={`unitcard-status ${isCompleted ? 'completed' : isInProgress ? 'in-progress' : ''}`}>
+              {isCompleted ? 'Completada' : isInProgress ? 'En progreso' : unit.isUnlocked ? 'Disponible' : 'Bloqueada'}
+            </span>
+            <span className="unitcard-number">{unit.number}</span>
+          </div>
         </div>
 
         <h3 className="unitcard-title">{unit.title}</h3>
@@ -56,13 +65,25 @@ const UnitCard = ({ unit, onOpen }) => {
           ))}
         </ul>
 
-        {unit.isAvailable ? (
+        {unit.isUnlocked && (
+          <div className="unitcard-progress" aria-label={`Progreso ${progressPercent}%`}>
+            <div className="unitcard-progress-label">
+              <span>Progreso</span>
+              <span>{completedStages}/3 etapas</span>
+            </div>
+            <div className="unitcard-progress-track">
+              <span style={{ width: `${progressPercent}%` }} />
+            </div>
+          </div>
+        )}
+
+        {unit.isUnlocked ? (
           <button className="unitcard-btn primary" onClick={() => onOpen(unit)}>
-            Comenzar unidad
+            {isCompleted ? <><CheckCircle2 className="icon-sm" /> Revisar unidad</> : isInProgress ? 'Continuar unidad' : 'Comenzar unidad'}
           </button>
         ) : (
           <button className="unitcard-btn disabled" disabled>
-            <Lock className="icon-sm" /> Próximamente
+            <Lock className="icon-sm" /> Completa primero la unidad anterior
           </button>
         )}
 

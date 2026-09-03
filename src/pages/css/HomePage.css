@@ -147,9 +147,9 @@
 
 .tabs-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   width: 100%;
-  max-width: 28rem;
+  max-width: 36rem;
   background: #f1f5f9;
   border-radius: 0.5rem;
   padding: 0.25rem;
@@ -295,4 +295,12 @@
 
 .empty-state p:last-child {
   font-size: 0.875rem;
+}
+
+@media (max-width: 520px) {
+  .tab-button {
+    padding-inline: .35rem;
+    gap: .25rem;
+    font-size: .78rem;
+  }
 }

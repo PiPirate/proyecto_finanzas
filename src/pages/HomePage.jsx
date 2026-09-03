@@ -3,20 +3,30 @@ import { useNavigate } from 'react-router-dom'
 import UnitCard from '../components/cards/UnitCard'
 import AchievementCard from '../components/AchievementCard'
 import NoteCard from '../components/NoteCard'
+import UserProfile from '../components/UserProfile'
 import { courseOverview } from '../data/courseStructure'
 import { achievements } from '../data/achievements'
 import { notes } from '../data/notes'
-import { Sparkles, BookOpen, Gamepad2, GraduationCap, Trophy, StickyNote } from 'lucide-react'
+import { Sparkles, BookOpen, Gamepad2, GraduationCap, Trophy, StickyNote, UserRound } from 'lucide-react'
+import { useCourseProgress } from '../progress/courseProgress'
 import './css/HomePage.css'
 
 const HomePage = ({ units }) => {
   const navigate = useNavigate()
+  const { state, isUnitUnlocked } = useCourseProgress()
   const [activeTab, setActiveTab] = useState('modulos')
   const highlightIcons = [BookOpen, Sparkles, Gamepad2]
   
   const handleOpenUnit = (unit) => {
+    if (!isUnitUnlocked(unit.id)) return
     navigate(`/unit/${unit.id}`)
   }
+
+  const unitsWithProgress = units.map((unit) => ({
+    ...unit,
+    isUnlocked: isUnitUnlocked(unit.id),
+    progress: state.units[unit.id],
+  }))
   
   // Statistics
   const unlockedAchievements = achievements.filter(a => a.unlocked).length
@@ -86,6 +96,13 @@ const HomePage = ({ units }) => {
               <StickyNote />
               Notas
             </button>
+            <button
+              className={`tab-button ${activeTab === 'perfil' ? 'tab-button-active' : ''}`}
+              onClick={() => setActiveTab('perfil')}
+            >
+              <UserRound />
+              Perfil
+            </button>
           </div>
 
           {/* Módulos Tab */}
@@ -104,7 +121,7 @@ const HomePage = ({ units }) => {
               </div>
 
               <div className="units-grid">
-                {units.map((unit) => (
+                {unitsWithProgress.map((unit) => (
                   <UnitCard key={unit.id} unit={unit} onOpen={handleOpenUnit} />
                 ))}
               </div>
@@ -167,6 +184,8 @@ const HomePage = ({ units }) => {
               )}
             </div>
           )}
+
+          {activeTab === 'perfil' && <UserProfile />}
         </div>
       </div>
     </section>

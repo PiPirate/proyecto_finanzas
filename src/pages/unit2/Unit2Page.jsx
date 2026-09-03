@@ -7,9 +7,10 @@ import EvaluationStage from './EvaluationStage';
 export default function Unit1Page() {
   return (
     <UnitPage
-      unitNumber={1}
+      unitId="unidad-2"
+      unitNumber={2}
       unitTitle="Mini-presupuesto: 50-30-20"
-      unitColor="linear-gradient(135deg, #2563eb, #1d4ed8)"
+      unitColor="linear-gradient(135deg, #a855f7, #ec4899)"
       VideoStage={VideoStage}
       TutorialStage={TutorialStage}
       EvaluationStage={EvaluationStage}

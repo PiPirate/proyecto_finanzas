@@ -7,6 +7,7 @@ import EvaluationStage from './EvaluationStage';
 export default function Unit1Page() {
   return (
     <UnitPage
+      unitId="unidad-1"
       unitNumber={1}
       unitTitle="Tu dinero y tus metas"
       unitColor="linear-gradient(135deg, #2563eb, #1d4ed8)"

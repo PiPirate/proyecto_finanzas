@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import "./css/FinalLoanEvaluationGame.css";
 
 export default function FinalLoanEvaluationGame({ visible, onFinish }) {
-    console.log("🧩 FinalLoanEvaluationGame montado/renderizado");
     if (!visible) return null;
 
     // ------------------------------------------------------
@@ -169,9 +168,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     const [correctCount, setCorrectCount] = useState(0);
     const [endScreen, setEndScreen] = useState(null);
     const [hoverDirection, setHoverDirection] = useState(null);
-
-    // Candado duro para evitar dobles respuestas
-    const lockRef = useRef(false);
+    const [isLocked, setIsLocked] = useState(false); // evita doble respuesta
 
     const startPos = useRef({ x: 0, y: 0 });
     const isPointerDownRef = useRef(false);
@@ -187,29 +184,30 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
         setFeedback(null);
         setEndScreen(null);
         setHoverDirection(null);
+        setIsLocked(false);
         startPos.current = { x: 0, y: 0 };
         isPointerDownRef.current = false;
-        lockRef.current = false;
     }
 
     function finishGame(score) {
+        const total = rounds.length;
         let type = "";
         let msg = "";
 
-        const MIN_SUCCESS = 5; // 👈 gana con 5 o más aciertos
-
-        if (score >= MIN_SUCCESS) {
+        if (score >= Math.ceil(total * 0.75)) {
             type = "success";
             msg = "🎉 ¡Excelente! Manejas muy bien los conceptos.";
+        } else if (score >= Math.floor(total * 0.5)) {
+            type = "medium";
+            msg = "⚠ Buen intento, pero puedes mejorar.";
         } else {
             type = "fail";
             msg = "❌ Te recomendamos repetir el juego antes de continuar.";
         }
 
         setEndScreen({ type, msg });
-        lockRef.current = true; // ya no queremos más interacciones
+        setIsLocked(false);
     }
-
 
     // ------------------------------------------------------
     // 4. GESTOS (POINTER EVENTS)
@@ -222,9 +220,8 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     };
 
     function handlePointerDown(e) {
+        // Evita scroll mientras haces swipe en móvil
         e.preventDefault();
-        if (lockRef.current || endScreen) return;
-
         isPointerDownRef.current = true;
         const { x, y } = getPoint(e);
         startPos.current = { x, y };
@@ -232,7 +229,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     }
 
     function handlePointerMove(e) {
-        if (!isPointerDownRef.current || lockRef.current || endScreen) return;
+        if (!isPointerDownRef.current || isLocked || endScreen) return;
 
         const { x, y } = getPoint(e);
         const dx = x - startPos.current.x;
@@ -263,7 +260,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
 
         setHoverDirection(null);
 
-        if (lockRef.current || endScreen) return;
+        if (isLocked || endScreen) return;
 
         let direction = null;
 
@@ -282,7 +279,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
     // 5. RESPUESTA
     // ------------------------------------------------------
     function evaluateChoice(dir) {
-        if (lockRef.current || endScreen) return;
+        if (isLocked || endScreen) return;
 
         const round = rounds[index];
         if (!round) return;
@@ -292,8 +289,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
 
         const isLast = index === rounds.length - 1;
 
-        // Bloqueamos inmediatamente
-        lockRef.current = true;
+        setIsLocked(true);
         setFeedback(option.msg);
 
         setCorrectCount((prevCorrect) => {
@@ -306,7 +302,7 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
                     finishGame(newCorrect);
                 } else {
                     setIndex((prevIndex) => prevIndex + 1);
-                    lockRef.current = false; // solo aquí se desbloquea para la siguiente ronda
+                    setIsLocked(false);
                 }
             }, 1300);
 
@@ -333,30 +329,25 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
                         </p>
 
                         <div className="final-buttons">
-                            {/* Si NO ganó → solo Reintentar */}
                             {endScreen.type !== "success" && (
                                 <button className="retry-btn" onClick={resetGame}>
                                     Reintentar
                                 </button>
                             )}
 
-                            {/* Si ganó (5 o más buenas) → solo Finalizar */}
-                            {endScreen.type === "success" && (
-                                <button
-                                    className="finish-btn"
-                                    onClick={() =>
-                                        onFinish?.({
-                                            score: correctCount,
-                                            total: rounds.length,
-                                            passed: true
-                                        })
-                                    }
-                                >
-                                    Finalizar
-                                </button>
-                            )}
+                            <button
+                                className="finish-btn"
+                                onClick={() =>
+                                    onFinish?.({
+                                        score: correctCount,
+                                        total: rounds.length,
+                                        passed: endScreen.type === "success"
+                                    })
+                                }
+                            >
+                                Finalizar
+                            </button>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -376,8 +367,9 @@ export default function FinalLoanEvaluationGame({ visible, onFinish }) {
                         <button
                             key={o.dir}
                             type="button"
-                            className={`side-card side-${o.dir} ${hoverDirection === o.dir ? "highlight" : ""
-                                }`}
+                            className={`side-card side-${o.dir} ${
+                                hoverDirection === o.dir ? "highlight" : ""
+                            }`}
                             onClick={() => evaluateChoice(o.dir)}
                         >
                             {o.label}
